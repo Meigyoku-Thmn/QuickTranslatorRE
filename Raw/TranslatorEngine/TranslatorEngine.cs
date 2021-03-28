@@ -232,38 +232,37 @@ namespace TranslatorEngine
                 File.Delete(bakFilePath);
         }
 
-        public static void SaveDictionaryToFile(ref Dictionary<string, string> dictionary, string filePath)
+        public static void SaveDictionaryToFile(ref Dictionary<string, string> dict, string filePath)
         {
-            var sortedDict = from pair in dictionary
-                             orderby pair.Key.Length descending, pair.Key
-                             select pair;
-            var dict = new Dictionary<string, string>();
-            string text = filePath + "." + DateTime.Now.Ticks;
-            Helper.CopyIfSourceExists(filePath, text, true);
-            var stringBuilder = new StringBuilder();
-            foreach (var pair in sortedDict)
-            {
-                stringBuilder.Append(pair.Key).Append("=").AppendLine(pair.Value);
-                dict.Add(pair.Key, pair.Value);
-            }
-            dictionary = dict;
+            var sortedPairs = from pair in dict
+                              orderby pair.Key.Length descending, pair.Key
+                              select pair;
+
+            var newDict = new Dictionary<string, string>();
+
+            // Back up old file in case of error
+            string bakFilePath = filePath + "." + DateTime.Now.Ticks;
+            Helper.CopyIfSourceExists(filePath, bakFilePath, true);
+
+            var lines = sortedPairs.Select(pair => $"{pair.Key}={pair.Value}");
+
+            dict = sortedPairs.ToDictionary(e => e.Key, e => e.Value);
+
             try
             {
-                File.WriteAllText(filePath, stringBuilder.ToString(), Encoding.UTF8);
+                File.WriteAllLines(filePath, lines, Encoding.UTF8);
             }
             catch (Exception ex)
             {
-                try
-                {
-                    File.Copy(text, filePath, true);
-                }
-                catch { } // first ex is more important
+                // Try to restore old file
+                try { File.Copy(bakFilePath, filePath, true); }
+                catch { }
                 throw ex;
             }
+
+            // Remove old file when completing
             if (File.Exists(filePath))
-            {
-                File.Delete(text);
-            }
+                File.Delete(bakFilePath);
         }
 
         public static string ChineseToHanViet(string chinese, out CharRange[] chineseHanVietMappingArray)
