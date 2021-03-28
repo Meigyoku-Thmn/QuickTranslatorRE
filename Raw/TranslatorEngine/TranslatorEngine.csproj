@@ -47,6 +47,7 @@
     <Compile Include="CharRange.cs" />
     <Compile Include="CharsetDetector.cs" />
     <Compile Include="DictionaryConfigurationHelper.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="HtmlParser.cs" />
     <Compile Include="Notifier.cs" />
     <Compile Include="org\mozilla\intl\chardet\Big5Statistics.cs" />

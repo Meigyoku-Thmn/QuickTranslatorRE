@@ -92,30 +92,8 @@ namespace TranslatorEngine
 
         public static void UpdateVietPhraseDictionary(string key, string value, bool sorting)
         {
-            if (vietPhraseDictionary.ContainsKey(key))
-            {
-                vietPhraseDictionary[key] = value;
-            }
-            else
-            {
-                vietPhraseDictionary.Add(key, value);
-            }
-            if (vietPhraseOneMeaningDictionary.ContainsKey(key))
-            {
-                vietPhraseOneMeaningDictionary[key] = value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0];
-            }
-            else
-            {
-                vietPhraseOneMeaningDictionary.Add(key, value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0]);
-            }
+            vietPhraseDictionary[key] = value;
+            vietPhraseOneMeaningDictionary[key] = value.Split('/', '|')[0];
             if (onlyVietPhraseDictionary.ContainsKey(key))
             {
                 onlyVietPhraseDictionary[key] = value;
@@ -133,6 +111,7 @@ namespace TranslatorEngine
                 }
                 WriteVietPhraseHistoryLog(key, "Added");
             }
+
             if (sorting)
             {
                 SaveDictionaryToFile(ref onlyVietPhraseDictionary, DictionaryConfigurationHelper.GetVietPhraseDictionaryPath());
@@ -141,105 +120,66 @@ namespace TranslatorEngine
             SaveDictionaryToFileWithoutSorting(onlyVietPhraseDictionary, DictionaryConfigurationHelper.GetVietPhraseDictionaryPath());
         }
 
-        // Token: 0x060000E8 RID: 232 RVA: 0x00006AEC File Offset: 0x00005AEC
-        private static Dictionary<string, string> AddEntryToDictionaryWithoutSorting(Dictionary<string, string> dictionary, string key, string value)
+        static Dictionary<string, string> AddEntryToDictionaryWithoutSorting(Dictionary<string, string> dictionary, string key, string value)
         {
-            Dictionary<string, string> dictionary2 = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> keyValuePair in dictionary)
-            {
-                dictionary2.Add(keyValuePair.Key, keyValuePair.Value);
-            }
-            dictionary2.Add(key, value);
-            return dictionary2;
+            return dictionary
+                .Concat(new[] { new KeyValuePair<string, string>(key, value) })
+                .ToDictionary(e => e.Key, e => e.Value);
         }
 
-        // Token: 0x060000E9 RID: 233 RVA: 0x00006B58 File Offset: 0x00005B58
         public static void UpdateNameDictionary(string key, string value, bool sorting, bool isNameChinh)
         {
-            if (vietPhraseDictionary.ContainsKey(key))
+            vietPhraseDictionary[key] = value;
+            vietPhraseOneMeaningDictionary[key] = value.Split('/', '|')[0];
+            var dict = isNameChinh ? onlyNameChinhDictionary : onlyNamePhuDictionary;
+
+            if (dict.ContainsKey(key))
             {
-                vietPhraseDictionary[key] = value;
-            }
-            else
-            {
-                vietPhraseDictionary.Add(key, value);
-            }
-            if (vietPhraseOneMeaningDictionary.ContainsKey(key))
-            {
-                vietPhraseOneMeaningDictionary[key] = value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0];
-            }
-            else
-            {
-                vietPhraseOneMeaningDictionary.Add(key, value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0]);
-            }
-            Dictionary<string, string> dictionary = isNameChinh ? onlyNameChinhDictionary : onlyNamePhuDictionary;
-            if (dictionary.ContainsKey(key))
-            {
-                dictionary[key] = value;
+                dict[key] = value;
                 WriteNamesHistoryLog(key, "Updated", isNameChinh);
             }
             else
             {
                 if (sorting)
                 {
-                    dictionary.Add(key, value);
+                    dict.Add(key, value);
                 }
                 else if (isNameChinh)
                 {
                     onlyNameChinhDictionary = AddEntryToDictionaryWithoutSorting(onlyNameChinhDictionary, key, value);
-                    dictionary = onlyNameChinhDictionary;
+                    dict = onlyNameChinhDictionary;
                 }
                 else
                 {
                     onlyNamePhuDictionary = AddEntryToDictionaryWithoutSorting(onlyNamePhuDictionary, key, value);
-                    dictionary = onlyNamePhuDictionary;
+                    dict = onlyNamePhuDictionary;
                 }
                 WriteNamesHistoryLog(key, "Added", isNameChinh);
             }
+
             if (onlyNameDictionary.ContainsKey(key))
             {
                 onlyNameDictionary[key] = value;
-                onlyNameOneMeaningDictionary[key] = value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0];
+                onlyNameOneMeaningDictionary[key] = value.Split('/', '|')[0];
             }
             else if (sorting)
             {
                 onlyNameDictionary.Add(key, value);
-                onlyNameOneMeaningDictionary.Add(key, value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0]);
+                onlyNameOneMeaningDictionary.Add(key, value.Split('/', '|')[0]);
             }
             else
             {
                 onlyNameDictionary = AddEntryToDictionaryWithoutSorting(onlyNameDictionary, key, value);
-                onlyNameOneMeaningDictionary = AddEntryToDictionaryWithoutSorting(onlyNameOneMeaningDictionary, key, value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0]);
+                onlyNameOneMeaningDictionary = AddEntryToDictionaryWithoutSorting(onlyNameOneMeaningDictionary, key, value.Split('/', '|')[0]);
             }
             if (sorting)
             {
-                SaveDictionaryToFile(ref dictionary, isNameChinh ? DictionaryConfigurationHelper.GetNamesDictionaryPath() : DictionaryConfigurationHelper.GetNamesPhuDictionaryPath());
+                SaveDictionaryToFile(ref dict, isNameChinh ? DictionaryConfigurationHelper.GetNamesDictionaryPath() : DictionaryConfigurationHelper.GetNamesPhuDictionaryPath());
                 return;
             }
-            SaveDictionaryToFileWithoutSorting(dictionary, isNameChinh ? DictionaryConfigurationHelper.GetNamesDictionaryPath() : DictionaryConfigurationHelper.GetNamesPhuDictionaryPath());
+            SaveDictionaryToFileWithoutSorting(dict, isNameChinh ? DictionaryConfigurationHelper.GetNamesDictionaryPath() : DictionaryConfigurationHelper.GetNamesPhuDictionaryPath());
         }
 
-        // Token: 0x060000EA RID: 234 RVA: 0x00006D48 File Offset: 0x00005D48
         public static void UpdatePhienAmDictionary(string key, string value, bool sorting)
         {
             if (hanVietDictionary.ContainsKey(key))
@@ -267,19 +207,18 @@ namespace TranslatorEngine
             SaveDictionaryToFileWithoutSorting(hanVietDictionary, DictionaryConfigurationHelper.GetChinesePhienAmWordsDictionaryPath());
         }
 
-        // Token: 0x060000EB RID: 235 RVA: 0x00006DCC File Offset: 0x00005DCC
         public static void SaveDictionaryToFileWithoutSorting(Dictionary<string, string> dictionary, string filePath)
         {
-            string text = filePath + "." + DateTime.Now.Ticks;
-            if (File.Exists(filePath))
+            var text = filePath + "." + DateTime.Now.Ticks;
+            Helper.CopyIfSourceExists(filePath, text, true);
+
+            var stringBuilder = new StringBuilder();
+
+            foreach (var pair in dictionary)
             {
-                File.Copy(filePath, text, true);
+                stringBuilder.Append(pair.Key).Append("=").AppendLine(pair.Value);
             }
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (KeyValuePair<string, string> keyValuePair in dictionary)
-            {
-                stringBuilder.Append(keyValuePair.Key).Append("=").AppendLine(keyValuePair.Value);
-            }
+
             try
             {
                 File.WriteAllText(filePath, stringBuilder.ToString(), Encoding.UTF8);
@@ -290,9 +229,7 @@ namespace TranslatorEngine
                 {
                     File.Copy(text, filePath, true);
                 }
-                catch
-                {
-                }
+                catch { } // first ex is more important
                 throw ex;
             }
             if (File.Exists(filePath))
@@ -301,25 +238,21 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x060000EC RID: 236 RVA: 0x00006ED0 File Offset: 0x00005ED0
         public static void SaveDictionaryToFile(ref Dictionary<string, string> dictionary, string filePath)
         {
-            IOrderedEnumerable<KeyValuePair<string, string>> orderedEnumerable = from pair in dictionary
-                                                                                 orderby pair.Key.Length descending, pair.Key
-                                                                                 select pair;
-            Dictionary<string, string> dictionary2 = new Dictionary<string, string>();
+            var sortedDict = from pair in dictionary
+                             orderby pair.Key.Length descending, pair.Key
+                             select pair;
+            var dict = new Dictionary<string, string>();
             string text = filePath + "." + DateTime.Now.Ticks;
-            if (File.Exists(filePath))
+            Helper.CopyIfSourceExists(filePath, text, true);
+            var stringBuilder = new StringBuilder();
+            foreach (var pair in sortedDict)
             {
-                File.Copy(filePath, text, true);
+                stringBuilder.Append(pair.Key).Append("=").AppendLine(pair.Value);
+                dict.Add(pair.Key, pair.Value);
             }
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (KeyValuePair<string, string> keyValuePair in orderedEnumerable)
-            {
-                stringBuilder.Append(keyValuePair.Key).Append("=").AppendLine(keyValuePair.Value);
-                dictionary2.Add(keyValuePair.Key, keyValuePair.Value);
-            }
-            dictionary = dictionary2;
+            dictionary = dict;
             try
             {
                 File.WriteAllText(filePath, stringBuilder.ToString(), Encoding.UTF8);
@@ -330,9 +263,7 @@ namespace TranslatorEngine
                 {
                     File.Copy(text, filePath, true);
                 }
-                catch
-                {
-                }
+                catch { } // first ex is more important
                 throw ex;
             }
             if (File.Exists(filePath))
@@ -341,12 +272,11 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x060000ED RID: 237 RVA: 0x00007020 File Offset: 0x00006020
         public static string ChineseToHanViet(string chinese, out CharRange[] chineseHanVietMappingArray)
         {
             LastTranslatedWord_HanViet = "";
-            List<CharRange> list = new List<CharRange>();
-            StringBuilder stringBuilder = new StringBuilder();
+            var list = new List<CharRange>();
+            var stringBuilder = new StringBuilder();
             int length = chinese.Length;
             for (int i = 0; i < length - 1; i++)
             {
@@ -391,15 +321,14 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000EE RID: 238 RVA: 0x000071F8 File Offset: 0x000061F8
         public static string ChineseToHanVietForBrowser(string chinese)
         {
             if (string.IsNullOrEmpty(chinese))
                 return "";
             chinese = StandardizeInputForBrowser(chinese);
-            StringBuilder stringBuilder = new StringBuilder();
-            string[] array = ClassifyWordsIntoLatinAndChinese(chinese);
-            int num = array.Length;
+            var stringBuilder = new StringBuilder();
+            var array = ClassifyWordsIntoLatinAndChinese(chinese);
+            var num = array.Length;
             for (int i = 0; i < num; i++)
             {
                 string text = array[i];
@@ -424,12 +353,11 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000EF RID: 239 RVA: 0x000072A4 File Offset: 0x000062A4
         public static string ChineseToHanVietForBatch(string chinese)
         {
-            string str = "";
-            StringBuilder stringBuilder = new StringBuilder();
-            int length = chinese.Length;
+            var str = "";
+            var stringBuilder = new StringBuilder();
+            var length = chinese.Length;
             for (int i = 0; i < length - 1; i++)
             {
                 char c = chinese[i];
@@ -465,7 +393,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000F0 RID: 240 RVA: 0x000073A5 File Offset: 0x000063A5
         public static string ChineseToHanViet(char chinese)
         {
             if (chinese == ' ')
@@ -479,13 +406,12 @@ namespace TranslatorEngine
             return hanVietDictionary[chinese.ToString()];
         }
 
-        // Token: 0x060000F1 RID: 241 RVA: 0x000073E4 File Offset: 0x000063E4
         public static string ChineseToVietPhrase(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName, out CharRange[] chinesePhraseRanges, out CharRange[] vietPhraseRanges)
         {
             LastTranslatedWord_VietPhrase = "";
-            List<CharRange> list = new List<CharRange>();
-            List<CharRange> list2 = new List<CharRange>();
-            StringBuilder stringBuilder = new StringBuilder();
+            var list = new List<CharRange>();
+            var list2 = new List<CharRange>();
+            var stringBuilder = new StringBuilder();
             int num = chinese.Length - 1;
             int i = 0;
             int num2 = -1;
@@ -644,7 +570,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000F2 RID: 242 RVA: 0x00007BEC File Offset: 0x00006BEC
         public static string ChineseToVietPhraseForBrowser(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
         {
             chinese = StandardizeInputForBrowser(chinese);
@@ -667,7 +592,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000F3 RID: 243 RVA: 0x00007C6C File Offset: 0x00006C6C
         public static string ChineseToVietPhraseForBatch(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
         {
             string text = "";
@@ -813,7 +737,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString().Replace("  ", " ");
         }
 
-        // Token: 0x060000F4 RID: 244 RVA: 0x000081A4 File Offset: 0x000071A4
         public static string ChineseToVietPhraseOneMeaning(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName, out CharRange[] chinesePhraseRanges, out CharRange[] vietPhraseRanges)
         {
             LastTranslatedWord_VietPhraseOneMeaning = "";
@@ -958,7 +881,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000F5 RID: 245 RVA: 0x00008804 File Offset: 0x00007804
         public static string ChineseToVietPhraseOneMeaningForBrowser(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
         {
             chinese = StandardizeInputForBrowser(chinese);
@@ -989,11 +911,10 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000F6 RID: 246 RVA: 0x000088AC File Offset: 0x000078AC
         public static string ChineseToVietPhraseOneMeaningForProxy(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
         {
             chinese = StandardizeInputForProxy(chinese);
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             string[] array = ClassifyWordsIntoLatinAndChineseForProxy(chinese);
             foreach (string text in array)
             {
@@ -1012,7 +933,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000F7 RID: 247 RVA: 0x0000892C File Offset: 0x0000792C
         public static string ChineseToVietPhraseOneMeaningForBatch(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
         {
             string text = "";
@@ -1145,7 +1065,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000F8 RID: 248 RVA: 0x00008DCC File Offset: 0x00007DCC
         public static string ChineseToNameForBatch(string chinese)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -1176,7 +1095,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x060000F9 RID: 249 RVA: 0x00008E70 File Offset: 0x00007E70
         public static string ChineseToMeanings(string chinese, out int phraseTranslatedLength)
         {
             string text = "";
@@ -1316,7 +1234,6 @@ namespace TranslatorEngine
             return text;
         }
 
-        // Token: 0x060000FA RID: 250 RVA: 0x0000926C File Offset: 0x0000826C
         public static void LoadDictionaries()
         {
             lock (lockObject)
@@ -1333,23 +1250,19 @@ namespace TranslatorEngine
                     ThreadPool.QueueUserWorkItem(new WaitCallback(LoadOnlyNamePhuDictionaryHistoryWithNewThread));
                     ThreadPool.QueueUserWorkItem(new WaitCallback(LoadOnlyVietPhraseDictionaryHistoryWithNewThread));
                     ThreadPool.QueueUserWorkItem(new WaitCallback(LoadHanVietDictionaryHistoryWithNewThread));
-                    ManualResetEvent[] array = new ManualResetEvent[]
-                    {
+                    var array = new[] {
                         new ManualResetEvent(false)
                     };
                     ThreadPool.QueueUserWorkItem(new WaitCallback(LoadLuatNhanDictionaryWithNewThread), array[0]);
-                    ManualResetEvent[] array2 = new ManualResetEvent[]
-                    {
+                    var array2 = new[] {
                         new ManualResetEvent(false)
                     };
                     ThreadPool.QueueUserWorkItem(new WaitCallback(LoadPronounDictionaryWithNewThread), array2[0]);
-                    ManualResetEvent[] array3 = new ManualResetEvent[]
-                    {
+                    var array3 = new[] {
                         new ManualResetEvent(false)
                     };
                     ThreadPool.QueueUserWorkItem(new WaitCallback(LoadOnlyVietPhraseDictionaryWithNewThread), array3[0]);
-                    ManualResetEvent[] array4 = new ManualResetEvent[]
-                    {
+                    var array4 = new[] {
                         new ManualResetEvent(false)
                     };
                     ThreadPool.QueueUserWorkItem(new WaitCallback(LoadOnlyNameDictionaryWithNewThread), array4[0]);
@@ -1367,28 +1280,23 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x060000FB RID: 251 RVA: 0x0000943C File Offset: 0x0000843C
-        private static void LoadLuatNhanDictionaryWithNewThread(object stateInfo)
+        static void LoadLuatNhanDictionaryWithNewThread(object stateInfo)
         {
             LoadLuatNhanDictionary();
             ((ManualResetEvent)stateInfo).Set();
         }
 
-        // Token: 0x060000FC RID: 252 RVA: 0x00009468 File Offset: 0x00008468
-        private static void LoadLuatNhanDictionary()
+        static void LoadLuatNhanDictionary()
         {
-            Dictionary<string, string> dictionary = new Dictionary<string, string>();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetLuatNhanDictionaryPath(), true))
+            var dictionary = new Dictionary<string, string>();
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetLuatNhanDictionaryPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
                     if (!text.StartsWith("#"))
                     {
-                        string[] array = text.Split(new char[]
-                        {
-                            '='
-                        });
+                        var array = text.Split('=');
                         if (array.Length == 2 && !dictionary.ContainsKey(array[0]))
                         {
                             dictionary.Add(array[0], array[1]);
@@ -1396,36 +1304,28 @@ namespace TranslatorEngine
                     }
                 }
             }
-            IOrderedEnumerable<KeyValuePair<string, string>> orderedEnumerable =
-                from pair in dictionary
-                orderby pair.Key.Length descending, pair.Key
-                select pair;
+            var orderedEnumerable = from pair in dictionary
+                                    orderby pair.Key.Length descending, pair.Key
+                                    select pair;
             luatNhanDictionary.Clear();
-            foreach (KeyValuePair<string, string> keyValuePair in orderedEnumerable)
+            foreach (var keyValuePair in orderedEnumerable)
             {
                 luatNhanDictionary.Add(keyValuePair.Key, keyValuePair.Value);
             }
         }
 
-        // Token: 0x060000FE RID: 254 RVA: 0x0000962C File Offset: 0x0000862C
-        private static void LoadHanVietDictionaryWithNewThread(object stateInfo)
-        {
-            LoadHanVietDictionary();
-        }
+        static void LoadHanVietDictionaryWithNewThread(object stateInfo)
+            => LoadHanVietDictionary();
 
-        // Token: 0x060000FF RID: 255 RVA: 0x00009634 File Offset: 0x00008634
-        private static void LoadHanVietDictionary()
+        static void LoadHanVietDictionary()
         {
             hanVietDictionary.Clear();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetChinesePhienAmWordsDictionaryPath(), true))
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetChinesePhienAmWordsDictionaryPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
-                    string[] array = text.Split(new char[]
-                    {
-                        '='
-                    });
+                    var array = text.Split('=');
                     if (array.Length == 2 && !hanVietDictionary.ContainsKey(array[0]))
                     {
                         hanVietDictionary.Add(array[0], array[1]);
@@ -1434,18 +1334,17 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x06000100 RID: 256 RVA: 0x000096B8 File Offset: 0x000086B8
-        private static void LoadVietPhraseDictionary()
+        static void LoadVietPhraseDictionary()
         {
             vietPhraseDictionary.Clear();
-            foreach (KeyValuePair<string, string> keyValuePair in onlyNameDictionary)
+            foreach (var keyValuePair in onlyNameDictionary)
             {
                 if (!vietPhraseDictionary.ContainsKey(keyValuePair.Key))
                 {
                     vietPhraseDictionary.Add(keyValuePair.Key, keyValuePair.Value);
                 }
             }
-            foreach (KeyValuePair<string, string> keyValuePair2 in onlyVietPhraseDictionary)
+            foreach (var keyValuePair2 in onlyVietPhraseDictionary)
             {
                 if (!vietPhraseDictionary.ContainsKey(keyValuePair2.Key))
                 {
@@ -1454,25 +1353,21 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x06000101 RID: 257 RVA: 0x000097A0 File Offset: 0x000087A0
-        private static void LoadOnlyVietPhraseDictionaryWithNewThread(object stateInfo)
+        static void LoadOnlyVietPhraseDictionaryWithNewThread(object stateInfo)
         {
             LoadOnlyVietPhraseDictionary();
             ((ManualResetEvent)stateInfo).Set();
         }
 
-        // Token: 0x06000102 RID: 258 RVA: 0x000097B4 File Offset: 0x000087B4
-        private static void LoadOnlyVietPhraseDictionary()
+        static void LoadOnlyVietPhraseDictionary()
         {
             onlyVietPhraseDictionary.Clear();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetVietPhraseDictionaryPath(), true))
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetVietPhraseDictionaryPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
-                    string[] array = text.Split(new char[] {
-                        '='
-                    });
+                    var array = text.Split('=');
                     if (array.Length == 2 && !onlyVietPhraseDictionary.ContainsKey(array[0]))
                     {
                         onlyVietPhraseDictionary.Add(array[0], array[1]);
@@ -1481,30 +1376,25 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x06000103 RID: 259 RVA: 0x00009838 File Offset: 0x00008838
-        private static void LoadOnlyNameDictionaryWithNewThread(object stateInfo)
+        static void LoadOnlyNameDictionaryWithNewThread(object stateInfo)
         {
             LoadOnlyNameDictionary();
             ((ManualResetEvent)stateInfo).Set();
         }
 
-        // Token: 0x06000104 RID: 260 RVA: 0x0000984C File Offset: 0x0000884C
-        private static void LoadOnlyNameDictionary()
+        static void LoadOnlyNameDictionary()
         {
             onlyNameDictionary.Clear();
             onlyNameOneMeaningDictionary.Clear();
             onlyNameChinhDictionary.Clear();
             onlyNamePhuDictionary.Clear();
-            char[] separator = "/|".ToCharArray();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetNamesDictionaryPath(), true))
+            var separator = "/|".ToCharArray();
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetNamesDictionaryPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
-                    string[] array = text.Split(new char[]
-                    {
-                        '='
-                    });
+                    var array = text.Split('=');
                     if (array.Length == 2 && !onlyNameDictionary.ContainsKey(array[0]))
                     {
                         onlyNameDictionary.Add(array[0], array[1]);
@@ -1513,15 +1403,12 @@ namespace TranslatorEngine
                     }
                 }
             }
-            using (TextReader textReader2 = new StreamReader(DictionaryConfigurationHelper.GetNamesPhuDictionaryPath(), true))
+            using (var textReader2 = new StreamReader(DictionaryConfigurationHelper.GetNamesPhuDictionaryPath(), true))
             {
                 string text2;
                 while ((text2 = textReader2.ReadLine()) != null)
                 {
-                    string[] array2 = text2.Split(new char[]
-                    {
-                        '='
-                    });
+                    var array2 = text2.Split('=');
                     if (array2.Length == 2 && !onlyNamePhuDictionary.ContainsKey(array2[0]))
                     {
                         if (onlyNameDictionary.ContainsKey(array2[0]))
@@ -1540,36 +1427,35 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x06000105 RID: 261 RVA: 0x00009A10 File Offset: 0x00008A10
-        private static void VietPhraseDictionaryToVietPhraseOneMeaningDictionary()
+        static void VietPhraseDictionaryToVietPhraseOneMeaningDictionary()
         {
             vietPhraseOneMeaningDictionary.Clear();
-            foreach (KeyValuePair<string, string> keyValuePair in vietPhraseDictionary)
+            foreach (var keyValuePair in vietPhraseDictionary)
             {
-                vietPhraseOneMeaningDictionary.Add(keyValuePair.Key, (keyValuePair.Value.Contains("/") || keyValuePair.Value.Contains("|")) ? keyValuePair.Value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0] : keyValuePair.Value);
+                vietPhraseOneMeaningDictionary.Add(
+                    keyValuePair.Key,
+                    keyValuePair.Value.Contains("/") || keyValuePair.Value.Contains("|")
+                        ? keyValuePair.Value.Split('/', '|')[0]
+                        : keyValuePair.Value
+                );
             }
         }
 
-        // Token: 0x06000106 RID: 262 RVA: 0x00009AC8 File Offset: 0x00008AC8
-        private static void PronounDictionaryToPronounOneMeaningDictionary()
+        static void PronounDictionaryToPronounOneMeaningDictionary()
         {
             pronounOneMeaningDictionary.Clear();
-            foreach (KeyValuePair<string, string> keyValuePair in pronounDictionary)
+            foreach (var keyValuePair in pronounDictionary)
             {
-                pronounOneMeaningDictionary.Add(keyValuePair.Key, (keyValuePair.Value.Contains("/") || keyValuePair.Value.Contains("|")) ? keyValuePair.Value.Split(new char[]
-                {
-                    '/',
-                    '|'
-                })[0] : keyValuePair.Value);
+                pronounOneMeaningDictionary.Add(
+                    keyValuePair.Key,
+                    keyValuePair.Value.Contains("/") || keyValuePair.Value.Contains("|")
+                        ? keyValuePair.Value.Split('/', '|')[0]
+                        : keyValuePair.Value
+                );
             }
         }
 
-        // Token: 0x06000107 RID: 263 RVA: 0x00009B80 File Offset: 0x00008B80
-        private static void LoadNhanByDictionary()
+        static void LoadNhanByDictionary()
         {
             if (DictionaryConfigurationHelper.IsNhanByPronouns)
             {
@@ -1579,11 +1465,11 @@ namespace TranslatorEngine
             if (DictionaryConfigurationHelper.IsNhanByPronounsAndNames)
             {
                 nhanByDictionary = new Dictionary<string, string>(pronounDictionary);
-                using (Dictionary<string, string>.Enumerator enumerator = onlyNameDictionary.GetEnumerator())
+                using (var enumerator = onlyNameDictionary.GetEnumerator())
                 {
                     while (enumerator.MoveNext())
                     {
-                        KeyValuePair<string, string> keyValuePair = enumerator.Current;
+                        var keyValuePair = enumerator.Current;
                         if (!nhanByDictionary.ContainsKey(keyValuePair.Key))
                         {
                             nhanByDictionary.Add(keyValuePair.Key, keyValuePair.Value);
@@ -1595,11 +1481,11 @@ namespace TranslatorEngine
             if (DictionaryConfigurationHelper.IsNhanByPronounsAndNamesAndVietPhrase)
             {
                 nhanByDictionary = new Dictionary<string, string>(pronounDictionary);
-                using (Dictionary<string, string>.Enumerator enumerator2 = vietPhraseDictionary.GetEnumerator())
+                using (var enumerator2 = vietPhraseDictionary.GetEnumerator())
                 {
                     while (enumerator2.MoveNext())
                     {
-                        KeyValuePair<string, string> keyValuePair2 = enumerator2.Current;
+                        var keyValuePair2 = enumerator2.Current;
                         if (!nhanByDictionary.ContainsKey(keyValuePair2.Key))
                         {
                             nhanByDictionary.Add(keyValuePair2.Key, keyValuePair2.Value);
@@ -1611,8 +1497,7 @@ namespace TranslatorEngine
             nhanByDictionary = null;
         }
 
-        // Token: 0x06000108 RID: 264 RVA: 0x00009CA4 File Offset: 0x00008CA4
-        private static void LoadNhanByOneMeaningDictionary()
+        static void LoadNhanByOneMeaningDictionary()
         {
             if (DictionaryConfigurationHelper.IsNhanByPronouns)
             {
@@ -1622,11 +1507,11 @@ namespace TranslatorEngine
             if (DictionaryConfigurationHelper.IsNhanByPronounsAndNames)
             {
                 nhanByOneMeaningDictionary = new Dictionary<string, string>(pronounOneMeaningDictionary);
-                using (Dictionary<string, string>.Enumerator enumerator = onlyNameOneMeaningDictionary.GetEnumerator())
+                using (var enumerator = onlyNameOneMeaningDictionary.GetEnumerator())
                 {
                     while (enumerator.MoveNext())
                     {
-                        KeyValuePair<string, string> keyValuePair = enumerator.Current;
+                        var keyValuePair = enumerator.Current;
                         if (!nhanByOneMeaningDictionary.ContainsKey(keyValuePair.Key))
                         {
                             nhanByOneMeaningDictionary.Add(keyValuePair.Key, keyValuePair.Value);
@@ -1638,11 +1523,11 @@ namespace TranslatorEngine
             if (DictionaryConfigurationHelper.IsNhanByPronounsAndNamesAndVietPhrase)
             {
                 nhanByOneMeaningDictionary = new Dictionary<string, string>(pronounOneMeaningDictionary);
-                using (Dictionary<string, string>.Enumerator enumerator2 = vietPhraseOneMeaningDictionary.GetEnumerator())
+                using (var enumerator2 = vietPhraseOneMeaningDictionary.GetEnumerator())
                 {
                     while (enumerator2.MoveNext())
                     {
-                        KeyValuePair<string, string> keyValuePair2 = enumerator2.Current;
+                        var keyValuePair2 = enumerator2.Current;
                         if (!nhanByOneMeaningDictionary.ContainsKey(keyValuePair2.Key))
                         {
                             nhanByOneMeaningDictionary.Add(keyValuePair2.Key, keyValuePair2.Value);
@@ -1654,25 +1539,18 @@ namespace TranslatorEngine
             nhanByOneMeaningDictionary = null;
         }
 
-        // Token: 0x06000109 RID: 265 RVA: 0x00009DC8 File Offset: 0x00008DC8
-        private static void LoadThieuChuuDictionaryWithNewThread(object stateInfo)
-        {
-            LoadThieuChuuDictionary();
-        }
+        static void LoadThieuChuuDictionaryWithNewThread(object stateInfo)
+            => LoadThieuChuuDictionary();
 
-        // Token: 0x0600010A RID: 266 RVA: 0x00009DD0 File Offset: 0x00008DD0
-        private static void LoadThieuChuuDictionary()
+        static void LoadThieuChuuDictionary()
         {
             thieuChuuDictionary.Clear();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetThieuChuuDictionaryPath(), true))
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetThieuChuuDictionaryPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
-                    string[] array = text.Split(new char[]
-                    {
-                        '='
-                    });
+                    var array = text.Split('=');
                     if (array.Length == 2 && !thieuChuuDictionary.ContainsKey(array[0]))
                     {
                         thieuChuuDictionary.Add(array[0], array[1]);
@@ -1681,25 +1559,18 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x0600010B RID: 267 RVA: 0x00009E54 File Offset: 0x00008E54
-        private static void LoadLacVietDictionaryWithNewThread(object stateInfo)
-        {
-            LoadLacVietDictionary();
-        }
+        static void LoadLacVietDictionaryWithNewThread(object stateInfo)
+            => LoadLacVietDictionary();
 
-        // Token: 0x0600010C RID: 268 RVA: 0x00009E5C File Offset: 0x00008E5C
-        private static void LoadLacVietDictionary()
+        static void LoadLacVietDictionary()
         {
             lacVietDictionary.Clear();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetLacVietDictionaryPath(), true))
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetLacVietDictionaryPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
-                    string[] array = text.Split(new char[]
-                    {
-                        '='
-                    });
+                    var array = text.Split('=');
                     if (array.Length == 2 && !lacVietDictionary.ContainsKey(array[0]))
                     {
                         lacVietDictionary.Add(array[0], array[1]);
@@ -1708,84 +1579,57 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x0600010D RID: 269 RVA: 0x00009EE0 File Offset: 0x00008EE0
-        private static void LoadCedictDictionaryWithNewThread(object stateInfo)
-        {
-            LoadCedictDictionary();
-        }
+        static void LoadCedictDictionaryWithNewThread(object stateInfo)
+            => LoadCedictDictionary();
 
-        // Token: 0x0600010E RID: 270 RVA: 0x00009EE7 File Offset: 0x00008EE7
-        private static void LoadChinesePhienAmEnglishDictionaryWithNewThread(object stateInfo)
-        {
-            LoadChinesePhienAmEnglishDictionary();
-        }
+        static void LoadChinesePhienAmEnglishDictionaryWithNewThread(object stateInfo)
+            => LoadChinesePhienAmEnglishDictionary();
 
-        // Token: 0x0600010F RID: 271 RVA: 0x00009EEE File Offset: 0x00008EEE
-        private static void LoadPronounDictionaryWithNewThread(object stateInfo)
+        static void LoadPronounDictionaryWithNewThread(object stateInfo)
         {
             LoadPronounDictionary();
             ((ManualResetEvent)stateInfo).Set();
         }
 
-        // Token: 0x06000110 RID: 272 RVA: 0x00009F01 File Offset: 0x00008F01
-        private static void LoadIgnoredChinesePhraseListsWithNewThread(object stateInfo)
-        {
-            LoadIgnoredChinesePhraseLists();
-        }
+        static void LoadIgnoredChinesePhraseListsWithNewThread(object stateInfo)
+            => LoadIgnoredChinesePhraseLists();
 
-        // Token: 0x06000111 RID: 273 RVA: 0x00009F08 File Offset: 0x00008F08
-        private static void LoadOnlyVietPhraseDictionaryHistoryWithNewThread(object stateInfo)
-        {
-            LoadOnlyVietPhraseDictionaryHistory();
-        }
+        static void LoadOnlyVietPhraseDictionaryHistoryWithNewThread(object stateInfo)
+            => LoadOnlyVietPhraseDictionaryHistory();
 
-        // Token: 0x06000112 RID: 274 RVA: 0x00009F0F File Offset: 0x00008F0F
-        private static void LoadOnlyNameDictionaryHistoryWithNewThread(object stateInfo)
-        {
-            LoadOnlyNameDictionaryHistory();
-        }
+        static void LoadOnlyNameDictionaryHistoryWithNewThread(object stateInfo)
+            => LoadOnlyNameDictionaryHistory();
 
-        // Token: 0x06000113 RID: 275 RVA: 0x00009F16 File Offset: 0x00008F16
-        private static void LoadOnlyNamePhuDictionaryHistoryWithNewThread(object stateInfo)
-        {
-            LoadOnlyNamePhuDictionaryHistory();
-        }
+        static void LoadOnlyNamePhuDictionaryHistoryWithNewThread(object stateInfo)
+            => LoadOnlyNamePhuDictionaryHistory();
 
-        // Token: 0x06000114 RID: 276 RVA: 0x00009F1D File Offset: 0x00008F1D
-        private static void LoadHanVietDictionaryHistoryWithNewThread(object stateInfo)
-        {
-            LoadHanVietDictionaryHistory();
-        }
+        static void LoadHanVietDictionaryHistoryWithNewThread(object stateInfo)
+            => LoadHanVietDictionaryHistory();
 
-        // Token: 0x06000115 RID: 277 RVA: 0x00009F24 File Offset: 0x00008F24
-        private static void LoadOnlyVietPhraseDictionaryHistory()
+        static void LoadOnlyVietPhraseDictionaryHistory()
         {
             LoadDictionaryHistory(DictionaryConfigurationHelper.GetVietPhraseDictionaryHistoryPath(), ref onlyVietPhraseDictionaryHistoryDataSet);
         }
 
-        // Token: 0x06000116 RID: 278 RVA: 0x00009F35 File Offset: 0x00008F35
-        private static void LoadOnlyNameDictionaryHistory()
+        static void LoadOnlyNameDictionaryHistory()
         {
             LoadDictionaryHistory(DictionaryConfigurationHelper.GetNamesDictionaryHistoryPath(), ref onlyNameDictionaryHistoryDataSet);
         }
 
-        // Token: 0x06000117 RID: 279 RVA: 0x00009F46 File Offset: 0x00008F46
-        private static void LoadOnlyNamePhuDictionaryHistory()
+        static void LoadOnlyNamePhuDictionaryHistory()
         {
             LoadDictionaryHistory(DictionaryConfigurationHelper.GetNamesPhuDictionaryHistoryPath(), ref onlyNamePhuDictionaryHistoryDataSet);
         }
 
-        // Token: 0x06000118 RID: 280 RVA: 0x00009F57 File Offset: 0x00008F57
-        private static void LoadHanVietDictionaryHistory()
+        static void LoadHanVietDictionaryHistory()
         {
             LoadDictionaryHistory(DictionaryConfigurationHelper.GetChinesePhienAmWordsDictionaryHistoryPath(), ref hanVietDictionaryHistoryDataSet);
         }
 
-        // Token: 0x06000119 RID: 281 RVA: 0x00009F68 File Offset: 0x00008F68
         public static void LoadDictionaryHistory(string dictionaryHistoryPath, ref DataSet dictionaryHistoryDataSet)
         {
             dictionaryHistoryDataSet.Clear();
-            string name = "DictionaryHistory";
+            var name = "DictionaryHistory";
             if (!dictionaryHistoryDataSet.Tables.Contains(name))
             {
                 dictionaryHistoryDataSet.Tables.Add(name);
@@ -1793,8 +1637,7 @@ namespace TranslatorEngine
                 dictionaryHistoryDataSet.Tables[name].Columns.Add("Action", Type.GetType("System.String"));
                 dictionaryHistoryDataSet.Tables[name].Columns.Add("User Name", Type.GetType("System.String"));
                 dictionaryHistoryDataSet.Tables[name].Columns.Add("Updated Date", Type.GetType("System.DateTime"));
-                dictionaryHistoryDataSet.Tables[name].PrimaryKey = new DataColumn[]
-                {
+                dictionaryHistoryDataSet.Tables[name].PrimaryKey = new DataColumn[] {
                     dictionaryHistoryDataSet.Tables[name].Columns["Entry"]
                 };
             }
@@ -1802,24 +1645,20 @@ namespace TranslatorEngine
             {
                 return;
             }
-            string name2 = CharsetDetector.DetectChineseCharset(dictionaryHistoryPath);
-            using (TextReader textReader = new StreamReader(dictionaryHistoryPath, Encoding.GetEncoding(name2)))
+            var name2 = CharsetDetector.DetectChineseCharset(dictionaryHistoryPath);
+            using (var textReader = new StreamReader(dictionaryHistoryPath, Encoding.GetEncoding(name2)))
             {
                 textReader.ReadLine();
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
-                    string[] array = text.Split(new char[]
-                    {
-                        '\t'
-                    });
+                    var array = text.Split('\t');
                     if (array.Length == 4)
                     {
-                        DataRow dataRow = dictionaryHistoryDataSet.Tables[name].Rows.Find(array[0]);
+                        var dataRow = dictionaryHistoryDataSet.Tables[name].Rows.Find(array[0]);
                         if (dataRow == null)
                         {
-                            dictionaryHistoryDataSet.Tables[name].Rows.Add(new object[]
-                            {
+                            dictionaryHistoryDataSet.Tables[name].Rows.Add(new object[] {
                                 array[0],
                                 array[1],
                                 array[2],
@@ -1837,22 +1676,18 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x0600011A RID: 282 RVA: 0x0000A198 File Offset: 0x00009198
-        private static void LoadCedictDictionary()
+        static void LoadCedictDictionary()
         {
             cedictDictionary.Clear();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetCEDictDictionaryPath(), Encoding.UTF8))
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetCEDictDictionaryPath(), Encoding.UTF8))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
                     if (!text.StartsWith("#"))
                     {
-                        string text2 = text.Substring(0, text.IndexOf(" ["));
-                        foreach (string key in text2.Split(new char[]
-                        {
-                            ' '
-                        }))
+                        var text2 = text.Substring(0, text.IndexOf(" ["));
+                        foreach (string key in text2.Split(' '))
                         {
                             if (!cedictDictionary.ContainsKey(key))
                             {
@@ -1862,15 +1697,12 @@ namespace TranslatorEngine
                     }
                 }
             }
-            using (TextReader textReader2 = new StreamReader(DictionaryConfigurationHelper.GetBabylonDictionaryPath(), Encoding.UTF8))
+            using (var textReader2 = new StreamReader(DictionaryConfigurationHelper.GetBabylonDictionaryPath(), Encoding.UTF8))
             {
                 string text3;
                 while ((text3 = textReader2.ReadLine()) != null)
                 {
-                    string[] array2 = text3.Split(new char[]
-                    {
-                        '='
-                    });
+                    var array2 = text3.Split('=');
                     if (!cedictDictionary.ContainsKey(array2[0]))
                     {
                         cedictDictionary.Add(array2[0], array2[1]);
@@ -1879,19 +1711,15 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x0600011B RID: 283 RVA: 0x0000A2D8 File Offset: 0x000092D8
-        private static void LoadChinesePhienAmEnglishDictionary()
+        static void LoadChinesePhienAmEnglishDictionary()
         {
             chinesePhienAmEnglishDictionary.Clear();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetChinesePhienAmEnglishWordsDictionaryPath(), true))
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetChinesePhienAmEnglishWordsDictionaryPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
-                    string[] array = text.Split(new char[]
-                    {
-                        '='
-                    });
+                    var array = text.Split('=');
                     if (array.Length == 2 && !chinesePhienAmEnglishDictionary.ContainsKey(array[0]))
                     {
                         chinesePhienAmEnglishDictionary.Add(array[0], array[1]);
@@ -1900,19 +1728,15 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x0600011C RID: 284 RVA: 0x0000A35C File Offset: 0x0000935C
-        private static void LoadPronounDictionary()
+        static void LoadPronounDictionary()
         {
             pronounDictionary.Clear();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetPronounsDictionaryPath(), true))
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetPronounsDictionaryPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
-                    string[] array = text.Split(new char[]
-                    {
-                        '='
-                    });
+                    var array = text.Split('=');
                     if (array.Length == 2 && !pronounDictionary.ContainsKey(array[0]))
                     {
                         pronounDictionary.Add(array[0], array[1]);
@@ -1921,7 +1745,6 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x0600011D RID: 285 RVA: 0x0000A3E0 File Offset: 0x000093E0
         public static void AddIgnoredChinesePhrase(string ignoredChinesePhrase)
         {
             if (ignoredChinesePhraseList.Contains(ignoredChinesePhrase))
@@ -1933,31 +1756,28 @@ namespace TranslatorEngine
             {
                 File.WriteAllLines(DictionaryConfigurationHelper.GetIgnoredChinesePhraseListPath(), ignoredChinesePhraseList.ToArray(), Encoding.UTF8);
             }
-            catch
-            {
-            }
+            catch { }
             LoadIgnoredChinesePhraseLists();
         }
 
-        // Token: 0x0600011E RID: 286 RVA: 0x0000A43C File Offset: 0x0000943C
-        private static void LoadIgnoredChinesePhraseLists()
+        static void LoadIgnoredChinesePhraseLists()
         {
             ignoredChinesePhraseList.Clear();
             ignoredChinesePhraseForBrowserList.Clear();
-            char[] trimChars = "\t\n".ToCharArray();
-            using (TextReader textReader = new StreamReader(DictionaryConfigurationHelper.GetIgnoredChinesePhraseListPath(), true))
+            var trimChars = "\t\n".ToCharArray();
+            using (var textReader = new StreamReader(DictionaryConfigurationHelper.GetIgnoredChinesePhraseListPath(), true))
             {
                 string text;
                 while ((text = textReader.ReadLine()) != null)
                 {
                     if (!string.IsNullOrEmpty(text))
                     {
-                        string text2 = StandardizeInputWithoutRemovingIgnoredChinesePhrases(text).Trim(trimChars);
+                        var text2 = StandardizeInputWithoutRemovingIgnoredChinesePhrases(text).Trim(trimChars);
                         if (!string.IsNullOrEmpty(text2) && !ignoredChinesePhraseList.Contains(text2))
                         {
                             ignoredChinesePhraseList.Add(text2);
                         }
-                        string text3 = StandardizeInputForBrowserWithoutRemovingIgnoredChinesePhrases(text).Trim(trimChars);
+                        var text3 = StandardizeInputForBrowserWithoutRemovingIgnoredChinesePhrases(text).Trim(trimChars);
                         if (!string.IsNullOrEmpty(text3) && !ignoredChinesePhraseForBrowserList.Contains(text3))
                         {
                             ignoredChinesePhraseForBrowserList.Add(text3);
@@ -1969,8 +1789,7 @@ namespace TranslatorEngine
             ignoredChinesePhraseForBrowserList.Sort(new Comparison<string>(CompareStringByDescending));
         }
 
-        // Token: 0x0600011F RID: 287 RVA: 0x0000A530 File Offset: 0x00009530
-        private static int CompareStringByDescending(string x, string y)
+        static int CompareStringByDescending(string x, string y)
         {
             if (x == null)
             {
@@ -1995,23 +1814,20 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x06000120 RID: 288 RVA: 0x0000A574 File Offset: 0x00009574
         public static string StandardizeInput(string original)
         {
             string standardizedChinese = StandardizeInputWithoutRemovingIgnoredChinesePhrases(original);
             return RemoveIgnoredChinesePhrases(standardizedChinese);
         }
 
-        // Token: 0x06000121 RID: 289 RVA: 0x0000A590 File Offset: 0x00009590
-        private static string StandardizeInputWithoutRemovingIgnoredChinesePhrases(string original)
+        static string StandardizeInputWithoutRemovingIgnoredChinesePhrases(string original)
         {
-            if (string.IsNullOrEmpty(original) || string.IsNullOrEmpty(original))
+            if (string.IsNullOrEmpty(original))
             {
                 return "";
             }
-            string text = ToSimplified(original);
-            string[] array = new string[]
-            {
+            var text = ToSimplified(original);
+            var array = new[] {
                 "，",
                 "。",
                 "：",
@@ -2029,8 +1845,7 @@ namespace TranslatorEngine
                 "…",
                 NULL_STRING
             };
-            string[] array2 = new string[]
-            {
+            var array2 = new[] {
                 ", ",
                 ".",
                 ": ",
@@ -2052,19 +1867,33 @@ namespace TranslatorEngine
             {
                 text = text.Replace(array[i], array2[i]);
             }
-            text = text.Replace("  ", " ").Replace(" \r\n", "\n").Replace(" \n", "\n").Replace(" ,", ",");
+            text = text
+                .Replace("  ", " ")
+                .Replace(" \r\n", "\n")
+                .Replace(" \n", "\n")
+                .Replace(" ,", ",");
             text = ToNarrow(text);
             int length = text.Length;
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             for (int j = 0; j < length - 1; j++)
             {
-                char c = text[j];
-                char c2 = text[j + 1];
+                var c = text[j];
+                var c2 = text[j + 1];
                 if (!char.IsControl(c) || c == '\t' || c == '\n' || c == '\r')
                 {
                     if (IsChineseInternal(c))
                     {
-                        if (!IsChineseInternal(c2) && c2 != ',' && c2 != '.' && c2 != ':' && c2 != ';' && c2 != '"' && c2 != '\'' && c2 != '?' && c2 != ' ' && c2 != '!' && c2 != ')')
+                        if (!IsChineseInternal(c2)
+                            && c2 != ','
+                            && c2 != '.'
+                            && c2 != ':'
+                            && c2 != ';'
+                            && c2 != '"'
+                            && c2 != '\''
+                            && c2 != '?'
+                            && c2 != ' '
+                            && c2 != '!'
+                            && c2 != ')')
                         {
                             stringBuilder.Append(c).Append(" ");
                         }
@@ -2103,23 +1932,20 @@ namespace TranslatorEngine
             return text.Replace(". . . . . .", "...");
         }
 
-        // Token: 0x06000122 RID: 290 RVA: 0x0000A908 File Offset: 0x00009908
         public static string StandardizeInputForBrowser(string original)
         {
             string standardizedChinese = StandardizeInputForBrowserWithoutRemovingIgnoredChinesePhrases(original);
             return RemoveIgnoredChinesePhrasesForBrowser(standardizedChinese);
         }
 
-        // Token: 0x06000123 RID: 291 RVA: 0x0000A924 File Offset: 0x00009924
-        private static string StandardizeInputForBrowserWithoutRemovingIgnoredChinesePhrases(string original)
+        static string StandardizeInputForBrowserWithoutRemovingIgnoredChinesePhrases(string original)
         {
-            if (string.IsNullOrEmpty(original) || string.IsNullOrEmpty(original))
+            if (string.IsNullOrEmpty(original))
             {
                 return "";
             }
-            string text = ToSimplified(original);
-            string[] array = new string[]
-            {
+            var text = ToSimplified(original);
+            var array = new[] {
                 "，",
                 "。",
                 "：",
@@ -2137,8 +1963,7 @@ namespace TranslatorEngine
                 "…",
                 NULL_STRING
             };
-            string[] array2 = new string[]
-            {
+            var array2 = new[] {
                 ", ",
                 ".",
                 ": ",
@@ -2163,14 +1988,23 @@ namespace TranslatorEngine
             text = text.Replace("  ", " ").Replace(" \r\n", "\n").Replace(" \n", "\n");
             text = ToNarrow(text);
             int length = text.Length;
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             for (int j = 0; j < length - 1; j++)
             {
                 char c = text[j];
                 char c2 = text[j + 1];
                 if (IsChineseInternal(c))
                 {
-                    if (!IsChineseInternal(c2) && c2 != ',' && c2 != '.' && c2 != ':' && c2 != ';' && c2 != '"' && c2 != '\'' && c2 != '?' && c2 != ' ' && c2 != '!')
+                    if (!IsChineseInternal(c2)
+                        && c2 != ','
+                        && c2 != '.'
+                        && c2 != ':'
+                        && c2 != ';'
+                        && c2 != '"'
+                        && c2 != '\''
+                        && c2 != '?'
+                        && c2 != ' '
+                        && c2 != '!')
                     {
                         stringBuilder.Append(c).Append(" ");
                     }
@@ -2196,23 +2030,21 @@ namespace TranslatorEngine
             return IndentAllLines(stringBuilder.ToString());
         }
 
-        // Token: 0x06000124 RID: 292 RVA: 0x0000AC04 File Offset: 0x00009C04
         public static string StandardizeInputForProxy(string original)
         {
-            string standardizedChinese = StandardizeInputForProxyWithoutRemovingIgnoredChinesePhrases(original);
-            return RemoveIgnoredChinesePhrasesForBrowser(standardizedChinese);
+            return RemoveIgnoredChinesePhrasesForBrowser(
+                StandardizeInputForProxyWithoutRemovingIgnoredChinesePhrases(original)
+            );
         }
 
-        // Token: 0x06000125 RID: 293 RVA: 0x0000AC20 File Offset: 0x00009C20
-        private static string StandardizeInputForProxyWithoutRemovingIgnoredChinesePhrases(string original)
+        static string StandardizeInputForProxyWithoutRemovingIgnoredChinesePhrases(string original)
         {
-            if (string.IsNullOrEmpty(original) || string.IsNullOrEmpty(original))
+            if (string.IsNullOrEmpty(original))
             {
                 return "";
             }
-            string text = ToSimplified(original);
-            string[] array = new string[]
-            {
+            var text = ToSimplified(original);
+            var array = new[] {
                 "，",
                 "。",
                 "：",
@@ -2230,7 +2062,7 @@ namespace TranslatorEngine
                 "…",
                 NULL_STRING
             };
-            string[] array2 = new string[]
+            var array2 = new[]
             {
                 ", ",
                 ".",
@@ -2256,14 +2088,22 @@ namespace TranslatorEngine
             text = text.Replace("  ", " ").Replace(" \r\n", "\n").Replace(" \n", "\n");
             text = ToNarrow(text);
             int length = text.Length;
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             for (int j = 0; j < length - 1; j++)
             {
-                char c = text[j];
-                char c2 = text[j + 1];
+                var c = text[j];
+                var c2 = text[j + 1];
                 if (IsChineseInternal(c))
                 {
-                    if (!IsChineseInternal(c2) && c2 != ',' && c2 != '.' && c2 != ':' && c2 != ';' && c2 != '"' && c2 != '\'' && c2 != '?' && c2 != ' ' && c2 != '!')
+                    if (!IsChineseInternal(c2) && c2 != ','
+                        && c2 != '.'
+                        && c2 != ':'
+                        && c2 != ';'
+                        && c2 != '"'
+                        && c2 != '\''
+                        && c2 != '?'
+                        && c2 != ' '
+                        && c2 != '!')
                     {
                         stringBuilder.Append(c).Append(" ");
                     }
@@ -2289,15 +2129,11 @@ namespace TranslatorEngine
             return text;
         }
 
-        // Token: 0x06000126 RID: 294 RVA: 0x0000AEF4 File Offset: 0x00009EF4
-        private static string IndentAllLines(string text, bool insertBlankLine)
+        static string IndentAllLines(string text, bool insertBlankLine)
         {
-            string[] array = text.Split(new char[]
-            {
-                '\n'
-            }, StringSplitOptions.RemoveEmptyEntries);
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (string text2 in array)
+            var array = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var stringBuilder = new StringBuilder();
+            foreach (var text2 in array)
             {
                 if (!string.IsNullOrEmpty(text2.Trim()))
                 {
@@ -2307,28 +2143,15 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x06000127 RID: 295 RVA: 0x0000AF80 File Offset: 0x00009F80
-        private static string IndentAllLines(string text)
-        {
-            return IndentAllLines(text, false);
-        }
+        static string IndentAllLines(string text) => IndentAllLines(text, false);
 
-        // Token: 0x06000128 RID: 296 RVA: 0x0000AF89 File Offset: 0x00009F89
-        private static bool IsChineseInternal(char character)
-        {
-            return hanVietDictionary.ContainsKey(character.ToString());
-        }
+        static bool IsChineseInternal(char character) => hanVietDictionary.ContainsKey(character.ToString());
 
-        // Token: 0x06000129 RID: 297 RVA: 0x0000AF9C File Offset: 0x00009F9C
-        public static bool IsChinese(char character)
-        {
-            return IsChineseInternal(character);
-        }
+        public static bool IsChinese(char character) => IsChineseInternal(character);
 
-        // Token: 0x0600012A RID: 298 RVA: 0x0000AFA4 File Offset: 0x00009FA4
         public static bool IsAllChinese(string text)
         {
-            foreach (char character in text)
+            foreach (var character in text)
             {
                 if (!IsChineseInternal(character))
                 {
@@ -2338,23 +2161,10 @@ namespace TranslatorEngine
             return true;
         }
 
-        // Token: 0x0600012B RID: 299 RVA: 0x0000AFDC File Offset: 0x00009FDC
-        private static bool HasOnlyOneMeaning(string meaning)
-        {
-            return meaning.Split(new char[]
-            {
-                '/',
-                '|'
-            }).Length == 1;
-        }
+        static bool HasOnlyOneMeaning(string meaning) => meaning.Split('/', '|').Length == 1;
 
-        // Token: 0x0600012C RID: 300 RVA: 0x0000B006 File Offset: 0x0000A006
-        internal static string ToSimplified(string str)
-        {
-            return Strings.StrConv(str, VbStrConv.SimplifiedChinese, 0);
-        }
+        internal static string ToSimplified(string str) => Strings.StrConv(str, VbStrConv.SimplifiedChinese, 0);
 
-        // Token: 0x0600012D RID: 301 RVA: 0x0000B014 File Offset: 0x0000A014
         internal static string ToWide(string str)
         {
             int length = str.Length;
@@ -2371,7 +2181,7 @@ namespace TranslatorEngine
             {
                 return str;
             }
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             for (i = 0; i < length; i++)
             {
                 char c = str[i];
@@ -2387,7 +2197,6 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x0600012E RID: 302 RVA: 0x0000B094 File Offset: 0x0000A094
         internal static string ToNarrow(string str)
         {
             int length = str.Length;
@@ -2404,7 +2213,7 @@ namespace TranslatorEngine
             {
                 return str;
             }
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             for (i = 0; i < length; i++)
             {
                 char c = str[i];
@@ -2420,17 +2229,26 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        // Token: 0x0600012F RID: 303 RVA: 0x0000B120 File Offset: 0x0000A120
-        private static void AppendTranslatedWord(StringBuilder result, string translatedText, ref string lastTranslatedWord)
+        static void AppendTranslatedWord(StringBuilder result, string translatedText, ref string lastTranslatedWord)
         {
-            int num = 0;
-            AppendTranslatedWord(result, translatedText, ref lastTranslatedWord, ref num);
+            int _ = 0;
+            AppendTranslatedWord(result, translatedText, ref lastTranslatedWord, ref _);
         }
 
-        // Token: 0x06000130 RID: 304 RVA: 0x0000B13C File Offset: 0x0000A13C
-        private static void AppendTranslatedWord(StringBuilder result, string translatedText, ref string lastTranslatedWord, ref int startIndexOfNextTranslatedText)
+        static void AppendTranslatedWord(StringBuilder result, string translatedText,
+            ref string lastTranslatedWord, ref int startIndexOfNextTranslatedText)
         {
-            if (lastTranslatedWord.EndsWith("\n") || lastTranslatedWord.EndsWith("\t") || lastTranslatedWord.EndsWith(". ") || lastTranslatedWord.EndsWith("\"") || lastTranslatedWord.EndsWith("'") || lastTranslatedWord.EndsWith("? ") || lastTranslatedWord.EndsWith("! ") || lastTranslatedWord.EndsWith(".\" ") || lastTranslatedWord.EndsWith("?\" ") || lastTranslatedWord.EndsWith("!\" ") || lastTranslatedWord.EndsWith(": "))
+            if (lastTranslatedWord.EndsWith("\n")
+                || lastTranslatedWord.EndsWith("\t")
+                || lastTranslatedWord.EndsWith(". ")
+                || lastTranslatedWord.EndsWith("\"")
+                || lastTranslatedWord.EndsWith("'")
+                || lastTranslatedWord.EndsWith("? ")
+                || lastTranslatedWord.EndsWith("! ")
+                || lastTranslatedWord.EndsWith(".\" ")
+                || lastTranslatedWord.EndsWith("?\" ")
+                || lastTranslatedWord.EndsWith("!\" ")
+                || lastTranslatedWord.EndsWith(": "))
             {
                 lastTranslatedWord = ToUpperCase(translatedText);
             }
@@ -2442,7 +2260,13 @@ namespace TranslatorEngine
             {
                 lastTranslatedWord = " " + translatedText;
             }
-            if ((string.IsNullOrEmpty(translatedText) || translatedText[0] == ',' || translatedText[0] == '.' || translatedText[0] == '?' || translatedText[0] == '!') && 0 < result.Length && result[result.Length - 1] == ' ')
+
+            if ((string.IsNullOrEmpty(translatedText)
+                || translatedText[0] == ','
+                || translatedText[0] == '.'
+                || translatedText[0] == '?'
+                || translatedText[0] == '!')
+                && 0 < result.Length && result[result.Length - 1] == ' ')
             {
                 result = result.Remove(result.Length - 1, 1);
                 startIndexOfNextTranslatedText--;
@@ -2450,8 +2274,7 @@ namespace TranslatorEngine
             result.Append(lastTranslatedWord);
         }
 
-        // Token: 0x06000131 RID: 305 RVA: 0x0000B290 File Offset: 0x0000A290
-        private static string ToUpperCase(string text)
+        static string ToUpperCase(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -2464,19 +2287,17 @@ namespace TranslatorEngine
             return char.ToUpper(text[0]) + ((text.Length <= 1) ? "" : text.Substring(1));
         }
 
-        // Token: 0x06000132 RID: 306 RVA: 0x0000B31D File Offset: 0x0000A31D
-        private static bool NextCharIsChinese(string chinese, int currentPhraseEndIndex)
+        static bool NextCharIsChinese(string chinese, int currentPhraseEndIndex)
         {
             return chinese.Length - 1 > currentPhraseEndIndex && IsChineseInternal(chinese[currentPhraseEndIndex + 1]);
         }
 
-        // Token: 0x06000133 RID: 307 RVA: 0x0000B33C File Offset: 0x0000A33C
-        private static string[] ClassifyWordsIntoLatinAndChinese(string inputText)
+        static string[] ClassifyWordsIntoLatinAndChinese(string inputText)
         {
-            List<string> list = new List<string>();
-            StringBuilder stringBuilder = new StringBuilder();
-            bool flag = false;
-            foreach (char c in inputText)
+            var list = new List<string>();
+            var stringBuilder = new StringBuilder();
+            var flag = false;
+            foreach (var c in inputText)
             {
                 if (IsChineseInternal(c))
                 {
@@ -2511,11 +2332,10 @@ namespace TranslatorEngine
             return list.ToArray();
         }
 
-        // Token: 0x06000134 RID: 308 RVA: 0x0000B3EC File Offset: 0x0000A3EC
-        private static string[] ClassifyWordsIntoLatinAndChineseForProxy(string inputText)
+        static string[] ClassifyWordsIntoLatinAndChineseForProxy(string inputText)
         {
-            List<string> list = new List<string>();
-            StringBuilder stringBuilder = new StringBuilder();
+            var list = new List<string>();
+            var stringBuilder = new StringBuilder();
             bool flag = false;
             bool flag2 = false;
             foreach (char c in inputText)
@@ -2572,16 +2392,11 @@ namespace TranslatorEngine
             return list.ToArray();
         }
 
-        // Token: 0x06000135 RID: 309 RVA: 0x0000B501 File Offset: 0x0000A501
-        public static bool IsInVietPhrase(string chinese)
-        {
-            return vietPhraseDictionary.ContainsKey(chinese);
-        }
+        public static bool IsInVietPhrase(string chinese) => vietPhraseDictionary.ContainsKey(chinese);
 
-        // Token: 0x06000136 RID: 310 RVA: 0x0000B510 File Offset: 0x0000A510
         public static string ChineseToHanVietForAnalyzer(string chinese)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             foreach (char c in chinese)
             {
                 if (hanVietDictionary.ContainsKey(c.ToString()))
@@ -2596,14 +2411,14 @@ namespace TranslatorEngine
             return stringBuilder.ToString().Trim();
         }
 
-        // Token: 0x06000137 RID: 311 RVA: 0x0000B597 File Offset: 0x0000A597
-        public static string ChineseToVietPhraseForAnalyzer(string chinese, int translationAlgorithm, bool prioritizedName)
+        public static string ChineseToVietPhraseForAnalyzer(string chinese, int translationAlgorithm,
+            bool prioritizedName)
         {
-            return ChineseToVietPhraseForBrowser(chinese, 11, translationAlgorithm, prioritizedName).Trim(trimCharsForAnalyzer);
+            return ChineseToVietPhraseForBrowser(chinese, 11, translationAlgorithm, prioritizedName)
+                .Trim(trimCharsForAnalyzer);
         }
 
-        // Token: 0x06000138 RID: 312 RVA: 0x0000B5B0 File Offset: 0x0000A5B0
-        private static bool ContainsName(string chinese, int startIndex, int phraseLength)
+        static bool ContainsName(string chinese, int startIndex, int phraseLength)
         {
             if (phraseLength < 2)
             {
@@ -2628,8 +2443,8 @@ namespace TranslatorEngine
             return false;
         }
 
-        // Token: 0x06000139 RID: 313 RVA: 0x0000B620 File Offset: 0x0000A620
-        private static bool IsLongestPhraseInSentence(string chinese, int startIndex, int phraseLength, Dictionary<string, string> dictionary, int translationAlgorithm)
+        static bool IsLongestPhraseInSentence(string chinese, int startIndex, int phraseLength,
+            Dictionary<string, string> dictionary, int translationAlgorithm)
         {
             if (phraseLength < 2)
             {
@@ -2650,43 +2465,22 @@ namespace TranslatorEngine
             return true;
         }
 
-        // Token: 0x0600013A RID: 314 RVA: 0x0000B682 File Offset: 0x0000A682
-        public static int GetVietPhraseDictionaryCount()
-        {
-            return onlyVietPhraseDictionary.Count;
-        }
+        public static int GetVietPhraseDictionaryCount() => onlyVietPhraseDictionary.Count;
 
-        // Token: 0x0600013B RID: 315 RVA: 0x0000B68E File Offset: 0x0000A68E
         public static int GetNameDictionaryCount(bool isNameChinh)
-        {
-            if (!isNameChinh)
-            {
-                return onlyNamePhuDictionary.Count;
-            }
-            return onlyNameChinhDictionary.Count;
-        }
+            => isNameChinh ? onlyNameChinhDictionary.Count : onlyNamePhuDictionary.Count;
 
-        // Token: 0x0600013C RID: 316 RVA: 0x0000B6A8 File Offset: 0x0000A6A8
-        public static int GetPhienAmDictionaryCount()
-        {
-            return hanVietDictionary.Count;
-        }
+        public static int GetPhienAmDictionaryCount() => hanVietDictionary.Count;
 
-        // Token: 0x0600013D RID: 317 RVA: 0x0000B6B4 File Offset: 0x0000A6B4
         public static bool ExistInPhienAmDictionary(string chinese)
-        {
-            return chinese.Length == 1 && hanVietDictionary.ContainsKey(chinese);
-        }
+            => chinese.Length == 1 && hanVietDictionary.ContainsKey(chinese);
 
-        // Token: 0x0600013E RID: 318 RVA: 0x0000B6CC File Offset: 0x0000A6CC
-        private static void UpdateHistoryLogInCache(string key, string action, ref DataSet dictionaryHistoryDataSet)
+        static void UpdateHistoryLogInCache(string key, string action, ref DataSet dictionaryHistoryDataSet)
         {
-            string name = "DictionaryHistory";
-            DataRow dataRow = dictionaryHistoryDataSet.Tables[name].Rows.Find(key);
+            var dataRow = dictionaryHistoryDataSet.Tables["DictionaryHistory"].Rows.Find(key);
             if (dataRow == null)
             {
-                dictionaryHistoryDataSet.Tables[name].Rows.Add(new object[]
-                {
+                dictionaryHistoryDataSet.Tables["DictionaryHistory"].Rows.Add(new object[] {
                     key,
                     action,
                     Environment.GetEnvironmentVariable("USERNAME"),
@@ -2699,96 +2493,80 @@ namespace TranslatorEngine
             dataRow[3] = DateTime.Now;
         }
 
-        // Token: 0x0600013F RID: 319 RVA: 0x0000B768 File Offset: 0x0000A768
-        private static void WriteVietPhraseHistoryLog(string key, string action)
+        static void WriteVietPhraseHistoryLog(string key, string action)
         {
             UpdateHistoryLogInCache(key, action, ref onlyVietPhraseDictionaryHistoryDataSet);
             WriteHistoryLog(key, action, DictionaryConfigurationHelper.GetVietPhraseDictionaryHistoryPath());
         }
 
-        // Token: 0x06000140 RID: 320 RVA: 0x0000B784 File Offset: 0x0000A784
-        private static void WriteNamesHistoryLog(string key, string action, bool isNameChinh)
+        static void WriteNamesHistoryLog(string key, string action, bool isNameChinh)
         {
             DataSet dataSet = isNameChinh ? onlyNameDictionaryHistoryDataSet : onlyNamePhuDictionaryHistoryDataSet;
             UpdateHistoryLogInCache(key, action, ref dataSet);
             WriteHistoryLog(key, action, isNameChinh ? DictionaryConfigurationHelper.GetNamesDictionaryHistoryPath() : DictionaryConfigurationHelper.GetNamesPhuDictionaryHistoryPath());
         }
 
-        // Token: 0x06000141 RID: 321 RVA: 0x0000B7C0 File Offset: 0x0000A7C0
-        private static void WritePhienAmHistoryLog(string key, string action)
+        static void WritePhienAmHistoryLog(string key, string action)
         {
             UpdateHistoryLogInCache(key, action, ref hanVietDictionaryHistoryDataSet);
             WriteHistoryLog(key, action, DictionaryConfigurationHelper.GetChinesePhienAmWordsDictionaryHistoryPath());
         }
 
-        // Token: 0x06000142 RID: 322 RVA: 0x0000B7DA File Offset: 0x0000A7DA
         public static string GetVietPhraseHistoryLogRecord(string key)
-        {
-            return GetDictionaryHistoryLogRecordInCache(key, onlyVietPhraseDictionaryHistoryDataSet);
-        }
+            => GetDictionaryHistoryLogRecordInCache(key, onlyVietPhraseDictionaryHistoryDataSet);
 
-        // Token: 0x06000143 RID: 323 RVA: 0x0000B7E7 File Offset: 0x0000A7E7
         public static string GetNameHistoryLogRecord(string key, bool isNameChinh)
         {
             return GetDictionaryHistoryLogRecordInCache(key, isNameChinh ? onlyNameDictionaryHistoryDataSet : onlyNamePhuDictionaryHistoryDataSet);
         }
 
-        // Token: 0x06000144 RID: 324 RVA: 0x0000B7FE File Offset: 0x0000A7FE
         public static string GetPhienAmHistoryLogRecord(string key)
-        {
-            return GetDictionaryHistoryLogRecordInCache(key, hanVietDictionaryHistoryDataSet);
-        }
+            => GetDictionaryHistoryLogRecordInCache(key, hanVietDictionaryHistoryDataSet);
 
-        // Token: 0x06000145 RID: 325 RVA: 0x0000B80C File Offset: 0x0000A80C
-        private static string GetDictionaryHistoryLogRecordInCache(string key, DataSet dictionaryHistoryDataSet)
+        static string GetDictionaryHistoryLogRecordInCache(string key, DataSet dictionaryHistoryDataSet)
         {
-            string name = "DictionaryHistory";
-            DataRow dataRow = dictionaryHistoryDataSet.Tables[name].Rows.Find(key);
+            var dataRow = dictionaryHistoryDataSet.Tables["DictionaryHistory"].Rows.Find(key);
             if (dataRow == null)
             {
                 return "";
             }
-            return string.Format("Entry này đã được <{0}> bởi <{1}> vào <{2}>.", dataRow[1], dataRow[2], ((DateTime)dataRow[3]).ToString("yyyy-MM-dd HH:mm:ss.fffzzz"));
+            return $"Entry này đã được <{dataRow[1]}> " +
+                $"bởi <{dataRow[2]}> vào <{(DateTime)dataRow[3]:yyyy-MM-dd HH:mm:ss.fffzzz}>.";
         }
 
-        // Token: 0x06000146 RID: 326 RVA: 0x0000B871 File Offset: 0x0000A871
         public static void CompressPhienAmDictionaryHistory()
         {
             CompressDictionaryHistory(hanVietDictionaryHistoryDataSet, DictionaryConfigurationHelper.GetChinesePhienAmWordsDictionaryHistoryPath());
         }
 
-        // Token: 0x06000147 RID: 327 RVA: 0x0000B882 File Offset: 0x0000A882
         public static void CompressOnlyVietPhraseDictionaryHistory()
         {
             CompressDictionaryHistory(onlyVietPhraseDictionaryHistoryDataSet, DictionaryConfigurationHelper.GetVietPhraseDictionaryHistoryPath());
         }
 
-        // Token: 0x06000148 RID: 328 RVA: 0x0000B893 File Offset: 0x0000A893
         public static void CompressOnlyNameDictionaryHistory(bool isNameChinh)
         {
-            CompressDictionaryHistory(isNameChinh ? onlyNameDictionaryHistoryDataSet : onlyNamePhuDictionaryHistoryDataSet, isNameChinh ? DictionaryConfigurationHelper.GetNamesDictionaryHistoryPath() : DictionaryConfigurationHelper.GetNamesPhuDictionaryHistoryPath());
+            CompressDictionaryHistory(
+                isNameChinh ? onlyNameDictionaryHistoryDataSet : onlyNamePhuDictionaryHistoryDataSet,
+                isNameChinh
+                    ? DictionaryConfigurationHelper.GetNamesDictionaryHistoryPath()
+                    : DictionaryConfigurationHelper.GetNamesPhuDictionaryHistoryPath()
+            );
         }
 
-        // Token: 0x06000149 RID: 329 RVA: 0x0000B8B8 File Offset: 0x0000A8B8
-        private static void CompressDictionaryHistory(DataSet dictionaryHistoryDataSet, string dictionaryHistoryFilePath)
+        static void CompressDictionaryHistory(DataSet dictionaryHistoryDataSet, string dictionaryHistoryFilePath)
         {
-            string name = "DictionaryHistory";
-            string text = dictionaryHistoryFilePath + "." + DateTime.Now.Ticks;
-            if (File.Exists(dictionaryHistoryFilePath))
-            {
-                File.Copy(dictionaryHistoryFilePath, text, true);
-            }
-            using (TextWriter textWriter = new StreamWriter(dictionaryHistoryFilePath, false, Encoding.UTF8))
+            var text = dictionaryHistoryFilePath + "." + DateTime.Now.Ticks;
+            Helper.CopyIfSourceExists(dictionaryHistoryFilePath, text, true);
+            using (var textWriter = new StreamWriter(dictionaryHistoryFilePath, false, Encoding.UTF8))
             {
                 try
                 {
                     textWriter.WriteLine("Entry\tAction\tUser Name\tUpdated Date");
-                    DataTable dataTable = dictionaryHistoryDataSet.Tables[name];
-                    foreach (object obj in dataTable.Rows)
+                    var dataTable = dictionaryHistoryDataSet.Tables["DictionaryHistory"];
+                    foreach (DataRow dataRow in dataTable.Rows)
                     {
-                        DataRow dataRow = (DataRow)obj;
-                        textWriter.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}", new object[]
-                        {
+                        textWriter.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}", new[] {
                             dataRow[0],
                             dataRow[1],
                             dataRow[2],
@@ -2802,18 +2580,15 @@ namespace TranslatorEngine
                     {
                         textWriter.Close();
                     }
-                    catch
-                    {
-                    }
+                    catch { }
+
                     if (File.Exists(dictionaryHistoryFilePath))
                     {
                         try
                         {
                             File.Copy(text, dictionaryHistoryFilePath, true);
                         }
-                        catch
-                        {
-                        }
+                        catch { }
                     }
                     throw ex;
                 }
@@ -2824,15 +2599,13 @@ namespace TranslatorEngine
             }
         }
 
-        // Token: 0x0600014A RID: 330 RVA: 0x0000BA44 File Offset: 0x0000AA44
         public static void WriteHistoryLog(string key, string action, string logPath)
         {
             if (!File.Exists(logPath))
             {
                 File.AppendAllText(logPath, "Entry\tAction\tUser Name\tUpdated Date\r\n", Encoding.UTF8);
             }
-            File.AppendAllText(logPath, string.Concat(new string[]
-            {
+            File.AppendAllText(logPath, string.Concat(new[] {
                 key,
                 "\t",
                 action,
@@ -2844,11 +2617,9 @@ namespace TranslatorEngine
             }), Encoding.UTF8);
         }
 
-        // Token: 0x0600014B RID: 331 RVA: 0x0000BACC File Offset: 0x0000AACC
         public static void CreateHistoryLog(string key, string action, ref StringBuilder historyLogs)
         {
-            historyLogs.AppendLine(string.Concat(new string[]
-            {
+            historyLogs.AppendLine(string.Concat(new[] {
                 key,
                 "\t",
                 action,
@@ -2859,7 +2630,6 @@ namespace TranslatorEngine
             }));
         }
 
-        // Token: 0x0600014C RID: 332 RVA: 0x0000BB30 File Offset: 0x0000AB30
         public static void WriteHistoryLog(string historyLogs, string logPath)
         {
             if (!File.Exists(logPath))
@@ -2869,56 +2639,51 @@ namespace TranslatorEngine
             File.AppendAllText(logPath, historyLogs, Encoding.UTF8);
         }
 
-        // Token: 0x0600014D RID: 333 RVA: 0x0000BB58 File Offset: 0x0000AB58
-        private static string RemoveIgnoredChinesePhrases(string standardizedChinese)
+        static string RemoveIgnoredChinesePhrases(string standardizedChinese)
         {
             if (string.IsNullOrEmpty(standardizedChinese))
             {
-                return string.Empty;
+                return "";
             }
-            string text = standardizedChinese;
-            foreach (string oldValue in ignoredChinesePhraseList)
+            var text = standardizedChinese;
+            foreach (var oldValue in ignoredChinesePhraseList)
             {
-                text = text.Replace(oldValue, string.Empty);
+                text = text.Replace(oldValue, "");
             }
-            return text.Replace("\t\n\n", string.Empty);
+            return text.Replace("\t\n\n", "");
         }
 
-        // Token: 0x0600014E RID: 334 RVA: 0x0000BBD0 File Offset: 0x0000ABD0
-        private static string RemoveIgnoredChinesePhrasesForBrowser(string standardizedChinese)
+        static string RemoveIgnoredChinesePhrasesForBrowser(string standardizedChinese)
         {
             if (string.IsNullOrEmpty(standardizedChinese))
             {
-                return string.Empty;
+                return "";
             }
-            string text = standardizedChinese;
-            foreach (string oldValue in ignoredChinesePhraseForBrowserList)
+            var text = standardizedChinese;
+            foreach (var oldValue in ignoredChinesePhraseForBrowserList)
             {
-                text = text.Replace(oldValue, string.Empty);
+                text = text.Replace(oldValue, "");
             }
-            return text.Replace("\t\n\n", string.Empty);
+            return text.Replace("\t\n\n", "");
         }
 
-        // Token: 0x0600014F RID: 335 RVA: 0x0000BC48 File Offset: 0x0000AC48
-        private static int ContainsLuatNhan(string chinese, Dictionary<string, string> dictionary)
-        {
-            return ContainsLuatNhan(chinese, dictionary, out _, out _);
-        }
+        static int ContainsLuatNhan(string chinese, Dictionary<string, string> dictionary)
+            => ContainsLuatNhan(chinese, dictionary, out _, out _);
 
-        // Token: 0x06000150 RID: 336 RVA: 0x0000BC60 File Offset: 0x0000AC60
-        private static int ContainsLuatNhan(string chinese, Dictionary<string, string> dictionary, out string luatNhan, out int matchedLength)
+        static int ContainsLuatNhan(string chinese, Dictionary<string, string> dictionary,
+            out string luatNhan, out int matchedLength)
         {
             int length = chinese.Length;
-            foreach (KeyValuePair<string, string> keyValuePair in luatNhanDictionary)
+            foreach (var keyValuePair in luatNhanDictionary)
             {
                 if (length >= keyValuePair.Key.Length - 2)
                 {
-                    string text = keyValuePair.Key.Replace("{0}", "([^,\\. ?]{1,10})");
-                    Match match = Regex.Match(chinese, text);
+                    var text = keyValuePair.Key.Replace("{0}", "([^,\\. ?]{1,10})");
+                    var match = Regex.Match(chinese, text);
                     int num = 0;
                     while (match.Success)
                     {
-                        string value = match.Groups[1].Value;
+                        var value = match.Groups[1].Value;
                         if (keyValuePair.Key.StartsWith("{0}"))
                         {
                             for (int i = 0; i < value.Length; i++)
@@ -2960,18 +2725,17 @@ namespace TranslatorEngine
                     }
                 }
             }
-            luatNhan = string.Empty;
+            luatNhan = "";
             matchedLength = -1;
             return -1;
         }
 
-        // Token: 0x06000151 RID: 337 RVA: 0x0000BE14 File Offset: 0x0000AE14
-        private static bool MatchesLuatNhan(string chinese, Dictionary<string, string> dictionary)
+        static bool MatchesLuatNhan(string chinese, Dictionary<string, string> dictionary)
         {
-            foreach (KeyValuePair<string, string> keyValuePair in luatNhanDictionary)
+            foreach (var keyValuePair in luatNhanDictionary)
             {
-                string str = keyValuePair.Key.Replace("{0}", "(.+)");
-                Match match = Regex.Match(chinese, "^" + str + "$");
+                var str = keyValuePair.Key.Replace("{0}", "(.+)");
+                var match = Regex.Match(chinese, "^" + str + "$");
                 if (match.Success && dictionary.ContainsKey(match.Groups[1].Value))
                 {
                     return true;
@@ -2980,26 +2744,18 @@ namespace TranslatorEngine
             return false;
         }
 
-        // Token: 0x06000153 RID: 339 RVA: 0x0000BF00 File Offset: 0x0000AF00
         public static string ChineseToLuatNhan(string chinese, Dictionary<string, string> dictionary)
-        {
-            return ChineseToLuatNhan(chinese, dictionary, out _);
-        }
+            => ChineseToLuatNhan(chinese, dictionary, out _);
 
-        // Token: 0x06000154 RID: 340 RVA: 0x0000BF1C File Offset: 0x0000AF1C
         public static string ChineseToLuatNhan(string chinese, Dictionary<string, string> dictionary, out string luatNhan)
         {
-            foreach (KeyValuePair<string, string> keyValuePair in luatNhanDictionary)
+            foreach (var keyValuePair in luatNhanDictionary)
             {
-                string str = keyValuePair.Key.Replace("{0}", "(.+)");
-                Match match = Regex.Match(chinese, "^" + str + "$");
+                var str = keyValuePair.Key.Replace("{0}", "(.+)");
+                var match = Regex.Match(chinese, "^" + str + "$");
                 if (match.Success && dictionary.ContainsKey(match.Groups[1].Value))
                 {
-                    string[] array = dictionary[match.Groups[1].Value].Split(new char[]
-                    {
-                        '/',
-                        '|'
-                    });
+                    string[] array = dictionary[match.Groups[1].Value].Split('/', '|');
                     StringBuilder stringBuilder = new StringBuilder();
                     foreach (string newValue in array)
                     {
@@ -3007,108 +2763,70 @@ namespace TranslatorEngine
                         stringBuilder.Append("/");
                     }
                     luatNhan = keyValuePair.Key;
-                    return stringBuilder.ToString().Trim(new char[]
-                    {
-                        '/'
-                    });
+                    return stringBuilder.ToString().Trim('/');
                 }
             }
             throw new NotImplementedException("Lỗi xử lý luật nhân cho cụm từ: " + chinese);
         }
 
-        // Token: 0x04000090 RID: 144
         public const int CHINESE_LOOKUP_MAX_LENGTH = 20;
 
-        // Token: 0x04000092 RID: 146
-        private static Dictionary<string, string> hanVietDictionary = new Dictionary<string, string>();
+        static Dictionary<string, string> hanVietDictionary = new Dictionary<string, string>();
 
-        // Token: 0x04000093 RID: 147
-        private static readonly Dictionary<string, string> vietPhraseDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> vietPhraseDictionary = new Dictionary<string, string>();
 
-        // Token: 0x04000094 RID: 148
-        private static readonly Dictionary<string, string> thieuChuuDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> thieuChuuDictionary = new Dictionary<string, string>();
 
-        // Token: 0x04000095 RID: 149
-        private static readonly Dictionary<string, string> lacVietDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> lacVietDictionary = new Dictionary<string, string>();
 
-        // Token: 0x04000096 RID: 150
-        private static readonly Dictionary<string, string> cedictDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> cedictDictionary = new Dictionary<string, string>();
 
-        // Token: 0x04000097 RID: 151
-        private static readonly Dictionary<string, string> chinesePhienAmEnglishDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> chinesePhienAmEnglishDictionary = new Dictionary<string, string>();
 
-        // Token: 0x04000098 RID: 152
-        private static readonly Dictionary<string, string> vietPhraseOneMeaningDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> vietPhraseOneMeaningDictionary = new Dictionary<string, string>();
 
-        // Token: 0x04000099 RID: 153
-        private static Dictionary<string, string> onlyVietPhraseDictionary = new Dictionary<string, string>();
+        static Dictionary<string, string> onlyVietPhraseDictionary = new Dictionary<string, string>();
 
-        // Token: 0x0400009A RID: 154
-        private static Dictionary<string, string> onlyNameDictionary = new Dictionary<string, string>();
+        static Dictionary<string, string> onlyNameDictionary = new Dictionary<string, string>();
 
-        // Token: 0x0400009B RID: 155
-        private static Dictionary<string, string> onlyNameOneMeaningDictionary = new Dictionary<string, string>();
+        static Dictionary<string, string> onlyNameOneMeaningDictionary = new Dictionary<string, string>();
 
-        // Token: 0x0400009C RID: 156
-        private static Dictionary<string, string> onlyNameChinhDictionary = new Dictionary<string, string>();
+        static Dictionary<string, string> onlyNameChinhDictionary = new Dictionary<string, string>();
 
-        // Token: 0x0400009D RID: 157
-        private static Dictionary<string, string> onlyNamePhuDictionary = new Dictionary<string, string>();
+        static Dictionary<string, string> onlyNamePhuDictionary = new Dictionary<string, string>();
 
-        // Token: 0x0400009E RID: 158
-        private static readonly Dictionary<string, string> luatNhanDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> luatNhanDictionary = new Dictionary<string, string>();
 
-        // Token: 0x0400009F RID: 159
-        private static readonly Dictionary<string, string> pronounDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> pronounDictionary = new Dictionary<string, string>();
 
-        // Token: 0x040000A0 RID: 160
-        private static readonly Dictionary<string, string> pronounOneMeaningDictionary = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> pronounOneMeaningDictionary = new Dictionary<string, string>();
 
-        // Token: 0x040000A1 RID: 161
-        private static Dictionary<string, string> nhanByDictionary = null;
+        static Dictionary<string, string> nhanByDictionary = null;
 
-        // Token: 0x040000A2 RID: 162
-        private static Dictionary<string, string> nhanByOneMeaningDictionary = null;
+        static Dictionary<string, string> nhanByOneMeaningDictionary = null;
 
-        // Token: 0x040000A3 RID: 163
-        private static DataSet onlyVietPhraseDictionaryHistoryDataSet = new DataSet();
+        static DataSet onlyVietPhraseDictionaryHistoryDataSet = new DataSet();
 
-        // Token: 0x040000A4 RID: 164
-        private static DataSet onlyNameDictionaryHistoryDataSet = new DataSet();
+        static DataSet onlyNameDictionaryHistoryDataSet = new DataSet();
 
-        // Token: 0x040000A5 RID: 165
-        private static DataSet onlyNamePhuDictionaryHistoryDataSet = new DataSet();
+        static DataSet onlyNamePhuDictionaryHistoryDataSet = new DataSet();
 
-        // Token: 0x040000A6 RID: 166
-        private static DataSet hanVietDictionaryHistoryDataSet = new DataSet();
+        static DataSet hanVietDictionaryHistoryDataSet = new DataSet();
 
-        // Token: 0x040000A7 RID: 167
-        private static readonly List<string> ignoredChinesePhraseList = new List<string>();
+        static readonly List<string> ignoredChinesePhraseList = new List<string>();
 
-        // Token: 0x040000A8 RID: 168
-        private static readonly List<string> ignoredChinesePhraseForBrowserList = new List<string>();
+        static readonly List<string> ignoredChinesePhraseForBrowserList = new List<string>();
 
-        // Token: 0x040000A9 RID: 169
-        private static readonly object lockObject = new object();
+        static readonly object lockObject = new object();
 
-        // Token: 0x040000AA RID: 170
-        private static readonly string NULL_STRING = Convert.ToChar(0).ToString();
+        static readonly string NULL_STRING = "\0";
 
-        // Token: 0x040000AB RID: 171
         public static string LastTranslatedWord_HanViet = "";
 
-        // Token: 0x040000AC RID: 172
         public static string LastTranslatedWord_VietPhrase = "";
 
-        // Token: 0x040000AD RID: 173
         public static string LastTranslatedWord_VietPhraseOneMeaning = "";
 
-        // Token: 0x040000AE RID: 174
-        private static readonly char[] trimCharsForAnalyzer = new char[]
-        {
-            ' ',
-            '\n',
-            '\t'
-        };
+        static readonly char[] trimCharsForAnalyzer = new[] { ' ', '\n', '\t', };
     }
 }
