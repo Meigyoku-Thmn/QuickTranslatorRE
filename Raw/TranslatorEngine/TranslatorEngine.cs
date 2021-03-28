@@ -573,15 +573,16 @@ namespace TranslatorEngine
         public static string ChineseToVietPhraseForBrowser(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
         {
             chinese = StandardizeInputForBrowser(chinese);
-            StringBuilder stringBuilder = new StringBuilder();
-            string[] array = ClassifyWordsIntoLatinAndChinese(chinese);
-            foreach (string text in array)
+            var stringBuilder = new StringBuilder();
+            var array = ClassifyWordsIntoLatinAndChinese(chinese);
+            foreach (var text in array)
             {
                 if (!string.IsNullOrEmpty(text))
                 {
                     if (IsChineseInternal(text[0]))
                     {
-                        stringBuilder.Append(ChineseToVietPhrase(text, wrapType, translationAlgorithm, prioritizedName, out _, out _));
+                        stringBuilder.Append(
+                            ChineseToVietPhrase(text, wrapType, translationAlgorithm, prioritizedName, out _, out _));
                     }
                     else
                     {
@@ -884,18 +885,19 @@ namespace TranslatorEngine
         public static string ChineseToVietPhraseOneMeaningForBrowser(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
         {
             chinese = StandardizeInputForBrowser(chinese);
-            StringBuilder stringBuilder = new StringBuilder();
-            string[] array = ClassifyWordsIntoLatinAndChinese(chinese);
+            var stringBuilder = new StringBuilder();
+            var array = ClassifyWordsIntoLatinAndChinese(chinese);
             int num = array.Length;
             for (int i = 0; i < num; i++)
             {
-                string text = array[i];
+                var text = array[i];
                 if (!string.IsNullOrEmpty(text))
                 {
                     string text2;
                     if (IsChineseInternal(text[0]))
                     {
-                        text2 = ChineseToVietPhraseOneMeaning(text, wrapType, translationAlgorithm, prioritizedName, out _, out _).TrimStart(new char[0]);
+                        text2 = ChineseToVietPhraseOneMeaning(text, wrapType, translationAlgorithm, prioritizedName,
+                            out _, out _).TrimStart();
                         if (i == 0 || !array[i - 1].EndsWith(", "))
                         {
                             text2 = ToUpperCase(text2);
@@ -911,11 +913,12 @@ namespace TranslatorEngine
             return stringBuilder.ToString();
         }
 
-        public static string ChineseToVietPhraseOneMeaningForProxy(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
+        public static string ChineseToVietPhraseOneMeaningForProxy(string chinese, int wrapType,
+            int translationAlgorithm, bool prioritizedName)
         {
             chinese = StandardizeInputForProxy(chinese);
             var stringBuilder = new StringBuilder();
-            string[] array = ClassifyWordsIntoLatinAndChineseForProxy(chinese);
+            var array = ClassifyWordsIntoLatinAndChineseForProxy(chinese);
             foreach (string text in array)
             {
                 if (!string.IsNullOrEmpty(text))
@@ -935,8 +938,8 @@ namespace TranslatorEngine
 
         public static string ChineseToVietPhraseOneMeaningForBatch(string chinese, int wrapType, int translationAlgorithm, bool prioritizedName)
         {
-            string text = "";
-            StringBuilder stringBuilder = new StringBuilder();
+            var text = "";
+            var stringBuilder = new StringBuilder();
             int num = chinese.Length - 1;
             int i = 0;
             int num2 = -1;
@@ -944,8 +947,8 @@ namespace TranslatorEngine
             int num4 = -1;
             while (i <= num)
             {
-                bool flag = false;
-                bool flag2 = true;
+                var flag = false;
+                var flag2 = true;
                 if (chinese[i] != '\n' && chinese[i] != '\t')
                 {
                     for (int j = 20; j > 0; j--)
@@ -1067,7 +1070,7 @@ namespace TranslatorEngine
 
         public static string ChineseToNameForBatch(string chinese)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             int num = chinese.Length - 1;
             int i = 0;
             while (i <= num)
@@ -1106,7 +1109,9 @@ namespace TranslatorEngine
             int num = 0;
             for (int i = 20; i > 0; i--)
             {
-                if (chinese.Length >= i && !chinese.Substring(0, i).Contains("\n") && !chinese.Substring(0, i).Contains("\t"))
+                if (chinese.Length >= i
+                    && !chinese.Substring(0, i).Contains("\n")
+                    && !chinese.Substring(0, i).Contains("\t"))
                 {
                     if (ContainsLuatNhan(chinese.Substring(0, i), vietPhraseDictionary) != 0)
                     {
@@ -1115,8 +1120,8 @@ namespace TranslatorEngine
                     if (MatchesLuatNhan(chinese.Substring(0, i), vietPhraseDictionary))
                     {
                         ChineseToLuatNhan(chinese.Substring(0, i), vietPhraseDictionary, out string empty);
-                        string text2 = text;
-                        text = string.Concat(new string[] {
+                        var text2 = text;
+                        text = string.Concat(new[] {
                             text2,
                             empty,
                             " <<Luật Nhân>> ",
@@ -1134,12 +1139,11 @@ namespace TranslatorEngine
             {
                 if (chinese.Length >= j)
                 {
-                    string text3 = chinese.Substring(0, j);
+                    var text3 = chinese.Substring(0, j);
                     if (vietPhraseDictionary.ContainsKey(text3))
                     {
-                        string text4 = text;
-                        text = string.Concat(new string[]
-                        {
+                        var text4 = text;
+                        text = string.Concat(new[] {
                             text4,
                             text3,
                             " <<VietPhrase>> ",
@@ -1157,12 +1161,11 @@ namespace TranslatorEngine
             {
                 if (chinese.Length >= k)
                 {
-                    string text3 = chinese.Substring(0, k);
+                    var text3 = chinese.Substring(0, k);
                     if (lacVietDictionary.ContainsKey(text3))
                     {
-                        string text5 = text;
-                        text = string.Concat(new string[]
-                        {
+                        var text5 = text;
+                        text = string.Concat(new[] {
                             text5,
                             text3,
                             " <<Lạc Việt>>\n",
@@ -1183,9 +1186,8 @@ namespace TranslatorEngine
                     string text3 = chinese.Substring(0, l);
                     if (cedictDictionary.ContainsKey(text3))
                     {
-                        string text6 = text;
-                        text = string.Concat(new string[]
-                        {
+                        var text6 = text;
+                        text = string.Concat(new[] {
                             text6,
                             text3,
                             " <<Cedict or Babylon>> ",
@@ -1202,11 +1204,10 @@ namespace TranslatorEngine
             if (thieuChuuDictionary.ContainsKey(chinese[0].ToString()))
             {
                 num = ((num == 0) ? 1 : num);
-                object obj = text;
-                text = string.Concat(new object[]
-                {
+                var obj = text;
+                text = string.Concat(new[] {
                     obj,
-                    chinese[0],
+                    chinese[0].ToString(),
                     " <<Thiều Chửu>> ",
                     thieuChuuDictionary[chinese[0].ToString()],
                     "\n-----------------\n"

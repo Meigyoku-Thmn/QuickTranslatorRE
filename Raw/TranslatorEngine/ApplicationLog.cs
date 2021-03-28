@@ -4,33 +4,28 @@ using System.Text;
 
 namespace TranslatorEngine
 {
-	// Token: 0x02000002 RID: 2
-	public class ApplicationLog
-	{
-		// Token: 0x06000001 RID: 1 RVA: 0x00002050 File Offset: 0x00001050
-		public static void Log(string applicationPath, string application, Exception exception)
-		{
-			try
-			{
-				string text = Path.Combine(applicationPath, application + ".log");
-				FileInfo fileInfo = new FileInfo(text);
-				if (fileInfo.Exists && 1000000L < fileInfo.Length)
-				{
-					fileInfo.Delete();
-				}
-				string contents = string.Format("{0:G}: {1}\r\n", DateTime.Now, string.Concat(new object[]
-				{
-					exception.Message,
-					"\r\n",
-					exception.GetType(),
-					"\r\n",
-					exception.StackTrace
-				}));
-				File.AppendAllText(text, contents, Encoding.UTF8);
-			}
-			catch
-			{
-			}
-		}
-	}
+    public class ApplicationLog
+    {
+        public static void Log(string applicationPath, string application, Exception exception)
+        {
+            try
+            {
+                var text = Path.Combine(applicationPath, application + ".log");
+                var fileInfo = new FileInfo(text);
+                if (fileInfo.Exists && 1000000L < fileInfo.Length)
+                {
+                    fileInfo.Delete();
+                }
+                var contents = string.Format("{0:G}: {1}\r\n", DateTime.Now, string.Concat(new[] {
+                    exception.Message,
+                    "\r\n",
+                    exception.GetType().ToString(),
+                    "\r\n",
+                    exception.StackTrace
+                }));
+                File.AppendAllText(text, contents, Encoding.UTF8);
+            }
+            catch { }
+        }
+    }
 }
