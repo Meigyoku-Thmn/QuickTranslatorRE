@@ -21,6 +21,7 @@ namespace TranslatorEngine
         public static string DetectChineseCharset(string filePath)
         {
             // case when input file is html with charset=gb2312 meta
+            // TODO: this code is not useful and very naive.
             if (File.ReadAllText(filePath).Contains("CONTENT=\"text/html; charset=gb2312\""))
                 return "GB2312";
 

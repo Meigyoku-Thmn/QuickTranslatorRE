@@ -8,96 +8,131 @@ namespace TranslatorEngine
 {
     public class HtmlParser
     {
-        public static string GetChineseContent(string htmlContent, bool needMarkChapterHeaders)
-        {
-            LoadConfiguration();
-            var stringBuilder = new StringBuilder();
-            foreach (var text in titleTags)
-            {
-                if (!string.IsNullOrEmpty(text)
-                    && !text.StartsWith("#")
-                    && htmlContent.ToLower().Contains(text.ToLower()))
-                {
-                    var text2 = htmlContent.Substring(htmlContent.ToLower().IndexOf(text.ToLower()) + text.Length);
-                    var text3 = text.Substring(text.LastIndexOf('<') + 1);
-                    text3 = text3.Substring(0, text3.IndexOfAny(new[] { ' ', '>' }));
-                    if (text2.ToLower().Contains("</" + text3.ToLower() + ">"))
-                    {
-                        stringBuilder.AppendLine((needMarkChapterHeaders ? "$CHAPTER_HEADER$. " : "")
-                            + text2.Substring(0, text2.ToLower().IndexOf("</" + text3.ToLower() + ">"))
-                                .TrimStart(" \u3000\t".ToCharArray())
-                        );
-                        break;
-                    }
-                }
-            }
-            foreach (var text4 in contentTags)
-            {
-                if (!string.IsNullOrEmpty(text4) && !text4.StartsWith("#") && htmlContent.ToLower().Contains(text4.ToLower()))
-                {
-                    string text5 = htmlContent.Substring(htmlContent.ToLower().IndexOf(text4.ToLower()) + text4.Length);
-                    if (text4 != "<!--bodybegin-->")
-                    {
-                        string text6 = text4.Substring(text4.LastIndexOf('<') + 1);
-                        text6 = text6.Substring(0, text6.IndexOfAny(new char[]
-                        {
-                            ' ',
-                            '>'
-                        }));
-                        if (text5.ToLower().Contains("</" + text6.ToLower().TrimStart(new char[]
-                        {
-                            '/'
-                        }) + ">"))
-                        {
-                            stringBuilder.AppendLine(text5.Substring(0, text5.ToLower().IndexOf("</" + text6.ToLower().TrimStart(new char[]
-                            {
-                                '/'
-                            }) + ">")));
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        string text6 = "<!--bodyend-->";
-                        if (text5.Contains(text6))
-                        {
-                            stringBuilder.AppendLine(text5.Substring(0, text5.ToLower().IndexOf(text6.ToLower())));
-                        }
-                    }
-                }
-            }
-            string text7 = stringBuilder.ToString();
-            foreach (string text8 in removedTags)
-            {
-                if (!string.IsNullOrEmpty(text8) && !text8.StartsWith("#"))
-                {
-                    text7 = text7.Replace(text8, string.Empty);
-                }
-            }
-            text7 = text7.Replace("<p>", "\n").Replace("</p>", "\n").Replace("<br>", "\n").Replace("<br/>", "\n").Replace("<br />", "\n").Replace("<BR>", "\n").Replace("<BR/>", "\n").Replace("<BR />", "\n").Replace("&nbsp;", "").Replace("&lt;", "").Replace("&gt;", "");
-            return Regex.Replace(text7, "<(.|\\n)*?>", string.Empty);
-        }
+        static bool configLoaded = false;
+
+        static string[] titleTokens;
+        static string[] contentTokens;
+        static string[] noiseTokens;
+
+        static readonly Regex NoiseToken = new Regex("<(.|\\n)*?>", RegexOptions.Compiled);
 
         static void LoadConfiguration()
         {
-            if (!dirty)
-            {
+            if (configLoaded)
                 return;
-            }
-            titleTags = File.ReadAllLines(Path.Combine(directoryPath, "HtmlChapterTitleTags.config"));
-            contentTags = File.ReadAllLines(Path.Combine(directoryPath, "HtmlChapterContentTags.config"));
-            removedTags = File.ReadAllLines(Path.Combine(directoryPath, "HtmlRemovedTags.config"));
-            dirty = false;
+
+            string engineDirPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            titleTokens = File.ReadAllLines(Path.Combine(engineDirPath, "HtmlChapterTitleTags.config"));
+            contentTokens = File.ReadAllLines(Path.Combine(engineDirPath, "HtmlChapterContentTags.config"));
+            noiseTokens = File.ReadAllLines(Path.Combine(engineDirPath, "HtmlRemovedTags.config"));
+
+            configLoaded = true;
         }
 
-        static string[] titleTags;
+        /// <summary>
+        /// Try to extract content from html of Chinese websites
+        /// </summary>
+        /// <param name="htmlContent"></param>
+        /// <param name="needMarkChapterHeaders"></param>
+        /// <returns></returns>
+        public static string GetChineseContent(string htmlContent, bool needMarkChapterHeaders)
+        {
+            LoadConfiguration();
 
-        static string[] contentTags;
+            var htmlContentLower = htmlContent.ToLower();
 
-        static string[] removedTags;
+            var fullContent = new StringBuilder();
 
-        static bool dirty = true;
+            foreach (var titleToken in titleTokens)
+            {
+                if (string.IsNullOrWhiteSpace(titleToken)               // blank line
+                    || titleToken.StartsWith("#")                       // comment
+                    || !htmlContentLower.Contains(titleToken.ToLower()) // htmlContent doesn't contains token
+                ) continue;
 
-        static readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var afterTokenHtmlContent = htmlContent.Substring(
+                    htmlContentLower.IndexOf(titleToken.ToLower()) + titleToken.Length);
+
+                var afterTokenHtmlContentLower = afterTokenHtmlContent.ToLower();
+
+                var _ = titleToken.Substring(titleToken.LastIndexOf('<') + 1);
+                var wrapperTagName = _.Substring(0, _.IndexOfAny(new[] { ' ', '>' })).ToLower();
+
+                var wrapperClosingTag = $"</{wrapperTagName}>";
+
+                if (afterTokenHtmlContentLower.Contains(wrapperClosingTag))
+                {
+                    var title = afterTokenHtmlContent
+                        .Substring(0, afterTokenHtmlContentLower.IndexOf(wrapperClosingTag))
+                        .TrimStart();
+                    fullContent.AppendLine((needMarkChapterHeaders ? "$CHAPTER_HEADER$. " : "") + title);
+                    break;
+                }
+            }
+
+            foreach (var contentToken in contentTokens)
+            {
+                if (string.IsNullOrEmpty(contentToken)                      // blank line
+                    || contentToken.StartsWith("#")                         // comment
+                    || !htmlContentLower.Contains(contentToken.ToLower())   // htmlContent doesn't contains token
+                ) continue;
+
+                var afterTokenHtmlContent = htmlContent.Substring(
+                    htmlContentLower.IndexOf(contentToken.ToLower()) + contentToken.Length);
+
+                var afterTokenHtmlContentLower = afterTokenHtmlContent.ToLower();
+
+                if (contentToken != "<!--bodybegin-->")
+                {
+                    var _ = contentToken.Substring(contentToken.LastIndexOf('<') + 1);
+                    var wrapperTagName = _.Substring(0, _.IndexOfAny(new[] { ' ', '>' })).ToLower();
+
+                    var wrapperClosingTag = $"</{wrapperTagName}>";
+
+                    if (afterTokenHtmlContentLower.Contains(wrapperClosingTag))
+                    {
+                        var content = afterTokenHtmlContent
+                            .Substring(0, afterTokenHtmlContentLower.IndexOf(wrapperClosingTag));
+                        fullContent.AppendLine(content);
+                        break;
+                    }
+                }
+                else
+                {
+                    string bodyEnd = "<!--bodyend-->";
+                    if (afterTokenHtmlContent.Contains(bodyEnd))
+                    {
+                        var content = afterTokenHtmlContent.Substring(0,
+                            afterTokenHtmlContentLower.IndexOf(bodyEnd.ToLower()));
+                        fullContent.AppendLine(content);
+                    }
+                }
+            }
+
+            var fullContentStr = fullContent.ToString();
+
+            foreach (var noiseToken in noiseTokens)
+            {
+                if (string.IsNullOrEmpty(noiseToken) || noiseToken.StartsWith("#"))
+                    continue;
+                fullContentStr = fullContentStr.Replace(noiseToken, "");
+            }
+
+            fullContentStr = fullContentStr
+                .Replace("<p>", "\n")
+                .Replace("</p>", "\n")
+                .Replace("<br>", "\n")
+                .Replace("<br/>", "\n")
+                .Replace("<br />", "\n")
+                .Replace("<BR>", "\n")
+                .Replace("<BR/>", "\n")
+                .Replace("<BR />", "\n")
+                .Replace("&nbsp;", "")
+                .Replace("&lt;", "")
+                .Replace("&gt;", "");
+
+            return NoiseToken.Replace(fullContentStr, "");
+        }
     }
 }
