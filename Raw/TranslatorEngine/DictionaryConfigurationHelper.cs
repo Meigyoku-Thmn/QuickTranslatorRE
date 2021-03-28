@@ -1,58 +1,23 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace TranslatorEngine
 {
     public class DictionaryConfigurationHelper
     {
-        public static string GetNamesPhuDictionaryPath() => GetDictionaryPathByKey("NamesPhu");
+        public static string GetNamesPhuDictionaryPath()
+            => GetDictionaryPathByKey("NamesPhu");
 
-        public static string GetNamesDictionaryPath() => GetDictionaryPathByKey("Names");
+        public static string GetNamesDictionaryPath()
+            => GetDictionaryPathByKey("Names");
 
-        public static string GetNamesDictionaryHistoryPath()
-        {
-            return Path.Combine(
-                Path.GetDirectoryName(GetNamesDictionaryPath()),
-                Path.GetFileNameWithoutExtension(GetNamesDictionaryPath())
-                    + "History"
-                    + Path.GetExtension(GetNamesDictionaryPath())
-            );
-        }
+        public static string GetVietPhraseDictionaryPath()
+            => GetDictionaryPathByKey("VietPhrase");
 
-        public static string GetNamesPhuDictionaryHistoryPath()
-        {
-            return Path.Combine(
-                Path.GetDirectoryName(GetNamesPhuDictionaryPath()),
-                Path.GetFileNameWithoutExtension(GetNamesPhuDictionaryPath())
-                    + "History"
-                    + Path.GetExtension(GetNamesPhuDictionaryPath())
-            );
-        }
-
-        public static string GetVietPhraseDictionaryPath() => GetDictionaryPathByKey("VietPhrase");
-
-        public static string GetVietPhraseDictionaryHistoryPath()
-        {
-            return Path.Combine(
-                Path.GetDirectoryName(GetVietPhraseDictionaryPath()),
-                Path.GetFileNameWithoutExtension(GetVietPhraseDictionaryPath())
-                    + "History"
-                    + Path.GetExtension(GetVietPhraseDictionaryPath())
-            );
-        }
-
-        public static string GetChinesePhienAmWordsDictionaryPath() => GetDictionaryPathByKey("ChinesePhienAmWords");
-
-        public static string GetChinesePhienAmWordsDictionaryHistoryPath()
-        {
-            return Path.Combine(
-                Path.GetDirectoryName(GetChinesePhienAmWordsDictionaryPath()),
-                Path.GetFileNameWithoutExtension(GetChinesePhienAmWordsDictionaryPath())
-                    + "History"
-                    + Path.GetExtension(GetChinesePhienAmWordsDictionaryPath())
-            );
-        }
+        public static string GetChinesePhienAmWordsDictionaryPath()
+            => GetDictionaryPathByKey("ChinesePhienAmWords");
 
         public static string GetChinesePhienAmEnglishWordsDictionaryPath()
             => GetDictionaryPathByKey("ChinesePhienAmEnglishWords");
@@ -78,74 +43,92 @@ namespace TranslatorEngine
         public static string GetPronounsDictionaryPath()
             => GetDictionaryPathByKey("Pronouns");
 
-        static string GetDictionaryPathByKey(string dictionaryKey)
+        public static string GetNamesDictionaryHistoryPath()
         {
-            var array = File.ReadAllLines(Path.Combine(directoryPath, "Dictionaries.config"));
-            var text = "";
-            foreach (var text2 in array)
-            {
-                if (!string.IsNullOrEmpty(text2) && !text2.StartsWith("#") && text2.StartsWith(dictionaryKey + "="))
-                {
-                    text = text2.Split('=')[1];
-                    break;
-                }
-            }
-            if (!Path.IsPathRooted(text))
-            {
-                text = Path.Combine(directoryPath, text);
-            }
-            if (!File.Exists(text))
-            {
-                throw new FileNotFoundException("Dictionary Not Found: " + text);
-            }
-            return text;
+            return Path.Combine(
+                Path.GetDirectoryName(GetNamesDictionaryPath()),
+                Path.GetFileNameWithoutExtension(GetNamesDictionaryPath())
+                    + "History"
+                    + Path.GetExtension(GetNamesDictionaryPath())
+            );
+        }
+
+        public static string GetNamesPhuDictionaryHistoryPath()
+        {
+            return Path.Combine(
+                Path.GetDirectoryName(GetNamesPhuDictionaryPath()),
+                Path.GetFileNameWithoutExtension(GetNamesPhuDictionaryPath())
+                    + "History"
+                    + Path.GetExtension(GetNamesPhuDictionaryPath())
+            );
+        }
+
+        public static string GetVietPhraseDictionaryHistoryPath()
+        {
+            return Path.Combine(
+                Path.GetDirectoryName(GetVietPhraseDictionaryPath()),
+                Path.GetFileNameWithoutExtension(GetVietPhraseDictionaryPath())
+                    + "History"
+                    + Path.GetExtension(GetVietPhraseDictionaryPath())
+            );
+        }
+
+
+        public static string GetChinesePhienAmWordsDictionaryHistoryPath()
+        {
+            return Path.Combine(
+                Path.GetDirectoryName(GetChinesePhienAmWordsDictionaryPath()),
+                Path.GetFileNameWithoutExtension(GetChinesePhienAmWordsDictionaryPath())
+                    + "History"
+                    + Path.GetExtension(GetChinesePhienAmWordsDictionaryPath())
+            );
+        }
+
+
+        static string GetDictionaryPathByKey(string key)
+        {
+            var lines = File.ReadAllLines(Path.Combine(Constant.EngineDirPath, "Dictionaries.config"));
+
+            var dictPath = lines
+                .FirstOrDefault(line =>
+                    !string.IsNullOrWhiteSpace(line) && !line.StartsWith("#") && line.StartsWith(key + "="))
+                ?.Split('=')[1] ?? "";
+
+            if (!Path.IsPathRooted(dictPath))
+                dictPath = Path.Combine(Constant.EngineDirPath, dictPath);
+
+            if (!File.Exists(dictPath))
+                throw new FileNotFoundException("Dictionary Not Found: " + dictPath);
+
+            return dictPath;
         }
 
         public static bool IsNhanByPronouns {
-            get {
-                if (string.IsNullOrEmpty(thuatToanNhan))
-                {
-                    ReadThuatToanNhan();
-                }
-                return thuatToanNhan == "1";
-            }
+            get => GetMultiplyAlgorithmConfig() == "1";
         }
 
         public static bool IsNhanByPronounsAndNames {
-            get {
-                if (string.IsNullOrEmpty(thuatToanNhan))
-                {
-                    ReadThuatToanNhan();
-                }
-                return thuatToanNhan == "2";
-            }
+            get => GetMultiplyAlgorithmConfig() == "2";
         }
 
         public static bool IsNhanByPronounsAndNamesAndVietPhrase {
-            get {
-                if (string.IsNullOrEmpty(thuatToanNhan))
-                {
-                    ReadThuatToanNhan();
-                }
-                return thuatToanNhan == "3";
-            }
+            get => GetMultiplyAlgorithmConfig() == "3";
         }
 
-        static void ReadThuatToanNhan()
+        static string _multiplyAlgorithm = "";
+        static string GetMultiplyAlgorithmConfig()
         {
-            string[] array = File.ReadAllLines(Path.Combine(directoryPath, "Dictionaries.config"));
-            foreach (string text in array)
-            {
-                if (!string.IsNullOrEmpty(text) && !text.StartsWith("#") && text.StartsWith("ThuatToanNhan="))
-                {
-                    thuatToanNhan = text.Split('=')[1];
-                    return;
-                }
-            }
+            if (!string.IsNullOrEmpty(_multiplyAlgorithm))
+                return _multiplyAlgorithm;
+
+            var lines = File.ReadAllLines(Path.Combine(Constant.EngineDirPath, "Dictionaries.config"));
+
+            _multiplyAlgorithm = lines
+                .FirstOrDefault(line =>
+                    !string.IsNullOrWhiteSpace(line) && !line.StartsWith("#") & line.StartsWith("ThuatToanNhan="))
+                ?.Split('=')[1] ?? _multiplyAlgorithm;
+
+            return _multiplyAlgorithm;
         }
-
-        static readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-        static string thuatToanNhan = "";
     }
 }

@@ -21,7 +21,7 @@ namespace TranslatorEngine
             if (configLoaded)
                 return;
 
-            string engineDirPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string engineDirPath = Constant.EngineDirPath;
 
             titleTokens = File.ReadAllLines(Path.Combine(engineDirPath, "HtmlChapterTitleTags.config"));
             contentTokens = File.ReadAllLines(Path.Combine(engineDirPath, "HtmlChapterContentTags.config"));

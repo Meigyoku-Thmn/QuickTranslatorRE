@@ -9,7 +9,7 @@ namespace TranslatorEngine
         class Observer : ICharsetDetectionObserver
         {
             public string DetectedCharset { get; private set; }
-            public Observer(string defaultCharset = "GB2312") => DetectedCharset = defaultCharset;
+            public Observer(string defaultCharset = Constant.DefaultCharset) => DetectedCharset = defaultCharset;
             public void Notify(string charset) => DetectedCharset = charset;
         }
 
@@ -23,7 +23,7 @@ namespace TranslatorEngine
             // case when input file is html with charset=gb2312 meta
             // TODO: this code is not useful and very naive.
             if (File.ReadAllText(filePath).Contains("CONTENT=\"text/html; charset=gb2312\""))
-                return "GB2312";
+                return Constant.DefaultCharset;
 
             var sample = new byte[1024];
             int sampleLen = File.OpenRead(filePath).Read(sample, 0, sample.Length);
