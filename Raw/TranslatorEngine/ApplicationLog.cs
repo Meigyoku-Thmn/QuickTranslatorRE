@@ -10,11 +10,11 @@ namespace TranslatorEngine
         {
             try
             {
-                var text = Path.Combine(applicationPath, application + ".log");
-                var fileInfo = new FileInfo(text);
-                if (fileInfo.Exists && 1000000L < fileInfo.Length)
+                var logPath = Path.Combine(applicationPath, application + ".log");
+                var logFileInfo = new FileInfo(logPath);
+                if (logFileInfo.Exists && 1000000L < logFileInfo.Length)
                 {
-                    fileInfo.Delete();
+                    logFileInfo.Delete();
                 }
                 var contents = string.Format("{0:G}: {1}\r\n", DateTime.Now, string.Concat(new[] {
                     exception.Message,
@@ -23,7 +23,7 @@ namespace TranslatorEngine
                     "\r\n",
                     exception.StackTrace
                 }));
-                File.AppendAllText(text, contents, Encoding.UTF8);
+                File.AppendAllText(logPath, contents, Encoding.UTF8);
             }
             catch { }
         }

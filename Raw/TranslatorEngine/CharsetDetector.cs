@@ -1,30 +1,43 @@
 ﻿using System;
 using System.IO;
-using org.mozilla.intl.chardet;
+using NChardet;
 
 namespace TranslatorEngine
 {
-	public class CharsetDetector
-	{
-		public static string DetectedCharset;
+    public class CharsetDetector
+    {
+        class Observer : ICharsetDetectionObserver
+        {
+            public string DetectedCharset { get; private set; }
+            public Observer(string defaultCharset = "GB2312") => DetectedCharset = defaultCharset;
+            public void Notify(string charset) => DetectedCharset = charset;
+        }
 
-		public static string DetectChineseCharset(string filePath)
-		{
-            DetectedCharset = "GB2312";
-			var nsDetector = new nsDetector(3);
-			var aObserver = new Notifier();
-			nsDetector.Init(aObserver);
-			var array = new byte[1024];
-			int aLen = File.OpenRead(filePath).Read(array, 0, array.Length);
-			var flag = nsDetector.isAscii(array, aLen);
-			if (!flag) nsDetector.DoIt(array, aLen, false);
-			nsDetector.DataEnd();
-			if (flag) DetectedCharset = "ASCII";
-			if (File.ReadAllText(filePath).Contains("CONTENT=\"text/html; charset=gb2312\""))
-			{
-                DetectedCharset = "GB2312";
-			}
-			return DetectedCharset;
-		}
-	}
+        /// <summary>
+        /// Try to guess charset of file specified by filePath.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string DetectChineseCharset(string filePath)
+        {
+            // case when input file is html with charset=gb2312 meta
+            if (File.ReadAllText(filePath).Contains("CONTENT=\"text/html; charset=gb2312\""))
+                return "GB2312";
+
+            var sample = new byte[1024];
+            int sampleLen = File.OpenRead(filePath).Read(sample, 0, sample.Length);
+
+            var nsDetector = new Detector(3);
+            var observer = new Observer();
+            nsDetector.Init(observer);
+
+            if (nsDetector.isAscii(sample, sampleLen))
+                return "ASCII";
+
+            nsDetector.DoIt(sample, sampleLen, false);
+            nsDetector.DataEnd();
+
+            return observer.DetectedCharset;
+        }
+    }
 }

@@ -25,6 +25,5 @@ namespace TranslatorEngine
                 return false;
             }
         }
-        public static bool 
     }
 }
