@@ -30,84 +30,84 @@ namespace QuickVietPhraseMultiplicator
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.runButton = new System.Windows.Forms.Button();
-            this.browseOutputFolderButton = new System.Windows.Forms.Button();
-            this.browseVietPhrase2Button = new System.Windows.Forms.Button();
-            this.browseVietPhrase1Button = new System.Windows.Forms.Button();
-            this.outputFolderTextBox = new System.Windows.Forms.TextBox();
-            this.vietPhrase2TextBox = new System.Windows.Forms.TextBox();
+            this.btnRun = new System.Windows.Forms.Button();
+            this.btnSelectOutputFile = new System.Windows.Forms.Button();
+            this.btnSelectMultiplyRuleFile = new System.Windows.Forms.Button();
+            this.btnSelectVietPhaseFile = new System.Windows.Forms.Button();
+            this.txtOutputDirPath = new System.Windows.Forms.TextBox();
+            this.txtMultiplyRuleFilePath = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.vietPhrase1TextBox = new System.Windows.Forms.TextBox();
+            this.txtVietPhraseFilePath = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // runButton
+            // btnRun
             // 
-            this.runButton.Location = new System.Drawing.Point(373, 101);
-            this.runButton.Margin = new System.Windows.Forms.Padding(4);
-            this.runButton.Name = "runButton";
-            this.runButton.Size = new System.Drawing.Size(149, 28);
-            this.runButton.TabIndex = 28;
-            this.runButton.Text = "Run";
-            this.runButton.UseVisualStyleBackColor = true;
-            this.runButton.Click += new System.EventHandler(this.RunButtonClick);
+            this.btnRun.Location = new System.Drawing.Point(373, 101);
+            this.btnRun.Margin = new System.Windows.Forms.Padding(4);
+            this.btnRun.Name = "btnRun";
+            this.btnRun.Size = new System.Drawing.Size(149, 28);
+            this.btnRun.TabIndex = 28;
+            this.btnRun.Text = "Run";
+            this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.RunButton_OnClick);
             // 
-            // browseOutputFolderButton
+            // btnSelectOutputFile
             // 
-            this.browseOutputFolderButton.Location = new System.Drawing.Point(825, 69);
-            this.browseOutputFolderButton.Margin = new System.Windows.Forms.Padding(4);
-            this.browseOutputFolderButton.Name = "browseOutputFolderButton";
-            this.browseOutputFolderButton.Size = new System.Drawing.Size(100, 27);
-            this.browseOutputFolderButton.TabIndex = 25;
-            this.browseOutputFolderButton.Text = "Browse...";
-            this.browseOutputFolderButton.UseVisualStyleBackColor = true;
-            this.browseOutputFolderButton.Click += new System.EventHandler(this.BrowseOutputFolderButtonClick);
+            this.btnSelectOutputFile.Location = new System.Drawing.Point(825, 69);
+            this.btnSelectOutputFile.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSelectOutputFile.Name = "btnSelectOutputFile";
+            this.btnSelectOutputFile.Size = new System.Drawing.Size(100, 27);
+            this.btnSelectOutputFile.TabIndex = 25;
+            this.btnSelectOutputFile.Text = "Browse...";
+            this.btnSelectOutputFile.UseVisualStyleBackColor = true;
+            this.btnSelectOutputFile.Click += new System.EventHandler(this.SelectOutputDirButton_OnClick);
             // 
-            // browseVietPhrase2Button
+            // btnSelectMultiplyRuleFile
             // 
-            this.browseVietPhrase2Button.Location = new System.Drawing.Point(825, 39);
-            this.browseVietPhrase2Button.Margin = new System.Windows.Forms.Padding(4);
-            this.browseVietPhrase2Button.Name = "browseVietPhrase2Button";
-            this.browseVietPhrase2Button.Size = new System.Drawing.Size(100, 27);
-            this.browseVietPhrase2Button.TabIndex = 18;
-            this.browseVietPhrase2Button.Text = "Browse...";
-            this.browseVietPhrase2Button.UseVisualStyleBackColor = true;
-            this.browseVietPhrase2Button.Click += new System.EventHandler(this.BrowseVietPhrase2ButtonClick);
+            this.btnSelectMultiplyRuleFile.Location = new System.Drawing.Point(825, 39);
+            this.btnSelectMultiplyRuleFile.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSelectMultiplyRuleFile.Name = "btnSelectMultiplyRuleFile";
+            this.btnSelectMultiplyRuleFile.Size = new System.Drawing.Size(100, 27);
+            this.btnSelectMultiplyRuleFile.TabIndex = 18;
+            this.btnSelectMultiplyRuleFile.Text = "Browse...";
+            this.btnSelectMultiplyRuleFile.UseVisualStyleBackColor = true;
+            this.btnSelectMultiplyRuleFile.Click += new System.EventHandler(this.SelectMultiplyRuleFileButton_OnClick);
             // 
-            // browseVietPhrase1Button
+            // btnSelectVietPhaseFile
             // 
-            this.browseVietPhrase1Button.Location = new System.Drawing.Point(825, 10);
-            this.browseVietPhrase1Button.Margin = new System.Windows.Forms.Padding(4);
-            this.browseVietPhrase1Button.Name = "browseVietPhrase1Button";
-            this.browseVietPhrase1Button.Size = new System.Drawing.Size(100, 27);
-            this.browseVietPhrase1Button.TabIndex = 16;
-            this.browseVietPhrase1Button.Text = "Browse...";
-            this.browseVietPhrase1Button.UseVisualStyleBackColor = true;
-            this.browseVietPhrase1Button.Click += new System.EventHandler(this.BrowseVietPhrase1ButtonClick);
+            this.btnSelectVietPhaseFile.Location = new System.Drawing.Point(825, 10);
+            this.btnSelectVietPhaseFile.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSelectVietPhaseFile.Name = "btnSelectVietPhaseFile";
+            this.btnSelectVietPhaseFile.Size = new System.Drawing.Size(100, 27);
+            this.btnSelectVietPhaseFile.TabIndex = 16;
+            this.btnSelectVietPhaseFile.Text = "Browse...";
+            this.btnSelectVietPhaseFile.UseVisualStyleBackColor = true;
+            this.btnSelectVietPhaseFile.Click += new System.EventHandler(this.SelectVietPhraseFileButton_OnClick);
             // 
-            // outputFolderTextBox
+            // txtOutputDirPath
             // 
-            this.outputFolderTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.outputFolderTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.outputFolderTextBox.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.outputFolderTextBox.Location = new System.Drawing.Point(197, 70);
-            this.outputFolderTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.outputFolderTextBox.Name = "outputFolderTextBox";
-            this.outputFolderTextBox.Size = new System.Drawing.Size(623, 23);
-            this.outputFolderTextBox.TabIndex = 21;
+            this.txtOutputDirPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.txtOutputDirPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.txtOutputDirPath.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutputDirPath.Location = new System.Drawing.Point(197, 70);
+            this.txtOutputDirPath.Margin = new System.Windows.Forms.Padding(4);
+            this.txtOutputDirPath.Name = "txtOutputDirPath";
+            this.txtOutputDirPath.Size = new System.Drawing.Size(623, 23);
+            this.txtOutputDirPath.TabIndex = 21;
             // 
-            // vietPhrase2TextBox
+            // txtMultiplyRuleFilePath
             // 
-            this.vietPhrase2TextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.vietPhrase2TextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.vietPhrase2TextBox.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.vietPhrase2TextBox.Location = new System.Drawing.Point(197, 41);
-            this.vietPhrase2TextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.vietPhrase2TextBox.Name = "vietPhrase2TextBox";
-            this.vietPhrase2TextBox.Size = new System.Drawing.Size(623, 23);
-            this.vietPhrase2TextBox.TabIndex = 17;
+            this.txtMultiplyRuleFilePath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.txtMultiplyRuleFilePath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.txtMultiplyRuleFilePath.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMultiplyRuleFilePath.Location = new System.Drawing.Point(197, 41);
+            this.txtMultiplyRuleFilePath.Margin = new System.Windows.Forms.Padding(4);
+            this.txtMultiplyRuleFilePath.Name = "txtMultiplyRuleFilePath";
+            this.txtMultiplyRuleFilePath.Size = new System.Drawing.Size(623, 23);
+            this.txtMultiplyRuleFilePath.TabIndex = 17;
             // 
             // label4
             // 
@@ -121,16 +121,16 @@ namespace QuickVietPhraseMultiplicator
             this.label4.Text = "Thư mục chứa file kết quả:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // vietPhrase1TextBox
+            // txtVietPhraseFilePath
             // 
-            this.vietPhrase1TextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.vietPhrase1TextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.vietPhrase1TextBox.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.vietPhrase1TextBox.Location = new System.Drawing.Point(197, 11);
-            this.vietPhrase1TextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.vietPhrase1TextBox.Name = "vietPhrase1TextBox";
-            this.vietPhrase1TextBox.Size = new System.Drawing.Size(623, 23);
-            this.vietPhrase1TextBox.TabIndex = 15;
+            this.txtVietPhraseFilePath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.txtVietPhraseFilePath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.txtVietPhraseFilePath.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtVietPhraseFilePath.Location = new System.Drawing.Point(197, 11);
+            this.txtVietPhraseFilePath.Margin = new System.Windows.Forms.Padding(4);
+            this.txtVietPhraseFilePath.Name = "txtVietPhraseFilePath";
+            this.txtVietPhraseFilePath.Size = new System.Drawing.Size(623, 23);
+            this.txtVietPhraseFilePath.TabIndex = 15;
             // 
             // label2
             // 
@@ -175,14 +175,14 @@ namespace QuickVietPhraseMultiplicator
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(935, 529);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.runButton);
-            this.Controls.Add(this.browseOutputFolderButton);
-            this.Controls.Add(this.browseVietPhrase2Button);
-            this.Controls.Add(this.browseVietPhrase1Button);
-            this.Controls.Add(this.outputFolderTextBox);
-            this.Controls.Add(this.vietPhrase2TextBox);
+            this.Controls.Add(this.btnRun);
+            this.Controls.Add(this.btnSelectOutputFile);
+            this.Controls.Add(this.btnSelectMultiplyRuleFile);
+            this.Controls.Add(this.btnSelectVietPhaseFile);
+            this.Controls.Add(this.txtOutputDirPath);
+            this.Controls.Add(this.txtMultiplyRuleFilePath);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.vietPhrase1TextBox);
+            this.Controls.Add(this.txtVietPhraseFilePath);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -205,20 +205,20 @@ namespace QuickVietPhraseMultiplicator
 
         private System.Windows.Forms.Label label2;
 
-        private System.Windows.Forms.TextBox vietPhrase1TextBox;
+        private System.Windows.Forms.TextBox txtVietPhraseFilePath;
 
         private System.Windows.Forms.Label label4;
 
-        private System.Windows.Forms.TextBox vietPhrase2TextBox;
+        private System.Windows.Forms.TextBox txtMultiplyRuleFilePath;
 
-        private System.Windows.Forms.TextBox outputFolderTextBox;
+        private System.Windows.Forms.TextBox txtOutputDirPath;
 
-        private System.Windows.Forms.Button browseVietPhrase1Button;
+        private System.Windows.Forms.Button btnSelectVietPhaseFile;
 
-        private System.Windows.Forms.Button browseVietPhrase2Button;
+        private System.Windows.Forms.Button btnSelectMultiplyRuleFile;
 
-        private System.Windows.Forms.Button browseOutputFolderButton;
+        private System.Windows.Forms.Button btnSelectOutputFile;
 
-        private System.Windows.Forms.Button runButton;
+        private System.Windows.Forms.Button btnRun;
     }
 }

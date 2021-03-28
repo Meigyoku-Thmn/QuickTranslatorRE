@@ -207,35 +207,29 @@ namespace TranslatorEngine
             SaveDictionaryToFileWithoutSorting(hanVietDictionary, DictionaryConfigurationHelper.GetChinesePhienAmWordsDictionaryPath());
         }
 
-        public static void SaveDictionaryToFileWithoutSorting(Dictionary<string, string> dictionary, string filePath)
+        public static void SaveDictionaryToFileWithoutSorting(Dictionary<string, string> dict, string filePath)
         {
-            var text = filePath + "." + DateTime.Now.Ticks;
-            Helper.CopyIfSourceExists(filePath, text, true);
+            // Back up old file in case of error
+            var bakFilePath = filePath + "." + DateTime.Now.Ticks;
+            Helper.CopyIfSourceExists(filePath, bakFilePath, true);
 
-            var stringBuilder = new StringBuilder();
-
-            foreach (var pair in dictionary)
-            {
-                stringBuilder.Append(pair.Key).Append("=").AppendLine(pair.Value);
-            }
+            var lines = dict.Select(pair => $"{pair.Key}={pair.Value}");
 
             try
             {
-                File.WriteAllText(filePath, stringBuilder.ToString(), Encoding.UTF8);
+                File.WriteAllLines(filePath, lines, Encoding.UTF8);
             }
             catch (Exception ex)
             {
-                try
-                {
-                    File.Copy(text, filePath, true);
-                }
-                catch { } // first ex is more important
+                // Try to restore old file
+                try { File.Copy(bakFilePath, filePath, true); }
+                catch { }
                 throw ex;
             }
+
+            // Remove old file when completing
             if (File.Exists(filePath))
-            {
-                File.Delete(text);
-            }
+                File.Delete(bakFilePath);
         }
 
         public static void SaveDictionaryToFile(ref Dictionary<string, string> dictionary, string filePath)
