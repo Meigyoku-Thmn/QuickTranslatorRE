@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{D1CEDB0B-73FE-4355-B334-5F52BEFE64EA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>QuickTranslator</RootNamespace>
+    <AssemblyName>QuickTranslator</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>4096</FileAlignment>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>QuickTranslator.ico</ApplicationIcon>
+    <StartupObject>QuickTranslator.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="QuickConverter">
+      <HintPath>..\..\..\QuickTranslator_20130708\QuickConverter.exe</HintPath>
+    </Reference>
+    <Reference Include="QuickWebBrowser">
+      <HintPath>..\..\..\QuickTranslator_20130708\QuickWebBrowser.exe</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="TranslatorEngine">
+      <HintPath>..\..\..\QuickTranslator_20130708\TranslatorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\..\..\QuickTranslator_20130708\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration.cs" />
+    <Compile Include="ConfigurationPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigurationPanel.Designer.cs">
+      <DependentUpon>ConfigurationPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentPanel.Designer.cs">
+      <DependentUpon>DocumentPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExportToWordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportToWordForm.Designer.cs">
+      <DependentUpon>ExportToWordForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FindAndReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindAndReplaceForm.Designer.cs">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PostTTVForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PostTTVForm.Designer.cs">
+      <DependentUpon>PostTTVForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PostTTVFormSettings.Designer.cs">
+      <DependentUpon>PostTTVFormSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScrollingRichTextBox.cs" />
+    <Compile Include="Shortcuts.cs" />
+    <Compile Include="UpdatePhienAmForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdatePhienAmForm.Designer.cs">
+      <DependentUpon>UpdatePhienAmForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateVietPhraseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateVietPhraseForm.Designer.cs">
+      <DependentUpon>UpdateVietPhraseForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ConfigurationPanel.resources" />
+    <EmbeddedResource Include="DocumentPanel.resources" />
+    <EmbeddedResource Include="ExportToWordForm.resources" />
+    <EmbeddedResource Include="FindAndReplaceForm.resources" />
+    <EmbeddedResource Include="MainForm.resources" />
+    <EmbeddedResource Include="PostTTVForm.resources" />
+    <EmbeddedResource Include="UpdatePhienAmForm.resources" />
+    <EmbeddedResource Include="UpdateVietPhraseForm.resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.manifest" />
+    <None Include="PostTTVFormSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PostTTVFormSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
