@@ -1620,50 +1620,60 @@ namespace TranslatorEngine
             LoadDictionaryHistory(DictionaryConfigurationHelper.GetChinesePhienAmWordsDictionaryHistoryPath(), ref hanVietDictionaryHistoryDataSet);
         }
 
-        public static void LoadDictionaryHistory(string dictionaryHistoryPath, ref DataSet dictionaryHistoryDataSet)
+        /// <summary>
+        /// Load change log of dictionary specified by dictLogPath, only get the lastest change for an entry
+        /// </summary>
+        /// <param name="dictLogPath"></param>
+        /// <param name="dictLogDataset"></param>
+        public static void LoadDictionaryHistory(string dictLogPath, ref DataSet dictLogDataset)
         {
-            dictionaryHistoryDataSet.Clear();
-            var name = "DictionaryHistory";
-            if (!dictionaryHistoryDataSet.Tables.Contains(name))
+            dictLogDataset.Clear();
+
+            var tblName = "DictionaryHistory";
+
+            if (!dictLogDataset.Tables.Contains(tblName))
             {
-                dictionaryHistoryDataSet.Tables.Add(name);
-                dictionaryHistoryDataSet.Tables[name].Columns.Add("Entry", Type.GetType("System.String"));
-                dictionaryHistoryDataSet.Tables[name].Columns.Add("Action", Type.GetType("System.String"));
-                dictionaryHistoryDataSet.Tables[name].Columns.Add("User Name", Type.GetType("System.String"));
-                dictionaryHistoryDataSet.Tables[name].Columns.Add("Updated Date", Type.GetType("System.DateTime"));
-                dictionaryHistoryDataSet.Tables[name].PrimaryKey = new DataColumn[] {
-                    dictionaryHistoryDataSet.Tables[name].Columns["Entry"]
+                dictLogDataset.Tables.Add(tblName);
+
+                dictLogDataset.Tables[tblName].Columns.Add("Entry", typeof(string));
+                dictLogDataset.Tables[tblName].Columns.Add("Action", typeof(string));
+                dictLogDataset.Tables[tblName].Columns.Add("User Name", typeof(string));
+                dictLogDataset.Tables[tblName].Columns.Add("Updated Date", typeof(DateTime));
+
+                dictLogDataset.Tables[tblName].PrimaryKey = new[] {
+                    dictLogDataset.Tables[tblName].Columns["Entry"]
                 };
             }
-            if (!File.Exists(dictionaryHistoryPath))
-            {
+
+            if (!File.Exists(dictLogPath))
                 return;
-            }
-            var name2 = CharsetDetector.DetectChineseCharset(dictionaryHistoryPath);
-            using (var textReader = new StreamReader(dictionaryHistoryPath, Encoding.GetEncoding(name2)))
+
+            var charset = CharsetDetector.DetectChineseCharset(dictLogPath);
+            using (var textReader = new StreamReader(dictLogPath, Encoding.GetEncoding(charset)))
             {
-                textReader.ReadLine();
-                string text;
-                while ((text = textReader.ReadLine()) != null)
+                textReader.ReadLine(); // skip header
+                string line;
+                while ((line = textReader.ReadLine()) != null)
                 {
-                    var array = text.Split('\t');
-                    if (array.Length == 4)
+                    var tuple = line.Split('\t');
+                    if (tuple.Length == 4)
                     {
-                        var dataRow = dictionaryHistoryDataSet.Tables[name].Rows.Find(array[0]);
+                        var dataRow = dictLogDataset.Tables[tblName].Rows.Find(tuple[0]); // search by key
                         if (dataRow == null)
                         {
-                            dictionaryHistoryDataSet.Tables[name].Rows.Add(new object[] {
-                                array[0],
-                                array[1],
-                                array[2],
-                                DateTime.ParseExact(array[3], "yyyy-MM-dd HH:mm:ss.fffzzz", null)
+                            dictLogDataset.Tables[tblName].Rows.Add(new object[] {
+                                tuple[0],
+                                tuple[1],
+                                tuple[2],
+                                DateTime.ParseExact(tuple[3], "yyyy-MM-dd HH:mm:ss.fffzzz", null)
                             });
                         }
                         else
                         {
-                            dataRow[1] = array[1];
-                            dataRow[2] = array[2];
-                            dataRow[3] = DateTime.ParseExact(array[3], "yyyy-MM-dd HH:mm:ss.fffzzz", null);
+                            // only get the lastest change of an entry
+                            dataRow[1] = tuple[1];
+                            dataRow[2] = tuple[2];
+                            dataRow[3] = DateTime.ParseExact(tuple[3], "yyyy-MM-dd HH:mm:ss.fffzzz", null);
                         }
                     }
                 }
