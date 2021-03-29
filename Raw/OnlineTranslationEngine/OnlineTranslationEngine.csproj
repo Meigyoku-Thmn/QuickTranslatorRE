@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{AFE84391-233B-436E-A42F-08A4B6C652C3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>OnlineTranslationEngine</RootNamespace>
+    <AssemblyName>OnlineTranslationEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>4096</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bing\AdultOption.cs" />
+    <Compile Include="Bing\BingOnlineTranslationEngine.cs" />
+    <Compile Include="Bing\DeepLink.cs" />
+    <Compile Include="Bing\Error.cs" />
+    <Compile Include="Bing\ImageRequest.cs" />
+    <Compile Include="Bing\ImageResponse.cs" />
+    <Compile Include="Bing\ImageResult.cs" />
+    <Compile Include="Bing\InstantAnswerResponse.cs" />
+    <Compile Include="Bing\InstantAnswerResult.cs" />
+    <Compile Include="Bing\LiveSearchService.cs" />
+    <Compile Include="Bing\MobileWebRequest.cs" />
+    <Compile Include="Bing\MobileWebResponse.cs" />
+    <Compile Include="Bing\MobileWebResult.cs" />
+    <Compile Include="Bing\MobileWebSearchOption.cs" />
+    <Compile Include="Bing\NewsArticle.cs" />
+    <Compile Include="Bing\NewsCollection.cs" />
+    <Compile Include="Bing\NewsRelatedSearch.cs" />
+    <Compile Include="Bing\NewsRequest.cs" />
+    <Compile Include="Bing\NewsResponse.cs" />
+    <Compile Include="Bing\NewsResult.cs" />
+    <Compile Include="Bing\NewsSortOption.cs" />
+    <Compile Include="Bing\PhonebookRequest.cs" />
+    <Compile Include="Bing\PhonebookResponse.cs" />
+    <Compile Include="Bing\PhonebookResult.cs" />
+    <Compile Include="Bing\PhonebookSortOption.cs" />
+    <Compile Include="Bing\Query.cs" />
+    <Compile Include="Bing\RelatedSearchResponse.cs" />
+    <Compile Include="Bing\RelatedSearchResult.cs" />
+    <Compile Include="Bing\SearchOption.cs" />
+    <Compile Include="Bing\SearchRequest.cs" />
+    <Compile Include="Bing\SearchResponse.cs" />
+    <Compile Include="Bing\SourceType.cs" />
+    <Compile Include="Bing\SpellResponse.cs" />
+    <Compile Include="Bing\SpellResult.cs" />
+    <Compile Include="Bing\Thumbnail.cs" />
+    <Compile Include="Bing\TranslationRequest.cs" />
+    <Compile Include="Bing\TranslationResponse.cs" />
+    <Compile Include="Bing\TranslationResult.cs" />
+    <Compile Include="Bing\VideoRequest.cs" />
+    <Compile Include="Bing\VideoResponse.cs" />
+    <Compile Include="Bing\VideoResult.cs" />
+    <Compile Include="Bing\VideoSortOption.cs" />
+    <Compile Include="Bing\WebRequest.cs" />
+    <Compile Include="Bing\WebResponse.cs" />
+    <Compile Include="Bing\WebResult.cs" />
+    <Compile Include="Bing\WebSearchOption.cs" />
+    <Compile Include="Bing\WebSearchTag.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="OnlineTranslationEngine.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
