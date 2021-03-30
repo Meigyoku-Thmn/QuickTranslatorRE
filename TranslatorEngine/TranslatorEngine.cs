@@ -12,7 +12,7 @@ namespace TranslatorEngine
 {
     public class TranslatorEngine
     {
-        public static bool DictionaryDirty { get; set; }
+        public static bool DictionaryDirty { get; set; } = true;
 
         public static string GetVietPhraseOrNameValueFromKey(string key)
         {
