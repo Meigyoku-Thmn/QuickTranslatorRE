@@ -1,175 +1,213 @@
 ﻿namespace QuickTranslator
 {
-	// Token: 0x02000011 RID: 17
-	public partial class FindAndReplaceForm : global::System.Windows.Forms.Form
-	{
-		// Token: 0x060000AA RID: 170 RVA: 0x00009A47 File Offset: 0x00008A47
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && this.components != null)
-			{
-				this.components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+    public partial class FindAndReplaceForm
+    {
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && this.components != null)
+            {
+                this.components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		// Token: 0x060000AB RID: 171 RVA: 0x00009A68 File Offset: 0x00008A68
-		private void InitializeComponent()
-		{
-			global::System.ComponentModel.ComponentResourceManager componentResourceManager = new global::System.ComponentModel.ComponentResourceManager(typeof(global::QuickTranslator.FindAndReplaceForm));
-			this.label1 = new global::System.Windows.Forms.Label();
-			this.findTextBox = new global::System.Windows.Forms.TextBox();
-			this.label2 = new global::System.Windows.Forms.Label();
-			this.replaceWithTextBox = new global::System.Windows.Forms.TextBox();
-			this.findNextButton = new global::System.Windows.Forms.Button();
-			this.replaceButton = new global::System.Windows.Forms.Button();
-			this.replaceAllButton = new global::System.Windows.Forms.Button();
-			this.matchCaseCheckBox = new global::System.Windows.Forms.CheckBox();
-			this.matchWholeWordCheckBox = new global::System.Windows.Forms.CheckBox();
-			this.groupBox1 = new global::System.Windows.Forms.GroupBox();
-			this.downRadioButton = new global::System.Windows.Forms.RadioButton();
-			this.upRadioButton = new global::System.Windows.Forms.RadioButton();
-			this.groupBox1.SuspendLayout();
-			base.SuspendLayout();
-			this.label1.Location = new global::System.Drawing.Point(12, 9);
-			this.label1.Name = "label1";
-			this.label1.Size = new global::System.Drawing.Size(75, 22);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Find:";
-			this.findTextBox.Location = new global::System.Drawing.Point(93, 6);
-			this.findTextBox.Name = "findTextBox";
-			this.findTextBox.Size = new global::System.Drawing.Size(276, 20);
-			this.findTextBox.TabIndex = 0;
-			this.findTextBox.TextChanged += new global::System.EventHandler(this.FindTextBoxTextChanged);
-			this.label2.Location = new global::System.Drawing.Point(12, 40);
-			this.label2.Name = "label2";
-			this.label2.Size = new global::System.Drawing.Size(75, 22);
-			this.label2.TabIndex = 0;
-			this.label2.Text = "Replace With:";
-			this.replaceWithTextBox.Location = new global::System.Drawing.Point(93, 37);
-			this.replaceWithTextBox.Name = "replaceWithTextBox";
-			this.replaceWithTextBox.Size = new global::System.Drawing.Size(276, 20);
-			this.replaceWithTextBox.TabIndex = 2;
-			this.findNextButton.Enabled = false;
-			this.findNextButton.Location = new global::System.Drawing.Point(385, 4);
-			this.findNextButton.Name = "findNextButton";
-			this.findNextButton.Size = new global::System.Drawing.Size(75, 23);
-			this.findNextButton.TabIndex = 1;
-			this.findNextButton.Text = "Find Next";
-			this.findNextButton.UseVisualStyleBackColor = true;
-			this.findNextButton.Click += new global::System.EventHandler(this.FindNextButtonClick);
-			this.replaceButton.Enabled = false;
-			this.replaceButton.Location = new global::System.Drawing.Point(385, 35);
-			this.replaceButton.Name = "replaceButton";
-			this.replaceButton.Size = new global::System.Drawing.Size(75, 23);
-			this.replaceButton.TabIndex = 3;
-			this.replaceButton.Text = "Replace";
-			this.replaceButton.UseVisualStyleBackColor = true;
-			this.replaceButton.Click += new global::System.EventHandler(this.ReplaceButtonClick);
-			this.replaceAllButton.Enabled = false;
-			this.replaceAllButton.Location = new global::System.Drawing.Point(385, 64);
-			this.replaceAllButton.Name = "replaceAllButton";
-			this.replaceAllButton.Size = new global::System.Drawing.Size(75, 23);
-			this.replaceAllButton.TabIndex = 4;
-			this.replaceAllButton.Text = "Replace All";
-			this.replaceAllButton.UseVisualStyleBackColor = true;
-			this.replaceAllButton.Click += new global::System.EventHandler(this.ReplaceAllButtonClick);
-			this.matchCaseCheckBox.Location = new global::System.Drawing.Point(12, 106);
-			this.matchCaseCheckBox.Name = "matchCaseCheckBox";
-			this.matchCaseCheckBox.Size = new global::System.Drawing.Size(104, 24);
-			this.matchCaseCheckBox.TabIndex = 5;
-			this.matchCaseCheckBox.Text = "Match Case";
-			this.matchCaseCheckBox.UseVisualStyleBackColor = true;
-			this.matchWholeWordCheckBox.Location = new global::System.Drawing.Point(12, 136);
-			this.matchWholeWordCheckBox.Name = "matchWholeWordCheckBox";
-			this.matchWholeWordCheckBox.Size = new global::System.Drawing.Size(150, 24);
-			this.matchWholeWordCheckBox.TabIndex = 6;
-			this.matchWholeWordCheckBox.Text = "Match Whole Word";
-			this.matchWholeWordCheckBox.UseVisualStyleBackColor = true;
-			this.groupBox1.Controls.Add(this.downRadioButton);
-			this.groupBox1.Controls.Add(this.upRadioButton);
-			this.groupBox1.Location = new global::System.Drawing.Point(169, 106);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new global::System.Drawing.Size(200, 54);
-			this.groupBox1.TabIndex = 8;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Direction";
-			this.downRadioButton.Checked = true;
-			this.downRadioButton.Location = new global::System.Drawing.Point(110, 19);
-			this.downRadioButton.Name = "downRadioButton";
-			this.downRadioButton.Size = new global::System.Drawing.Size(84, 27);
-			this.downRadioButton.TabIndex = 1;
-			this.downRadioButton.TabStop = true;
-			this.downRadioButton.Text = "Down";
-			this.downRadioButton.UseVisualStyleBackColor = true;
-			this.upRadioButton.Location = new global::System.Drawing.Point(13, 19);
-			this.upRadioButton.Name = "upRadioButton";
-			this.upRadioButton.Size = new global::System.Drawing.Size(73, 27);
-			this.upRadioButton.TabIndex = 0;
-			this.upRadioButton.Text = "Up";
-			this.upRadioButton.UseVisualStyleBackColor = true;
-			base.AutoScaleDimensions = new global::System.Drawing.SizeF(6f, 13f);
-			base.AutoScaleMode = global::System.Windows.Forms.AutoScaleMode.Font;
-			base.ClientSize = new global::System.Drawing.Size(470, 169);
-			base.Controls.Add(this.groupBox1);
-			base.Controls.Add(this.matchWholeWordCheckBox);
-			base.Controls.Add(this.matchCaseCheckBox);
-			base.Controls.Add(this.replaceAllButton);
-			base.Controls.Add(this.replaceButton);
-			base.Controls.Add(this.findNextButton);
-			base.Controls.Add(this.replaceWithTextBox);
-			base.Controls.Add(this.findTextBox);
-			base.Controls.Add(this.label2);
-			base.Controls.Add(this.label1);
-			base.Icon = (global::System.Drawing.Icon)componentResourceManager.GetObject("$this.Icon");
-			base.KeyPreview = true;
-			base.MaximizeBox = false;
-			base.MinimizeBox = false;
-			base.Name = "FindAndReplaceForm";
-			base.StartPosition = global::System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Find and Replace (ô Trung)";
-			this.groupBox1.ResumeLayout(false);
-			base.ResumeLayout(false);
-			base.PerformLayout();
-		}
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FindAndReplaceForm));
+            this.label1 = new System.Windows.Forms.Label();
+            this.findTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.replaceWithTextBox = new System.Windows.Forms.TextBox();
+            this.findNextButton = new System.Windows.Forms.Button();
+            this.replaceButton = new System.Windows.Forms.Button();
+            this.replaceAllButton = new System.Windows.Forms.Button();
+            this.matchCaseCheckBox = new System.Windows.Forms.CheckBox();
+            this.matchWholeWordCheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.downRadioButton = new System.Windows.Forms.RadioButton();
+            this.upRadioButton = new System.Windows.Forms.RadioButton();
+            this.groupBox1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(16, 11);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 27);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Find:";
+            // 
+            // findTextBox
+            // 
+            this.findTextBox.Location = new System.Drawing.Point(124, 7);
+            this.findTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.findTextBox.Name = "findTextBox";
+            this.findTextBox.Size = new System.Drawing.Size(367, 22);
+            this.findTextBox.TabIndex = 0;
+            this.findTextBox.TextChanged += new System.EventHandler(this.FindTextBoxTextChanged);
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(16, 49);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(100, 27);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Replace With:";
+            // 
+            // replaceWithTextBox
+            // 
+            this.replaceWithTextBox.Location = new System.Drawing.Point(124, 46);
+            this.replaceWithTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.replaceWithTextBox.Name = "replaceWithTextBox";
+            this.replaceWithTextBox.Size = new System.Drawing.Size(367, 22);
+            this.replaceWithTextBox.TabIndex = 2;
+            // 
+            // findNextButton
+            // 
+            this.findNextButton.Enabled = false;
+            this.findNextButton.Location = new System.Drawing.Point(513, 5);
+            this.findNextButton.Margin = new System.Windows.Forms.Padding(4);
+            this.findNextButton.Name = "findNextButton";
+            this.findNextButton.Size = new System.Drawing.Size(100, 28);
+            this.findNextButton.TabIndex = 1;
+            this.findNextButton.Text = "Find Next";
+            this.findNextButton.UseVisualStyleBackColor = true;
+            this.findNextButton.Click += new System.EventHandler(this.FindNextButtonClick);
+            // 
+            // replaceButton
+            // 
+            this.replaceButton.Enabled = false;
+            this.replaceButton.Location = new System.Drawing.Point(513, 43);
+            this.replaceButton.Margin = new System.Windows.Forms.Padding(4);
+            this.replaceButton.Name = "replaceButton";
+            this.replaceButton.Size = new System.Drawing.Size(100, 28);
+            this.replaceButton.TabIndex = 3;
+            this.replaceButton.Text = "Replace";
+            this.replaceButton.UseVisualStyleBackColor = true;
+            this.replaceButton.Click += new System.EventHandler(this.ReplaceButtonClick);
+            // 
+            // replaceAllButton
+            // 
+            this.replaceAllButton.Enabled = false;
+            this.replaceAllButton.Location = new System.Drawing.Point(513, 79);
+            this.replaceAllButton.Margin = new System.Windows.Forms.Padding(4);
+            this.replaceAllButton.Name = "replaceAllButton";
+            this.replaceAllButton.Size = new System.Drawing.Size(100, 28);
+            this.replaceAllButton.TabIndex = 4;
+            this.replaceAllButton.Text = "Replace All";
+            this.replaceAllButton.UseVisualStyleBackColor = true;
+            this.replaceAllButton.Click += new System.EventHandler(this.ReplaceAllButtonClick);
+            // 
+            // matchCaseCheckBox
+            // 
+            this.matchCaseCheckBox.Location = new System.Drawing.Point(16, 130);
+            this.matchCaseCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.matchCaseCheckBox.Name = "matchCaseCheckBox";
+            this.matchCaseCheckBox.Size = new System.Drawing.Size(139, 30);
+            this.matchCaseCheckBox.TabIndex = 5;
+            this.matchCaseCheckBox.Text = "Match Case";
+            this.matchCaseCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // matchWholeWordCheckBox
+            // 
+            this.matchWholeWordCheckBox.Location = new System.Drawing.Point(16, 167);
+            this.matchWholeWordCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.matchWholeWordCheckBox.Name = "matchWholeWordCheckBox";
+            this.matchWholeWordCheckBox.Size = new System.Drawing.Size(200, 30);
+            this.matchWholeWordCheckBox.TabIndex = 6;
+            this.matchWholeWordCheckBox.Text = "Match Whole Word";
+            this.matchWholeWordCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.downRadioButton);
+            this.groupBox1.Controls.Add(this.upRadioButton);
+            this.groupBox1.Location = new System.Drawing.Point(225, 130);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Size = new System.Drawing.Size(267, 66);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Direction";
+            // 
+            // downRadioButton
+            // 
+            this.downRadioButton.Checked = true;
+            this.downRadioButton.Location = new System.Drawing.Point(147, 23);
+            this.downRadioButton.Margin = new System.Windows.Forms.Padding(4);
+            this.downRadioButton.Name = "downRadioButton";
+            this.downRadioButton.Size = new System.Drawing.Size(112, 33);
+            this.downRadioButton.TabIndex = 1;
+            this.downRadioButton.TabStop = true;
+            this.downRadioButton.Text = "Down";
+            this.downRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // upRadioButton
+            // 
+            this.upRadioButton.Location = new System.Drawing.Point(17, 23);
+            this.upRadioButton.Margin = new System.Windows.Forms.Padding(4);
+            this.upRadioButton.Name = "upRadioButton";
+            this.upRadioButton.Size = new System.Drawing.Size(97, 33);
+            this.upRadioButton.TabIndex = 0;
+            this.upRadioButton.Text = "Up";
+            this.upRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // FindAndReplaceForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(627, 208);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.matchWholeWordCheckBox);
+            this.Controls.Add(this.matchCaseCheckBox);
+            this.Controls.Add(this.replaceAllButton);
+            this.Controls.Add(this.replaceButton);
+            this.Controls.Add(this.findNextButton);
+            this.Controls.Add(this.replaceWithTextBox);
+            this.Controls.Add(this.findTextBox);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FindAndReplaceForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Find and Replace (ô Trung)";
+            this.groupBox1.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
-		// Token: 0x040000DD RID: 221
-		private global::System.ComponentModel.IContainer components;
+        }
 
-		// Token: 0x040000DE RID: 222
-		private global::System.Windows.Forms.RadioButton upRadioButton;
+        private System.ComponentModel.IContainer components;
 
-		// Token: 0x040000DF RID: 223
-		private global::System.Windows.Forms.RadioButton downRadioButton;
+        private System.Windows.Forms.RadioButton upRadioButton;
 
-		// Token: 0x040000E0 RID: 224
-		private global::System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton downRadioButton;
 
-		// Token: 0x040000E1 RID: 225
-		private global::System.Windows.Forms.CheckBox matchWholeWordCheckBox;
+        private System.Windows.Forms.GroupBox groupBox1;
 
-		// Token: 0x040000E2 RID: 226
-		private global::System.Windows.Forms.CheckBox matchCaseCheckBox;
+        private System.Windows.Forms.CheckBox matchWholeWordCheckBox;
 
-		// Token: 0x040000E3 RID: 227
-		private global::System.Windows.Forms.Button replaceAllButton;
+        private System.Windows.Forms.CheckBox matchCaseCheckBox;
 
-		// Token: 0x040000E4 RID: 228
-		private global::System.Windows.Forms.Button replaceButton;
+        private System.Windows.Forms.Button replaceAllButton;
 
-		// Token: 0x040000E5 RID: 229
-		private global::System.Windows.Forms.Button findNextButton;
+        private System.Windows.Forms.Button replaceButton;
 
-		// Token: 0x040000E6 RID: 230
-		private global::System.Windows.Forms.TextBox replaceWithTextBox;
+        private System.Windows.Forms.Button findNextButton;
 
-		// Token: 0x040000E7 RID: 231
-		private global::System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox replaceWithTextBox;
 
-		// Token: 0x040000E8 RID: 232
-		private global::System.Windows.Forms.TextBox findTextBox;
+        private System.Windows.Forms.Label label2;
 
-		// Token: 0x040000E9 RID: 233
-		private global::System.Windows.Forms.Label label1;
-	}
+        private System.Windows.Forms.TextBox findTextBox;
+
+        private System.Windows.Forms.Label label1;
+    }
 }

@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickTranslator", "QuickTranslator\QuickTranslator.csproj", "{D1CEDB0B-73FE-4355-B334-5F52BEFE64EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslatorEngine", "TranslatorEngine\TranslatorEngine.csproj", "{67F7A833-92CA-440E-9155-04228974501C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickConverter", "QuickConverter\QuickConverter.csproj", "{55F09024-A43F-4671-BF92-45B3C013C7ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickWebBrowser", "QuickWebBrowser\QuickWebBrowser.csproj", "{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +33,41 @@ Global
 		{D1CEDB0B-73FE-4355-B334-5F52BEFE64EA}.Release|Mixed Platforms.Build.0 = Release|x86
 		{D1CEDB0B-73FE-4355-B334-5F52BEFE64EA}.Release|x86.ActiveCfg = Release|x86
 		{D1CEDB0B-73FE-4355-B334-5F52BEFE64EA}.Release|x86.Build.0 = Release|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Debug|x86.ActiveCfg = Debug|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Debug|x86.Build.0 = Debug|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Release|Any CPU.ActiveCfg = Release|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Release|x86.ActiveCfg = Release|x86
+		{67F7A833-92CA-440E-9155-04228974501C}.Release|x86.Build.0 = Release|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Debug|x86.ActiveCfg = Debug|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Debug|x86.Build.0 = Debug|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Release|Any CPU.ActiveCfg = Release|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Release|Mixed Platforms.Build.0 = Release|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Release|x86.ActiveCfg = Release|x86
+		{55F09024-A43F-4671-BF92-45B3C013C7ED}.Release|x86.Build.0 = Release|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Debug|x86.ActiveCfg = Debug|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Debug|x86.Build.0 = Debug|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Release|Any CPU.ActiveCfg = Release|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Release|x86.ActiveCfg = Release|x86
+		{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {19DA5214-44EB-4C20-81E2-6E9EFF486F08}
 	EndGlobalSection
 EndGlobal

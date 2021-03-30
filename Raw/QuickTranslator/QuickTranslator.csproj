@@ -8,11 +8,13 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>QuickTranslator</RootNamespace>
     <AssemblyName>QuickTranslator</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>4096</FileAlignment>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>QuickTranslator.ico</ApplicationIcon>
-    <StartupObject>QuickTranslator.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -23,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -32,25 +35,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QuickConverter">
-      <HintPath>..\..\..\QuickTranslator_20130708\QuickConverter.exe</HintPath>
-    </Reference>
-    <Reference Include="QuickWebBrowser">
-      <HintPath>..\..\..\QuickTranslator_20130708\QuickWebBrowser.exe</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="TranslatorEngine">
-      <HintPath>..\..\..\QuickTranslator_20130708\TranslatorEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="WeifenLuo.WinFormsUI.Docking">
-      <HintPath>..\..\..\QuickTranslator_20130708\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
@@ -100,7 +92,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScrollingRichTextBox.cs" />
+    <Compile Include="ScrollingRichTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Shortcuts.cs" />
     <Compile Include="UpdatePhienAmForm.cs">
       <SubType>Form</SubType>
@@ -116,21 +110,57 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigurationPanel.resources" />
-    <EmbeddedResource Include="DocumentPanel.resources" />
-    <EmbeddedResource Include="ExportToWordForm.resources" />
-    <EmbeddedResource Include="FindAndReplaceForm.resources" />
-    <EmbeddedResource Include="MainForm.resources" />
-    <EmbeddedResource Include="PostTTVForm.resources" />
-    <EmbeddedResource Include="UpdatePhienAmForm.resources" />
-    <EmbeddedResource Include="UpdateVietPhraseForm.resources" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="app.config" />
     <None Include="app.manifest" />
     <None Include="PostTTVFormSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>PostTTVFormSettings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DockPanelSuite">
+      <Version>3.0.6</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ConfigurationPanel.resx">
+      <DependentUpon>ConfigurationPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentPanel.resx">
+      <DependentUpon>DocumentPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportToWordForm.resx">
+      <DependentUpon>ExportToWordForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindAndReplaceForm.resx">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PostTTVForm.resx">
+      <DependentUpon>PostTTVForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdatePhienAmForm.resx">
+      <DependentUpon>UpdatePhienAmForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateVietPhraseForm.resx">
+      <DependentUpon>UpdateVietPhraseForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuickConverter\QuickConverter.csproj">
+      <Project>{55F09024-A43F-4671-BF92-45B3C013C7ED}</Project>
+      <Name>QuickConverter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QuickWebBrowser\QuickWebBrowser.csproj">
+      <Project>{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}</Project>
+      <Name>QuickWebBrowser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TranslatorEngine\TranslatorEngine.csproj">
+      <Project>{67F7A833-92CA-440E-9155-04228974501C}</Project>
+      <Name>TranslatorEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
