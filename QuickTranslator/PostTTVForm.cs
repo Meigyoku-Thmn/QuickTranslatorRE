@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using TranslatorEngine;
 
 namespace QuickTranslator
 {
@@ -14,7 +15,7 @@ namespace QuickTranslator
         public PostTTVForm(string viet, string hanViet, string vietPhrase, string trung, DateTime editingStartDateTime)
         {
             InitializeComponent();
-            postToTTVTemplate = File.ReadAllText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "PostToTTV.config")).Trim();
+            postToTTVTemplate = File.ReadAllText(Path.Combine(Constants.ConfigsDir, "PostToTTV.config")).Trim();
             LoadSettings();
             this.viet = viet;
             this.hanViet = hanViet;

@@ -2072,11 +2072,11 @@ namespace QuickTranslator
 
         private ConfigurationPanel configurationPanel = new ConfigurationPanel(applicationConfigFilePath);
 
-        private static string dockPanelConfigFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslatorDockPanel.config");
+        private static string dockPanelConfigFilePath = Path.Combine(Constants.ConfigsDir, "QuickTranslatorDockPanel.config");
 
-        private static string applicationConfigFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslatorMain.config");
+        private static string applicationConfigFilePath = Path.Combine(Constants.ConfigsDir, "QuickTranslatorMain.config");
 
-        private static string shortcutDictionaryFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Shortcuts.txt");
+        private static string shortcutDictionaryFilePath = Path.Combine(Constants.AssetsDir, "Shortcuts.txt");
 
         private CharRange[] chineseHanVietMappingArray;
 

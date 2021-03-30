@@ -87,7 +87,7 @@ namespace TranslatorEngine
 
         static string GetDictionaryPathByKey(string key)
         {
-            var lines = File.ReadAllLines(Path.Combine(Constant.EngineDirPath, "Dictionaries.config"));
+            var lines = File.ReadAllLines(Path.Combine(Constants.ConfigsDir, "Dictionaries.config"));
 
             var dictPath = lines
                 .FirstOrDefault(line =>
@@ -95,7 +95,7 @@ namespace TranslatorEngine
                 ?.Split('=')[1] ?? "";
 
             if (!Path.IsPathRooted(dictPath))
-                dictPath = Path.Combine(Constant.EngineDirPath, dictPath);
+                dictPath = Path.Combine(Constants.WorkingDir, dictPath);
 
             if (!File.Exists(dictPath))
                 throw new FileNotFoundException("Dictionary Not Found: " + dictPath);
@@ -121,7 +121,7 @@ namespace TranslatorEngine
             if (!string.IsNullOrEmpty(_multiplyAlgorithm))
                 return _multiplyAlgorithm;
 
-            var lines = File.ReadAllLines(Path.Combine(Constant.EngineDirPath, "Dictionaries.config"));
+            var lines = File.ReadAllLines(Path.Combine(Constants.ConfigsDir, "Dictionaries.config"));
 
             _multiplyAlgorithm = lines
                 .FirstOrDefault(line =>

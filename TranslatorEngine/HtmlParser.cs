@@ -21,11 +21,9 @@ namespace TranslatorEngine
             if (configLoaded)
                 return;
 
-            string engineDirPath = Constant.EngineDirPath;
-
-            titleTokens = File.ReadAllLines(Path.Combine(engineDirPath, "HtmlChapterTitleTags.config"));
-            contentTokens = File.ReadAllLines(Path.Combine(engineDirPath, "HtmlChapterContentTags.config"));
-            noiseTokens = File.ReadAllLines(Path.Combine(engineDirPath, "HtmlRemovedTags.config"));
+            titleTokens = File.ReadAllLines(Path.Combine(Constants.ConfigsDir, "HtmlChapterTitleTags.config"));
+            contentTokens = File.ReadAllLines(Path.Combine(Constants.ConfigsDir, "HtmlChapterContentTags.config"));
+            noiseTokens = File.ReadAllLines(Path.Combine(Constants.ConfigsDir, "HtmlRemovedTags.config"));
 
             configLoaded = true;
         }

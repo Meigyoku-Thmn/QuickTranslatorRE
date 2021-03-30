@@ -791,9 +791,9 @@ namespace ExtendedWebBrowser2
 
         private bool isLostFocusWhenFullScreen;
 
-        public static string IgnoredListFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "IgnoredList.txt");
+        public static string IgnoredListFilePath = Path.Combine(Constants.AssetsDir, "IgnoredList.txt");
 
-        public static string BookmarksFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Bookmarks.txt");
+        public static string BookmarksFilePath = Path.Combine(Constants.AssetsDir, "Bookmarks.txt");
 
         private WindowManager _windowManager;
 

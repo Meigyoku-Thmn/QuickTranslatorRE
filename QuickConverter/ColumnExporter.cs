@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using TranslatorEngine;
 
 namespace QuickConverter
 {
@@ -16,32 +17,32 @@ namespace QuickConverter
             {
                 return;
             }
-            ColumnExporter.loadTemplate();
+            loadTemplate();
             string[][] array = new string[columnNames.Length][];
             for (int i = 0; i < columnNames.Length; i++)
             {
-                array[i] = ColumnExporter.getLines(columnContents[i], needRemoveBlankLines);
+                array[i] = getLines(columnContents[i], needRemoveBlankLines);
             }
-            int maxLineCount = ColumnExporter.getMaxLineCount(array);
+            int maxLineCount = getMaxLineCount(array);
             int num = columnNames.Length;
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append(ColumnExporter.HTML_BEFORE_TABLE);
-            stringBuilder.Append(ColumnExporter.HTML_ROW_HEADER_START);
+            stringBuilder.Append(HTML_BEFORE_TABLE);
+            stringBuilder.Append(HTML_ROW_HEADER_START);
             for (int j = 0; j < num; j++)
             {
-                stringBuilder.Append(ColumnExporter.HTML_CELL_HEADER.Replace("{header}", columnNames[j]));
+                stringBuilder.Append(HTML_CELL_HEADER.Replace("{header}", columnNames[j]));
             }
-            stringBuilder.Append(ColumnExporter.HTML_ROW_HEADER_END);
+            stringBuilder.Append(HTML_ROW_HEADER_END);
             for (int k = 0; k < maxLineCount; k++)
             {
-                stringBuilder.Append(ColumnExporter.HTML_ROW_START);
+                stringBuilder.Append(HTML_ROW_START);
                 for (int l = 0; l < num; l++)
                 {
-                    stringBuilder.Append(ColumnExporter.HTML_CELL.Replace("{content}", "<![CDATA[" + ((k < array[l].Length) ? array[l][k].Trim() : "") + "]]>"));
+                    stringBuilder.Append(HTML_CELL.Replace("{content}", "<![CDATA[" + ((k < array[l].Length) ? array[l][k].Trim() : "") + "]]>"));
                 }
-                stringBuilder.Append(ColumnExporter.HTML_ROW_END);
+                stringBuilder.Append(HTML_ROW_END);
             }
-            stringBuilder.Append(ColumnExporter.HTML_AFTER_TABLE);
+            stringBuilder.Append(HTML_AFTER_TABLE);
             File.WriteAllText(filePath, stringBuilder.ToString(), Encoding.UTF8);
         }
 
@@ -131,13 +132,13 @@ namespace QuickConverter
         // Token: 0x06000005 RID: 5 RVA: 0x00002450 File Offset: 0x00001450
         private static void loadTemplate()
         {
-            if (ColumnExporter.templateLoaded)
+            if (templateLoaded)
             {
                 return;
             }
-            string text = File.ReadAllText(ColumnExporter.columnTemplateFilePath).Replace("=\r\n", "").Replace("=\n", "");
-            ColumnExporter.HTML_BEFORE_TABLE = text.Substring(0, text.IndexOf("<w:tr"));
-            ColumnExporter.HTML_AFTER_TABLE = text.Substring(text.IndexOf("</w:tbl>"));
+            string text = File.ReadAllText(columnTemplateFilePath).Replace("=\r\n", "").Replace("=\n", "");
+            HTML_BEFORE_TABLE = text.Substring(0, text.IndexOf("<w:tr"));
+            HTML_AFTER_TABLE = text.Substring(text.IndexOf("</w:tbl>"));
             string text2 = text.Substring(text.IndexOf("<w:tr"), text.IndexOf("</w:tbl>") - text.IndexOf("<w:tr"));
             string text3 = text2.Substring(0, text2.IndexOf("</w:tr>"));
             StringBuilder stringBuilder = new StringBuilder();
@@ -149,16 +150,16 @@ namespace QuickConverter
                     break;
                 }
             }
-            ColumnExporter.HTML_ROW_HEADER_START = stringBuilder.ToString();
-            ColumnExporter.HTML_ROW_HEADER_END = "</w:tr>";
-            ColumnExporter.HTML_CELL_HEADER = text3.Replace(ColumnExporter.HTML_ROW_HEADER_START, "").Replace(ColumnExporter.HTML_ROW_HEADER_END, "");
-            ColumnExporter.HTML_ROW_START = ColumnExporter.HTML_ROW_HEADER_START;
-            ColumnExporter.HTML_ROW_END = ColumnExporter.HTML_ROW_HEADER_END;
+            HTML_ROW_HEADER_START = stringBuilder.ToString();
+            HTML_ROW_HEADER_END = "</w:tr>";
+            HTML_CELL_HEADER = text3.Replace(HTML_ROW_HEADER_START, "").Replace(HTML_ROW_HEADER_END, "");
+            HTML_ROW_START = HTML_ROW_HEADER_START;
+            HTML_ROW_END = HTML_ROW_HEADER_END;
             string text5 = text2.Substring(text2.IndexOf("</w:tr>") + "</w:tr>".Length);
             text5 = text5.Substring(text5.IndexOf("<w:tr"));
             text5 = text5.Substring(0, text5.IndexOf("</w:tr>") + "</w:tr>".Length);
-            ColumnExporter.HTML_CELL = text5.Replace(ColumnExporter.HTML_ROW_START, "").Replace(ColumnExporter.HTML_ROW_END, "");
-            ColumnExporter.templateLoaded = true;
+            HTML_CELL = text5.Replace(HTML_ROW_START, "").Replace(HTML_ROW_END, "");
+            templateLoaded = true;
         }
 
         // Token: 0x04000001 RID: 1
@@ -186,7 +187,7 @@ namespace QuickConverter
         private static string HTML_CELL = "<td>{content}</td>";
 
         // Token: 0x04000009 RID: 9
-        private static string columnTemplateFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "columnTemplate.doc");
+        private static string columnTemplateFilePath = Path.Combine(Constants.AssetsDir, "columnTemplate.doc");
 
         // Token: 0x0400000A RID: 10
         private static bool templateLoaded = false;

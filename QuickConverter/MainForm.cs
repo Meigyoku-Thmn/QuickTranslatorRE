@@ -123,7 +123,7 @@ namespace QuickConverter
             {
                 Directory.CreateDirectory(this.targetFolderTextBox.Text);
             }
-            string[] source = File.ReadAllLines(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "IgnoredFiles.txt"));
+            string[] source = File.ReadAllLines(Path.Combine(Constants.AssetsDir, "IgnoredFiles.txt"));
             string[] files = Directory.GetFiles(this.sourceFolderTextBox.Text);
             List<string> list = new List<string>();
             foreach (string text in files)

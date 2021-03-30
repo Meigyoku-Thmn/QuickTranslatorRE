@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using TranslatorEngine;
 
 namespace QuickConverter
 {
@@ -59,7 +60,7 @@ namespace QuickConverter
         private static string PARAGRAPH_END = "";
 
         // Token: 0x0400004A RID: 74
-        private static string vietPhraseTemplateFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "vietPhraseTemplate.doc");
+        private static string vietPhraseTemplateFilePath = Path.Combine(Constants.AssetsDir, "vietPhraseTemplate.doc");
 
         // Token: 0x0400004B RID: 75
         private static bool templateLoaded = false;

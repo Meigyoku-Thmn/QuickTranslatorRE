@@ -46,7 +46,7 @@
     <Compile Include="ApplicationLog.cs" />
     <Compile Include="CharRange.cs" />
     <Compile Include="CharsetDetector.cs" />
-    <Compile Include="Constant.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="DictionaryConfigurationHelper.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="HtmlParser.cs" />
