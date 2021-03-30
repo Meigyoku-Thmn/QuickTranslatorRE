@@ -1,10 +1,10 @@
-﻿using System;
+﻿using mshtml;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using MSHTML;
 
 namespace ExtendedWebBrowser2
 {
