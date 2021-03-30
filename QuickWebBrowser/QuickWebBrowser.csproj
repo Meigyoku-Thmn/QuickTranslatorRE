@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>QuickWebBrowser</RootNamespace>
+    <AssemblyName>QuickWebBrowser</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>4096</FileAlignment>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>QuickWebBrowser.ico</ApplicationIcon>
+    <StartupObject>
+    </StartupObject>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.MSHTML, Version=4.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Libs\Interop.MSHTML.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ExtendedWebBrowser2\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\Adblock.cs" />
+    <Compile Include="ExtendedWebBrowser2\Base64DecoderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\Base64DecoderForm.Designer.cs">
+      <DependentUpon>Base64DecoderForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\BrowserCommands.cs" />
+    <Compile Include="ExtendedWebBrowser2\BrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\BrowserExtendedNavigatingEventArgs.cs" />
+    <Compile Include="ExtendedWebBrowser2\BrowserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\BrowserForm.Designer.cs">
+      <DependentUpon>BrowserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\BrowserOptions.cs" />
+    <Compile Include="ExtendedWebBrowser2\CommandStateEventArgs.cs" />
+    <Compile Include="ExtendedWebBrowser2\ExtendedWebBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\HtmlUtilities.cs" />
+    <Compile Include="ExtendedWebBrowser2\IOleClientSite.cs" />
+    <Compile Include="ExtendedWebBrowser2\IOleContainer.cs" />
+    <Compile Include="ExtendedWebBrowser2\IOleControl.cs" />
+    <Compile Include="ExtendedWebBrowser2\IOleObject.cs" />
+    <Compile Include="ExtendedWebBrowser2\MSG.cs" />
+    <Compile Include="ExtendedWebBrowser2\NativeMethods.cs" />
+    <Compile Include="ExtendedWebBrowser2\NotifyCollection.cs" />
+    <Compile Include="ExtendedWebBrowser2\OpenUrlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\OpenUrlForm.Designer.cs">
+      <DependentUpon>OpenUrlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\PopupBlockerFilterLevel.cs" />
+    <Compile Include="ExtendedWebBrowser2\Program.cs" />
+    <Compile Include="ExtendedWebBrowser2\Properties\Resources.cs" />
+    <Compile Include="ExtendedWebBrowser2\Properties\Settings.Designer.cs">
+      <DependentUpon>Settings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\RECT.cs" />
+    <Compile Include="ExtendedWebBrowser2\ScriptError.cs" />
+    <Compile Include="ExtendedWebBrowser2\ScriptErrorManager.cs" />
+    <Compile Include="ExtendedWebBrowser2\ScriptErrorWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\ScriptErrorWindow.Designer.cs">
+      <DependentUpon>ScriptErrorWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\SettingsHelper.cs" />
+    <Compile Include="ExtendedWebBrowser2\TextChangedEventArgs.cs" />
+    <Compile Include="ExtendedWebBrowser2\UnsafeNativeMethods.cs" />
+    <Compile Include="ExtendedWebBrowser2\UrlContext.cs" />
+    <Compile Include="ExtendedWebBrowser2\ViewSourceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\ViewSourceForm.Designer.cs">
+      <DependentUpon>ViewSourceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendedWebBrowser2\WindowManager.cs" />
+    <Compile Include="FullScreenMode\FullScreen.cs" />
+    <Compile Include="FullScreenMode\HandleTaskBar.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ExtendedWebBrowser2\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedWebBrowser2\Base64DecoderForm.resx">
+      <DependentUpon>Base64DecoderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedWebBrowser2\BrowserControl.resx">
+      <DependentUpon>BrowserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedWebBrowser2\BrowserForm.resx">
+      <DependentUpon>BrowserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedWebBrowser2\OpenUrlForm.resx">
+      <DependentUpon>OpenUrlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedWebBrowser2\Options.resx">
+      <DependentUpon>Options.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedWebBrowser2\Properties\Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedWebBrowser2\ScriptErrorWindow.resx">
+      <DependentUpon>ScriptErrorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedWebBrowser2\ViewSourceForm.resx">
+      <DependentUpon>ViewSourceForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="app.manifest" />
+    <None Include="ExtendedWebBrowser2\Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TranslatorEngine\TranslatorEngine.csproj">
+      <Project>{67F7A833-92CA-440E-9155-04228974501C}</Project>
+      <Name>TranslatorEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DockPanelSuite">
+      <Version>3.0.6</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

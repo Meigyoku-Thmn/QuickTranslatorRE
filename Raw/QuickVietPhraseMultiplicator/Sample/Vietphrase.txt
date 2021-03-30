@@ -1,2 +1,0 @@
-奖金=tiền thưởng
-奖项=giải thưởng

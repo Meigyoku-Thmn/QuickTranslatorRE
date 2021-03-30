@@ -1,3 +1,0 @@
-﻿Entry	Action	User Name	Updated Date
-领导的	Deleted	NgocHuynhMinhTran	2021-03-28 23:12:49.973+07:00
-当领导的	Deleted	NgocHuynhMinhTran	2021-03-28 23:15:14.521+07:00
