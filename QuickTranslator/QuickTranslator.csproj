@@ -160,9 +160,9 @@
       <Project>{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}</Project>
       <Name>QuickWebBrowser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TranslatorEngine\TranslatorEngine.csproj">
+    <ProjectReference Include="..\QuickTranslatorCore\QuickTranslatorCore.csproj">
       <Project>{67F7A833-92CA-440E-9155-04228974501C}</Project>
-      <Name>TranslatorEngine</Name>
+      <Name>QuickTranslatorCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

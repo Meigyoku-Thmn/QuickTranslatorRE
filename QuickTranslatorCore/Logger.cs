@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 
-namespace TranslatorEngine
+namespace QuickTranslatorCore
 {
-    public class ApplicationLog
+    public class Logger
     {
         const int OneMB = 1 * 1024 * 1024;
 

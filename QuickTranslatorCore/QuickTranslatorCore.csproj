@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{67F7A833-92CA-440E-9155-04228974501C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>TranslatorEngine</RootNamespace>
-    <AssemblyName>TranslatorEngine</AssemblyName>
+    <RootNamespace>QuickTranslatorCore</RootNamespace>
+    <AssemblyName>QuickTranslatorCore</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>4096</FileAlignment>
     <TargetFrameworkProfile />
@@ -43,15 +43,41 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationLog.cs" />
+    <Compile Include="Engine\DictData.cs" />
+    <Compile Include="Engine\DictInitializer.cs" />
+    <Compile Include="Engine\DictLogger.cs" />
+    <Compile Include="Engine\DictOperator.cs" />
+    <Compile Include="Engine\DictTranslator.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="CharRange.cs" />
     <Compile Include="CharsetDetector.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="DictionaryConfigurationHelper.cs" />
+    <Compile Include="DictionaryConfiguration.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="HtmlParser.cs" />
+    <Compile Include="HtmlScrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TranslatorEngine.cs" />
+    <Compile Include="TranslationEngine.Algorithm.cs">
+      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TranslationEngine.Database.cs" />
+    <Compile Include="TranslationEngine.Deleter.cs">
+      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TranslationEngine.Helper.cs">
+      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TranslationEngine.Normalizer.cs">
+      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TranslationEngine.Reader.cs">
+      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TranslationEngine.Updater.cs">
+      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TranslationEngine.Writer.cs">
+      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NChardet">

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TranslatorEngine
+namespace QuickTranslatorCore
 {
     public class CharRange
     {

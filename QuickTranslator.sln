@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickTranslator", "QuickTranslator\QuickTranslator.csproj", "{D1CEDB0B-73FE-4355-B334-5F52BEFE64EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslatorEngine", "TranslatorEngine\TranslatorEngine.csproj", "{67F7A833-92CA-440E-9155-04228974501C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickTranslatorCore", "QuickTranslatorCore\QuickTranslatorCore.csproj", "{67F7A833-92CA-440E-9155-04228974501C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickConverter", "QuickConverter\QuickConverter.csproj", "{55F09024-A43F-4671-BF92-45B3C013C7ED}"
 EndProject

@@ -4,29 +4,20 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace TranslatorEngine
+namespace QuickTranslatorCore
 {
-    public class HtmlParser
+    public class HtmlScrapper
     {
-        static bool configLoaded = false;
+        static readonly string[] titleTokens = File.ReadAllLines(
+            Path.Combine(Constants.ConfigsDir, "HtmlChapterTitleTags.config"));
 
-        static string[] titleTokens;
-        static string[] contentTokens;
-        static string[] noiseTokens;
+        static readonly string[] contentTokens = File.ReadAllLines(
+            Path.Combine(Constants.ConfigsDir, "HtmlChapterContentTags.config"));
+
+        static readonly string[] noiseTokens = File.ReadAllLines(
+            Path.Combine(Constants.ConfigsDir, "HtmlRemovedTags.config"));
 
         static readonly Regex NoiseToken = new Regex("<(.|\\n)*?>", RegexOptions.Compiled);
-
-        static void LoadConfiguration()
-        {
-            if (configLoaded)
-                return;
-
-            titleTokens = File.ReadAllLines(Path.Combine(Constants.ConfigsDir, "HtmlChapterTitleTags.config"));
-            contentTokens = File.ReadAllLines(Path.Combine(Constants.ConfigsDir, "HtmlChapterContentTags.config"));
-            noiseTokens = File.ReadAllLines(Path.Combine(Constants.ConfigsDir, "HtmlRemovedTags.config"));
-
-            configLoaded = true;
-        }
 
         /// <summary>
         /// Try to extract content from html of Chinese websites
@@ -36,8 +27,6 @@ namespace TranslatorEngine
         /// <returns></returns>
         public static string GetChineseContent(string htmlContent, bool needMarkChapterHeaders)
         {
-            LoadConfiguration();
-
             var htmlContentLower = htmlContent.ToLower();
 
             var fullContent = new StringBuilder();

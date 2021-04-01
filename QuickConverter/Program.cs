@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
 namespace QuickConverter
 {
@@ -37,7 +37,7 @@ namespace QuickConverter
         private static void UnhandledExceptionHandler(Exception exception)
         {
             string text = "QuickConverter";
-            ApplicationLog.Log(Path.GetDirectoryName(Application.ExecutablePath), text, exception);
+            Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), text, exception);
             MessageBox.Show("Lỗi chương trình! Hãy gửi " + text + ".log cho tác giả. Xin cám ơn!", "Lỗi chương trình", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             Application.Exit();
         }

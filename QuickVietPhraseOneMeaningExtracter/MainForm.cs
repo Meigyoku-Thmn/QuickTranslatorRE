@@ -5,9 +5,9 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
-using static TranslatorEngine.TranslatorEngine;
+using static QuickTranslatorCore.TranslationEngine;
 
 namespace QuickVietPhraseOneMeaningExtracter
 {

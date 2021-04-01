@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
-using static TranslatorEngine.TranslatorEngine;
+using static QuickTranslatorCore.TranslationEngine;
 
 namespace QuickVietPhraseMultiplicator
 {
@@ -93,7 +93,7 @@ namespace QuickVietPhraseMultiplicator
                         select g.First())
                         .ToDictionary(item => item.key, item => item.value);
 
-            SaveDictionaryToFileWithoutSorting(dict, Path.Combine(
+            SaveDictionaryToFileNoSort(dict, Path.Combine(
                 txtOutputDirPath.Text, $"QuickVietPhraseMultiplicator_{DateTime.Now:yyyyMMddHHmmss}.txt"));
 
             MessageBox.Show("Xong!!!");

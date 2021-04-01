@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
-using static TranslatorEngine.TranslatorEngine;
+using static QuickTranslatorCore.TranslationEngine;
 
 namespace QuickVietPhraseMerger
 {
@@ -217,16 +217,16 @@ namespace QuickVietPhraseMerger
                 if (mergedDict.ContainsKey(vietPhrase2.Key))
                 {
                     mergedDict[vietPhrase2.Key] = MergeMeanings(mergedDict[vietPhrase2.Key], vietPhrase2.Value);
-                    CreateHistoryLog(vietPhrase2.Key, "Updated", ref stringBuilder);
+                    CreateLog(vietPhrase2.Key, "Updated", ref stringBuilder);
                 }
                 else
                 {
                     mergedDict[vietPhrase2.Key] = vietPhrase2.Value;
-                    CreateHistoryLog(vietPhrase2.Key, "Added", ref stringBuilder);
+                    CreateLog(vietPhrase2.Key, "Added", ref stringBuilder);
                 }
             }
 
-            WriteHistoryLog(stringBuilder.ToString(), logPath);
+            WriteLog(stringBuilder.ToString(), logPath);
 
             return mergedDict;
         }
@@ -261,7 +261,7 @@ namespace QuickVietPhraseMerger
         private DataSet LoadDictionaryLog(string dictLogPath)
         {
             var result = new DataSet();
-            LoadDictionaryHistory(dictLogPath, ref result);
+            Helper.LoadLog(dictLogPath, ref result);
             return result;
         }
 

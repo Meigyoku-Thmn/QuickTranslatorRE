@@ -9,10 +9,10 @@ using System.Threading;
 using System.Windows.Forms;
 using ExtendedWebBrowser2.Properties;
 using FullScreenMode;
-using TranslatorEngine;
+using QuickTranslatorCore;
 using WeifenLuo.WinFormsUI.Docking;
 
-using static TranslatorEngine.TranslatorEngine;
+using static QuickTranslatorCore.TranslationEngine;
 
 namespace ExtendedWebBrowser2
 {
@@ -154,7 +154,7 @@ namespace ExtendedWebBrowser2
         private void MainForm_Load(object sender, EventArgs e)
         {
             _windowManager.New(false, true);
-            if (DictionaryDirty)
+            if (FlagToLoadData)
             {
                 new Thread(delegate () {
                     LoadDictionaries();
@@ -376,7 +376,7 @@ namespace ExtendedWebBrowser2
                 htmlDocument.Title = title;
                 return;
             }
-            text = StandardizeInput(text);
+            text = NormalizeTextAndRemoveIgnoredChinesePhrases(text);
             text = text.Replace(". htm", ".htm");
             if (TranslationType == 1)
             {
@@ -680,7 +680,7 @@ namespace ExtendedWebBrowser2
 
         private void ReloadDictsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DictionaryDirty = true;
+            FlagToLoadData = true;
             LoadDictionaries();
             RefreshToolStripButton_Click(null, null);
         }
@@ -773,7 +773,7 @@ namespace ExtendedWebBrowser2
             {
                 return;
             }
-            string chineseContent = HtmlParser.GetChineseContent(_windowManager.ActiveBrowserControl.OriginalHTMLSource, false);
+            string chineseContent = HtmlScrapper.GetChineseContent(_windowManager.ActiveBrowserControl.OriginalHTMLSource, false);
             try
             {
                 Clipboard.SetDataObject(chineseContent, true, 50, 100);

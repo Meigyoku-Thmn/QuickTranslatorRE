@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
-using static TranslatorEngine.TranslatorEngine;
+using static QuickTranslatorCore.TranslationEngine;
 
 namespace QuickConverter
 {
@@ -212,7 +212,7 @@ namespace QuickConverter
                 int num2 = 0;
                 while (num2 < mergeOption && sourceFiles.Length > i + num2)
                 {
-                    stringBuilder.Append(StandardizeInput(this.readFile(sourceFiles[i + num2], Encoding.GetEncoding(name), needMarkChapterHeaders))).Append("\n\n----------oOo----------\n\n");
+                    stringBuilder.Append(NormalizeTextAndRemoveIgnoredChinesePhrases(this.readFile(sourceFiles[i + num2], Encoding.GetEncoding(name), needMarkChapterHeaders))).Append("\n\n----------oOo----------\n\n");
                     if (num2 == 0)
                     {
                         stringBuilder2.Append(this.getOutputFileName(sourceFiles[i + num2], i + num2, num, @checked));
@@ -264,7 +264,7 @@ namespace QuickConverter
             string text = File.ReadAllText(filePath, encoding);
             if (filePath.EndsWith("html") || filePath.EndsWith("htm") || filePath.EndsWith("asp") || filePath.EndsWith("aspx") || filePath.EndsWith("php"))
             {
-                text = HtmlParser.GetChineseContent(text, needMarkChapterHeaders);
+                text = HtmlScrapper.GetChineseContent(text, needMarkChapterHeaders);
             }
             else if (needMarkChapterHeaders && text.Contains("\n"))
             {

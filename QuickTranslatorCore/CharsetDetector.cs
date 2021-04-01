@@ -2,7 +2,7 @@
 using System.IO;
 using NChardet;
 
-namespace TranslatorEngine
+namespace QuickTranslatorCore
 {
     public class CharsetDetector
     {

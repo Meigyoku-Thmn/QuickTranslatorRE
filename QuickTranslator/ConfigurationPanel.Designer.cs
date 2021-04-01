@@ -212,7 +212,7 @@
             // 
             this.vietPhrase_OnlyWrapTwoMeaningRadioButton.Location = new System.Drawing.Point(6, 96);
             this.vietPhrase_OnlyWrapTwoMeaningRadioButton.Name = "vietPhrase_OnlyWrapTwoMeaningRadioButton";
-            this.vietPhrase_OnlyWrapTwoMeaningRadioButton.Size = new System.Drawing.Size(219, 24);
+            this.vietPhrase_OnlyWrapTwoMeaningRadioButton.Size = new System.Drawing.Size(252, 24);
             this.vietPhrase_OnlyWrapTwoMeaningRadioButton.TabIndex = 5;
             this.vietPhrase_OnlyWrapTwoMeaningRadioButton.TabStop = true;
             this.vietPhrase_OnlyWrapTwoMeaningRadioButton.Text = "Chỉ sử dụng [ ... ] nếu có hơn một nghĩa";
@@ -223,7 +223,7 @@
             // 
             this.vietPhrase_AlwaysWrapRadioButton.Location = new System.Drawing.Point(6, 47);
             this.vietPhrase_AlwaysWrapRadioButton.Name = "vietPhrase_AlwaysWrapRadioButton";
-            this.vietPhrase_AlwaysWrapRadioButton.Size = new System.Drawing.Size(219, 24);
+            this.vietPhrase_AlwaysWrapRadioButton.Size = new System.Drawing.Size(252, 24);
             this.vietPhrase_AlwaysWrapRadioButton.TabIndex = 4;
             this.vietPhrase_AlwaysWrapRadioButton.TabStop = true;
             this.vietPhrase_AlwaysWrapRadioButton.Text = "Luôn sử dụng [ ... ] (cả Hán Việt)";
@@ -234,7 +234,7 @@
             // 
             this.vietPhrase_NoWrapRadioButton.Location = new System.Drawing.Point(6, 19);
             this.vietPhrase_NoWrapRadioButton.Name = "vietPhrase_NoWrapRadioButton";
-            this.vietPhrase_NoWrapRadioButton.Size = new System.Drawing.Size(219, 24);
+            this.vietPhrase_NoWrapRadioButton.Size = new System.Drawing.Size(252, 24);
             this.vietPhrase_NoWrapRadioButton.TabIndex = 3;
             this.vietPhrase_NoWrapRadioButton.TabStop = true;
             this.vietPhrase_NoWrapRadioButton.Text = "Không sử dụng [ ... ]";
@@ -279,7 +279,7 @@
             // 
             this.vietPhraseOneMeaning_AlwaysWrapRadioButton.Location = new System.Drawing.Point(6, 46);
             this.vietPhraseOneMeaning_AlwaysWrapRadioButton.Name = "vietPhraseOneMeaning_AlwaysWrapRadioButton";
-            this.vietPhraseOneMeaning_AlwaysWrapRadioButton.Size = new System.Drawing.Size(179, 24);
+            this.vietPhraseOneMeaning_AlwaysWrapRadioButton.Size = new System.Drawing.Size(237, 24);
             this.vietPhraseOneMeaning_AlwaysWrapRadioButton.TabIndex = 7;
             this.vietPhraseOneMeaning_AlwaysWrapRadioButton.TabStop = true;
             this.vietPhraseOneMeaning_AlwaysWrapRadioButton.Text = "Luôn sử dụng [ ... ] (cả Hán Việt)";

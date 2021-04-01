@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
 namespace QuickConverter
 {

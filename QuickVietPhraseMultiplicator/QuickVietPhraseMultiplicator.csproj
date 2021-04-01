@@ -43,9 +43,6 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="TranslatorEngine">
-      <HintPath>..\TranslatorEngine\bin\Debug\TranslatorEngine.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
@@ -67,6 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuickTranslatorCore\QuickTranslatorCore.csproj">
+      <Project>{67f7a833-92ca-440e-9155-04228974501c}</Project>
+      <Name>QuickTranslatorCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

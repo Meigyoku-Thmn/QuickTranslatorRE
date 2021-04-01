@@ -10,10 +10,10 @@ using System.Web;
 using System.Windows.Forms;
 using ExtendedWebBrowser2;
 using QuickConverter;
-using TranslatorEngine;
+using QuickTranslatorCore;
 using WeifenLuo.WinFormsUI.Docking;
 
-using static TranslatorEngine.TranslatorEngine;
+using static QuickTranslatorCore.TranslationEngine;
 
 namespace QuickTranslator
 {
@@ -227,7 +227,7 @@ namespace QuickTranslator
             catch
             {
             }
-            chineseDocumentPanel.SetTextContent(StandardizeInput(original));
+            chineseDocumentPanel.SetTextContent(NormalizeTextAndRemoveIgnoredChinesePhrases(original));
             Translate(-2, -2, -2);
             Text = "Quick Translator - Untitled";
             workingFilePath = "";
@@ -238,9 +238,7 @@ namespace QuickTranslator
         {
             chineseContent = chineseDocumentPanel.GetTextContent();
             if (string.IsNullOrEmpty(chineseContent) || string.IsNullOrEmpty(chineseContent.Trim()))
-            {
                 return;
-            }
             TranslateHanViet(currentHanVietDisplayedLine);
             TranslateVietPhraseOneMeaning(currentVietPhraseOneMeaningDisplayedLine);
             TranslateVietPhrase(currentVietPhraseDisplayedLine);
@@ -251,7 +249,7 @@ namespace QuickTranslator
         private void TranslateHanViet(int currentDisplayedLine)
         {
             new Thread(delegate () {
-                lock (LastTranslatedWord_HanViet)
+                lock (LastTranslatedWord_SinoViet)
                 {
                     if (!string.IsNullOrEmpty(chineseContent))
                     {
@@ -385,7 +383,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                ApplicationLog.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
+                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
             }
         }
 
@@ -430,7 +428,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                ApplicationLog.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
+                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
             }
         }
 
@@ -484,7 +482,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                ApplicationLog.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
+                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
             }
         }
 
@@ -526,7 +524,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                ApplicationLog.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
+                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
             }
         }
 
@@ -554,7 +552,7 @@ namespace QuickTranslator
                 vietPhraseDocumentPanel.HighlightText(vietPhraseCharRangeFromChineseIndex.StartIndex, vietPhraseCharRangeFromChineseIndex.Length, true, true);
             }
             CharRange vietPhraseOneMeaningCharRangeFromChineseIndex = GetVietPhraseOneMeaningCharRangeFromChineseIndex(startIndex);
-            string text2 = GetVietPhraseOrNameValueFromKey(chineseContent.Substring(startIndex, num));
+            string text2 = GetVietPhraseOrName(chineseContent.Substring(startIndex, num));
             if (vietPhraseOneMeaningDocumentPanel.CurrentHighlightedTextStartIndex == vietPhraseOneMeaningCharRangeFromChineseIndex.StartIndex && vietPhraseOneMeaningDocumentPanel.CurrentHighlightedTextLength == vietPhraseOneMeaningCharRangeFromChineseIndex.Length && !"\n".Equals(vietPhraseOneMeaningDocumentPanel.GetHighlightText()))
             {
                 if (string.IsNullOrEmpty(text2))
@@ -639,7 +637,7 @@ namespace QuickTranslator
             vietPhraseOneMeaningDocumentPanel.ReplaceHighlightedText(text3);
             if ("Update VietPhrase".Equals(toolStripMenuItem.Text))
             {
-                string[] array2 = GetVietPhraseValueFromKey(array[2].Trim()).Split("/|".ToCharArray());
+                string[] array2 = GetVietPhrase(array[2].Trim()).Split("/|".ToCharArray());
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.Append(text);
                 foreach (string text4 in array2)
@@ -650,7 +648,7 @@ namespace QuickTranslator
                         stringBuilder.Append(text4);
                     }
                 }
-                UpdateVietPhraseDictionary(array[2], stringBuilder.ToString(), false);
+                UpdateVietPhraseDict(array[2], stringBuilder.ToString(), false);
             }
             vietPhraseOneMeaningDocumentPanel.chooseMeaningContextMenuStrip.Hide();
         }
@@ -688,7 +686,7 @@ namespace QuickTranslator
                 text3 = char.ToUpper(text[0]) + ((text.Length <= 1) ? "" : text.Substring(1));
             }
             vietPhraseOneMeaningDocumentPanel.ReplaceHighlightedText(text3);
-            string vietPhraseValueFromKey = GetVietPhraseValueFromKey(array[2].Trim());
+            string vietPhraseValueFromKey = GetVietPhrase(array[2].Trim());
             string[] array2 = (vietPhraseValueFromKey ?? "").Split("/|".ToCharArray());
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(text);
@@ -700,7 +698,7 @@ namespace QuickTranslator
                     stringBuilder.Append(text4);
                 }
             }
-            UpdateVietPhraseDictionary(array[2], stringBuilder.ToString().TrimEnd("/".ToCharArray()), false);
+            UpdateVietPhraseDict(array[2], stringBuilder.ToString().TrimEnd("/".ToCharArray()), false);
             vietPhraseOneMeaningDocumentPanel.chooseMeaningContextMenuStrip.Hide();
         }
 
@@ -1076,7 +1074,7 @@ namespace QuickTranslator
 
         private void ReloadDictToolStripButtonClick(object sender, EventArgs e)
         {
-            DictionaryDirty = true;
+            FlagToLoadData = true;
             LoadDictionaries();
             Shortcuts.LoadFromFile(shortcutDictionaryFilePath);
             Retranslate();
@@ -1248,11 +1246,11 @@ namespace QuickTranslator
                 {
                     MessageBox.Show("Định dạng của file không đúng!");
                     string application = "QuickTranslator";
-                    ApplicationLog.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
+                    Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
                     return;
                 }
             }
-            chineseDocumentPanel.SetTextContent(StandardizeInput(original));
+            chineseDocumentPanel.SetTextContent(NormalizeTextAndRemoveIgnoredChinesePhrases(original));
             vietDocumentPanel.SetRftContent(rftContent);
             vietDocumentPanel.AppendText("");
             vietDocumentPanel.ScrollToBottom();
@@ -1691,7 +1689,7 @@ namespace QuickTranslator
             catch (Exception exception)
             {
                 string application = "QuickTranslator";
-                ApplicationLog.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
+                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
             }
         }
 
@@ -1726,7 +1724,7 @@ namespace QuickTranslator
                     {
                         text4 = char.ToUpper(text4[0]) + text4.Substring(1);
                         CharRange chineseCharRangeFromVietPhraseOneMeaningIndex = GetChineseCharRangeFromVietPhraseOneMeaningIndex(selectionStart);
-                        if (chineseCharRangeFromVietPhraseOneMeaningIndex != null && GetNameValueFromKey(chineseContent.Substring(chineseCharRangeFromVietPhraseOneMeaningIndex.StartIndex, chineseCharRangeFromVietPhraseOneMeaningIndex.Length)) == null)
+                        if (chineseCharRangeFromVietPhraseOneMeaningIndex != null && GetName(chineseContent.Substring(chineseCharRangeFromVietPhraseOneMeaningIndex.StartIndex, chineseCharRangeFromVietPhraseOneMeaningIndex.Length)) == null)
                         {
                             text4 = text4.Substring(0, num3) + char.ToLower(text4[num3]) + text4.Substring(num3 + 1);
                         }
@@ -1768,7 +1766,7 @@ namespace QuickTranslator
             {
                 text4 = char.ToUpper(text4[0]) + text4.Substring(1);
                 int num5 = text4.Length - num4 + (text4.EndsWith(" ") ? 0 : 1);
-                if (GetNameValueFromKey(chineseDocumentPanel.GetHighlightText()) == null)
+                if (GetName(chineseDocumentPanel.GetHighlightText()) == null)
                 {
                     text4 = text4.Substring(0, num5) + char.ToLower(text4[num5]) + text4.Substring(num5 + 1);
                 }
@@ -1794,7 +1792,7 @@ namespace QuickTranslator
         private void RetranslateToolStripButtonClick(object sender, EventArgs e)
         {
             int currentLineIndex = chineseDocumentPanel.GetCurrentLineIndex();
-            UpdateDocumentPanel(chineseDocumentPanel, StandardizeInput(chineseDocumentPanel.GetTextContent()), currentLineIndex);
+            UpdateDocumentPanel(chineseDocumentPanel, NormalizeTextAndRemoveIgnoredChinesePhrases(chineseDocumentPanel.GetTextContent()), currentLineIndex);
             Retranslate();
         }
 
@@ -1834,7 +1832,7 @@ namespace QuickTranslator
                     text = textReader.ReadToEnd();
                 }
                 string original = text.Substring(text.IndexOf("[Chinese]\n") + "[Chinese]\n".Length, text.IndexOf("[Viet]\n") - text.IndexOf("[Chinese]\n") - "[Chinese]\n".Length);
-                chineseDocumentPanel.SetTextContent(StandardizeInput(original));
+                chineseDocumentPanel.SetTextContent(NormalizeTextAndRemoveIgnoredChinesePhrases(original));
                 string rftContent = text.Substring(text.IndexOf("[Viet]\n") + "[Viet]\n".Length);
                 vietDocumentPanel.SetRftContent(rftContent);
                 vietDocumentPanel.AppendText("");
@@ -1898,9 +1896,9 @@ namespace QuickTranslator
             isNewTranslationWork = true;
             if (fileName.EndsWith("html") || fileName.EndsWith("htm") || fileName.EndsWith("asp") || fileName.EndsWith("aspx") || fileName.EndsWith("php"))
             {
-                text = HtmlParser.GetChineseContent(text, false);
+                text = HtmlScrapper.GetChineseContent(text, false);
             }
-            text = StandardizeInput(text);
+            text = NormalizeTextAndRemoveIgnoredChinesePhrases(text);
             chineseDocumentPanel.SetTextContent(text);
             Text = "Quick Translator - " + fileName;
             Translate(-2, -2, -2);
@@ -1918,10 +1916,10 @@ namespace QuickTranslator
             {
                 MessageBox.Show("Định dạng của file không đúng!");
                 string application = "QuickTranslator";
-                ApplicationLog.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
+                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
                 return;
             }
-            chineseDocumentPanel.SetTextContent(StandardizeInput(original));
+            chineseDocumentPanel.SetTextContent(NormalizeTextAndRemoveIgnoredChinesePhrases(original));
             vietDocumentPanel.SetTextContent(textContent);
             vietDocumentPanel.ScrollToBottom();
             vietDocumentPanel.FocusInRichTextBox();
@@ -2048,7 +2046,7 @@ namespace QuickTranslator
             string textContent = chineseDocumentPanel.GetTextContent();
             foreach (char character in textContent)
             {
-                if (IsChinese(character))
+                if (IsChineseChar(character))
                 {
                     num++;
                 }

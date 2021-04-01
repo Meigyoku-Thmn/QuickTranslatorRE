@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
-using static TranslatorEngine.TranslatorEngine;
+using static QuickTranslatorCore.TranslationEngine;
 
 namespace QuickAnalyzer
 {
@@ -296,7 +296,7 @@ namespace QuickAnalyzer
                 || filePath.EndsWith("aspx") || filePath.EndsWith("php")
             )
             {
-                text = HtmlParser.GetChineseContent(text, needMarkChapterHeaders);
+                text = HtmlScrapper.GetChineseContent(text, needMarkChapterHeaders);
             }
             else if (needMarkChapterHeaders && text.Contains("\n"))
             {

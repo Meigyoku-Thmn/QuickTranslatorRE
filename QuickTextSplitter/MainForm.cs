@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
 namespace QuickTextSplitter
 {

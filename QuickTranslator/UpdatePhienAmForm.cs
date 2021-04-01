@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using TranslatorEngine;
+using QuickTranslatorCore;
 
-using static TranslatorEngine.TranslatorEngine;
+using static QuickTranslatorCore.TranslationEngine;
 
 namespace QuickTranslator
 {
@@ -32,7 +32,7 @@ namespace QuickTranslator
                 '\n',
                 '\t'
             });
-            entryCountLabel.Text = GetPhienAmDictionaryCount().ToString();
+            entryCountLabel.Text = GetSinoVietPronunciationDictCount().ToString();
             ActiveControl = phienAmTextBox;
         }
 
@@ -53,7 +53,7 @@ namespace QuickTranslator
                 updateButton.Enabled = false;
                 return;
             }
-            bool flag = ExistInPhienAmDictionary(chineseTextBox.Text);
+            bool flag = ExistInSinoVietPronunciationDict(chineseTextBox.Text);
             deleteButton.Enabled = flag;
             updateButton.Enabled = true;
             updateButton.Text = (flag ? "Update" : "Add");
@@ -69,13 +69,13 @@ namespace QuickTranslator
             {
                 return;
             }
-            UpdatePhienAmDictionary(chineseTextBox.Text, phienAmTextBox.Text, sortingCheckBox.Checked);
+            UpdateSinoVietPronunciationDict(chineseTextBox.Text, phienAmTextBox.Text, sortingCheckBox.Checked);
             Close();
         }
 
         private void DeleteButtonClick(object sender, EventArgs e)
         {
-            DeleteKeyFromPhienAmDictionary(chineseTextBox.Text, sortingCheckBox.Checked);
+            DeleteKeyFromSinoVietPronunciationDict(chineseTextBox.Text, sortingCheckBox.Checked);
             Close();
         }
 
