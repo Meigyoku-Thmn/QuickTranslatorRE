@@ -6,6 +6,7 @@ namespace ExtendedWebBrowser2
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("0000011B-0000-0000-C000-000000000046")]
     [ComVisible(true)]
+    [CLSCompliantAttribute(false)]
     public interface IOleContainer
     {
         [PreserveSig]

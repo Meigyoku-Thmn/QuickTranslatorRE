@@ -2,6 +2,7 @@
 
 namespace ExtendedWebBrowser2
 {
+    [CLSCompliantAttribute(false)]
     public enum BrowserOptions : uint
     {
         None,

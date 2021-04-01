@@ -15,4 +15,3 @@ using System.Security.Permissions;
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCompany("")]
-[assembly: PermissionSet(SecurityAction.RequestMinimum, Name = "FullTrust")]
