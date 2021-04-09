@@ -81,10 +81,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OnlineTranslationEngine\OnlineTranslationEngine.csproj">
-      <Project>{AFE84391-233B-436E-A42F-08A4B6C652C3}</Project>
-      <Name>OnlineTranslationEngine</Name>
-    </ProjectReference>
     <ProjectReference Include="..\QuickTranslatorCore\QuickTranslatorCore.csproj">
       <Project>{67F7A833-92CA-440E-9155-04228974501C}</Project>
       <Name>QuickTranslatorCore</Name>

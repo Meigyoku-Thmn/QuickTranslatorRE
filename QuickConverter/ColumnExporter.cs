@@ -7,46 +7,35 @@ using QuickTranslatorCore;
 
 namespace QuickConverter
 {
-    // Token: 0x02000002 RID: 2
     public class ColumnExporter
     {
-        // Token: 0x06000001 RID: 1 RVA: 0x00002050 File Offset: 0x00001050
         public static void Export(string[] columnNames, string[] columnContents, bool needRemoveBlankLines, string filePath)
         {
             if (columnNames.Length != columnContents.Length || columnNames.Length == 0)
-            {
                 return;
-            }
             loadTemplate();
             string[][] array = new string[columnNames.Length][];
             for (int i = 0; i < columnNames.Length; i++)
-            {
                 array[i] = getLines(columnContents[i], needRemoveBlankLines);
-            }
             int maxLineCount = getMaxLineCount(array);
             int num = columnNames.Length;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(HTML_BEFORE_TABLE);
             stringBuilder.Append(HTML_ROW_HEADER_START);
             for (int j = 0; j < num; j++)
-            {
                 stringBuilder.Append(HTML_CELL_HEADER.Replace("{header}", columnNames[j]));
-            }
             stringBuilder.Append(HTML_ROW_HEADER_END);
             for (int k = 0; k < maxLineCount; k++)
             {
                 stringBuilder.Append(HTML_ROW_START);
                 for (int l = 0; l < num; l++)
-                {
                     stringBuilder.Append(HTML_CELL.Replace("{content}", "<![CDATA[" + ((k < array[l].Length) ? array[l][k].Trim() : "") + "]]>"));
-                }
                 stringBuilder.Append(HTML_ROW_END);
             }
             stringBuilder.Append(HTML_AFTER_TABLE);
             File.WriteAllText(filePath, stringBuilder.ToString(), Encoding.UTF8);
         }
 
-        // Token: 0x06000002 RID: 2 RVA: 0x000021A0 File Offset: 0x000011A0
         public static void ExtractFromWord(string wordMLContent, out string chinese, out string viet)
         {
             XmlDocument xmlDocument = new XmlDocument();
@@ -68,27 +57,15 @@ namespace QuickConverter
             for (int i = 0; i < count; i++)
             {
                 if (xmlNodeList[0].ChildNodes[i].SelectSingleNode("w:p/w:r/w:t", xmlNamespaceManager).InnerText == "Trung")
-                {
                     num = i;
-                }
                 else if (xmlNodeList[0].ChildNodes[i].SelectSingleNode("w:p/w:r/w:t", xmlNamespaceManager).InnerText == "Việt")
-                {
                     num2 = i;
-                }
             }
             if (num == -1 && num2 == -1)
             {
                 chinese = "";
                 viet = "";
                 return;
-            }
-            if (num == -1)
-            {
-                chinese = "";
-            }
-            else if (num2 == -1)
-            {
-                viet = "";
             }
             StringBuilder stringBuilder = new StringBuilder();
             StringBuilder stringBuilder2 = new StringBuilder();
@@ -99,43 +76,27 @@ namespace QuickConverter
                 stringBuilder2.AppendLine(xmlNodeList[j].ChildNodes[num2].SelectSingleNode("w:p/w:r/w:t", xmlNamespaceManager).InnerText);
             }
             chinese = stringBuilder.ToString();
-            viet = stringBuilder2.ToString().Trim(new char[]
-            {
-                ' ',
-                '\n',
-                't',
-                '\r'
-            });
+            viet = stringBuilder2.ToString().Trim(' ', '\n', 't', '\r');
         }
 
-        // Token: 0x06000003 RID: 3 RVA: 0x000023EC File Offset: 0x000013EC
         private static string[] getLines(string content, bool needRemoveBlankLines)
         {
-            return content.Split(new char[]
-            {
-                '\n'
-            }, needRemoveBlankLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
+            return content.Split(new [] { '\n' }, needRemoveBlankLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
         }
 
-        // Token: 0x06000004 RID: 4 RVA: 0x00002414 File Offset: 0x00001414
         private static int getMaxLineCount(string[][] columnLines)
         {
             int[] array = new int[columnLines.Length];
             for (int i = 0; i < columnLines.Length; i++)
-            {
                 array[i] = columnLines[i].Length;
-            }
-            Array.Sort<int>(array);
+            Array.Sort(array);
             return array[array.Length - 1];
         }
 
-        // Token: 0x06000005 RID: 5 RVA: 0x00002450 File Offset: 0x00001450
         private static void loadTemplate()
         {
             if (templateLoaded)
-            {
                 return;
-            }
             string text = File.ReadAllText(columnTemplateFilePath).Replace("=\r\n", "").Replace("=\n", "");
             HTML_BEFORE_TABLE = text.Substring(0, text.IndexOf("<w:tr"));
             HTML_AFTER_TABLE = text.Substring(text.IndexOf("</w:tbl>"));
@@ -146,9 +107,7 @@ namespace QuickConverter
             {
                 stringBuilder.Append(c);
                 if (c == '>')
-                {
                     break;
-                }
             }
             HTML_ROW_HEADER_START = stringBuilder.ToString();
             HTML_ROW_HEADER_END = "</w:tr>";
@@ -162,34 +121,24 @@ namespace QuickConverter
             templateLoaded = true;
         }
 
-        // Token: 0x04000001 RID: 1
         private static string HTML_BEFORE_TABLE = "<html><head><meta content=\"text/html; charset=UTF-8\" http-equiv=\"content-type\"/><style>table {width: 100%; border-width: 1px; border-style: solid; border-color: black; border-collapse: collapse;} body {font-family: 'Times New Roman'; font-size: 12pt;} th {background-color: #FAF0E6; font-weight: bold;} th, td {border-width: 1px; border-style: solid; border-color: black; padding: 4px; vertical-align: top;}</style></head><body><table>";
 
-        // Token: 0x04000002 RID: 2
         private static string HTML_AFTER_TABLE = "</table></body></html>";
 
-        // Token: 0x04000003 RID: 3
         private static string HTML_ROW_HEADER_START = "<tr>";
 
-        // Token: 0x04000004 RID: 4
         private static string HTML_ROW_HEADER_END = "</tr>";
 
-        // Token: 0x04000005 RID: 5
         private static string HTML_ROW_START = "<tr>";
 
-        // Token: 0x04000006 RID: 6
         private static string HTML_ROW_END = "</tr>";
 
-        // Token: 0x04000007 RID: 7
         private static string HTML_CELL_HEADER = "<td>{header}</td>";
 
-        // Token: 0x04000008 RID: 8
         private static string HTML_CELL = "<td>{content}</td>";
 
-        // Token: 0x04000009 RID: 9
         private static string columnTemplateFilePath = Path.Combine(Constants.AssetsDir, "columnTemplate.doc");
 
-        // Token: 0x0400000A RID: 10
         private static bool templateLoaded = false;
     }
 }
