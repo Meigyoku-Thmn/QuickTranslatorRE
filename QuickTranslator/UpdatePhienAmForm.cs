@@ -3,8 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using QuickTranslatorCore;
-
-using static QuickTranslatorCore.TranslationEngine;
+using QuickTranslatorCore.Engine;
 
 namespace QuickTranslator
 {
@@ -32,7 +31,7 @@ namespace QuickTranslator
                 '\n',
                 '\t'
             });
-            entryCountLabel.Text = GetSinoVietPronunciationDictCount().ToString();
+            entryCountLabel.Text = Operator.GetSinoVietPronunciationDictCount().ToString();
             ActiveControl = phienAmTextBox;
         }
 
@@ -46,14 +45,14 @@ namespace QuickTranslator
                 return;
             }
 
-            phienAmTextBox.Text = ChineseToHanViet(chineseTextBox.Text, out _).Trim();
+            phienAmTextBox.Text = Translator.ChineseToHanViet(chineseTextBox.Text, out _).Trim();
             if (1 != chineseTextBox.Text.Length)
             {
                 deleteButton.Enabled = false;
                 updateButton.Enabled = false;
                 return;
             }
-            bool flag = ExistInSinoVietPronunciationDict(chineseTextBox.Text);
+            bool flag = Operator.ExistInSinoVietPronunciationDict(chineseTextBox.Text);
             deleteButton.Enabled = flag;
             updateButton.Enabled = true;
             updateButton.Text = (flag ? "Update" : "Add");
@@ -69,13 +68,13 @@ namespace QuickTranslator
             {
                 return;
             }
-            UpdateSinoVietPronunciationDict(chineseTextBox.Text, phienAmTextBox.Text, sortingCheckBox.Checked);
+            Operator.UpdateSinoVietPronunciationDict(chineseTextBox.Text, phienAmTextBox.Text, sortingCheckBox.Checked);
             Close();
         }
 
         private void DeleteButtonClick(object sender, EventArgs e)
         {
-            DeleteKeyFromSinoVietPronunciationDict(chineseTextBox.Text, sortingCheckBox.Checked);
+            Operator.DeleteKeyFromSinoVietPronunciationDict(chineseTextBox.Text, sortingCheckBox.Checked);
             Close();
         }
 

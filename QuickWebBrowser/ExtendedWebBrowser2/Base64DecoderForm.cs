@@ -19,13 +19,8 @@ namespace ExtendedWebBrowser2
 
         private void CopyAndCloseButtonClick(object sender, EventArgs e)
         {
-            try
-            {
-                Clipboard.SetText(decodedTextBox.Text);
-            }
-            catch
-            {
-            }
+            try { Clipboard.SetText(decodedTextBox.Text); }
+            catch { }
             Close();
         }
 

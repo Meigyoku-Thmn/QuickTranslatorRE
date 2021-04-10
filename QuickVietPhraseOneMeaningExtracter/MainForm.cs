@@ -6,8 +6,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using QuickTranslatorCore;
-
-using static QuickTranslatorCore.TranslationEngine;
+using QuickTranslatorCore.Engine;
 
 namespace QuickVietPhraseOneMeaningExtracter
 {
@@ -40,7 +39,7 @@ namespace QuickVietPhraseOneMeaningExtracter
             }
             var dirPath = Path.GetDirectoryName(txtVietPhraseFilePath.Text);
             var dict = LoadOneMeaningDictionary(txtVietPhraseFilePath.Text);
-            SaveDictionaryToFile(ref dict, Path.Combine(dirPath, "VietPhraseOneMeaning.txt"));
+            Operator.SaveDictionaryToFile(ref dict, Path.Combine(dirPath, "VietPhraseOneMeaning.txt"));
             MessageBox.Show("Xong!!!");
         }
 

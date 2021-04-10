@@ -22,13 +22,7 @@ namespace QuickTranslatorCore
                 var logFileInfo = new FileInfo(logPath);
                 if (logFileInfo.Exists && logFileInfo.Length > OneMB)
                     logFileInfo.Delete();
-
-                var content = string.Join("\r\n", new[] {
-                    exception.Message,
-                    exception.GetType().ToString(),
-                    exception.StackTrace
-                });
-                var message = string.Format($"{DateTime.Now:G}: {content}");
+                var message = string.Format($"[{DateTime.Now:G}] {exception}");
                 File.AppendAllLines(logPath, new[] { message }, Encoding.UTF8);
             }
             catch { }

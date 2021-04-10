@@ -8,8 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using QuickTranslatorCore;
-
-using static QuickTranslatorCore.TranslationEngine;
+using QuickTranslatorCore.Engine;
 
 namespace QuickVietPhraseFilter
 {
@@ -92,7 +91,7 @@ namespace QuickVietPhraseFilter
                                     select vietPhrase;
             var dict = sortedVietPhrases.ToDictionary(pair => pair.Key, pair => pair.Value);
 
-            SaveDictionaryToFileNoSort(dict,
+            Operator.SaveDictionaryToFileNoSort(dict,
                 Path.Combine(txtOutputDirPath.Text, $"QuickVietPhraseFilter_{DateTime.Now:yyyyMMddHHmmss}.txt"));
 
             MessageBox.Show("Done!!!");

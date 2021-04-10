@@ -1,9 +1,9 @@
 ﻿namespace QuickConverter
 {
-    // Token: 0x02000003 RID: 3
     public partial class MainForm
     {
-        // Token: 0x06000022 RID: 34 RVA: 0x00004509 File Offset: 0x00003509
+        private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
@@ -13,7 +13,6 @@
             base.Dispose(disposing);
         }
 
-        // Token: 0x06000023 RID: 35 RVA: 0x00004528 File Offset: 0x00003528
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
@@ -691,124 +690,82 @@
 
         }
 
-        // Token: 0x0400001D RID: 29
-        private global::System.ComponentModel.IContainer components;
+        private System.Windows.Forms.CheckBox prioritizedNameCheckBox;
 
-        // Token: 0x0400001E RID: 30
-        private global::System.Windows.Forms.CheckBox prioritizedNameCheckBox;
+        private System.Windows.Forms.ComboBox onlineTranslationTypeComboBox;
 
-        // Token: 0x0400001F RID: 31
-        private global::System.Windows.Forms.ComboBox onlineTranslationTypeComboBox;
+        private System.Windows.Forms.Label label15;
 
-        // Token: 0x04000020 RID: 32
-        private global::System.Windows.Forms.Label label15;
+        private System.Windows.Forms.ComboBox columnComboBox6;
 
-        // Token: 0x04000021 RID: 33
-        private global::System.Windows.Forms.ComboBox columnComboBox6;
+        private System.Windows.Forms.Label label14;
 
-        // Token: 0x04000022 RID: 34
-        private global::System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox changeFileNameCheckBox;
 
-        // Token: 0x04000023 RID: 35
-        private global::System.Windows.Forms.CheckBox changeFileNameCheckBox;
+        private System.Windows.Forms.ComboBox translationAlgorithmComboBox;
 
-        // Token: 0x04000024 RID: 36
-        private global::System.Windows.Forms.ComboBox translationAlgorithmComboBox;
+        private System.Windows.Forms.Label label13;
 
-        // Token: 0x04000025 RID: 37
-        private global::System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
 
-        // Token: 0x04000026 RID: 38
-        private global::System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.StatusStrip statusStrip1;
 
-        // Token: 0x04000027 RID: 39
-        private global::System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.Label processedFilesLabel;
 
-        // Token: 0x04000028 RID: 40
-        private global::System.Windows.Forms.Label processedFilesLabel;
+        private System.Windows.Forms.Button btnRunOrCancel;
 
-        // Token: 0x04000029 RID: 41
-        private global::System.Windows.Forms.Button btnRunOrCancel;
+        private System.Windows.Forms.Button browseTargetFolderButton;
 
-        // Token: 0x0400002A RID: 42
-        private global::System.Windows.Forms.Button browseTargetFolderButton;
+        private System.Windows.Forms.TextBox targetFolderTextBox;
 
-        // Token: 0x0400002B RID: 43
-        private global::System.Windows.Forms.TextBox targetFolderTextBox;
+        private System.Windows.Forms.Button browseSourceFolderButton;
 
-        // Token: 0x0400002C RID: 44
-        private global::System.Windows.Forms.Button browseSourceFolderButton;
+        private System.Windows.Forms.TextBox sourceFolderTextBox;
 
-        // Token: 0x0400002D RID: 45
-        private global::System.Windows.Forms.TextBox sourceFolderTextBox;
+        private System.Windows.Forms.CheckBox insertBlankLinesCheckBox;
 
-        // Token: 0x0400002E RID: 46
-        private global::System.Windows.Forms.CheckBox insertBlankLinesCheckBox;
+        private System.Windows.Forms.ComboBox vietPhraseOneMeaningTranslationTypeComboBox;
 
-        // Token: 0x0400002F RID: 47
-        private global::System.Windows.Forms.ComboBox vietPhraseOneMeaningTranslationTypeComboBox;
+        private System.Windows.Forms.ComboBox vietPhraseTranslationTypeComboBox;
 
-        // Token: 0x04000030 RID: 48
-        private global::System.Windows.Forms.ComboBox vietPhraseTranslationTypeComboBox;
+        private System.Windows.Forms.NumericUpDown mergeFilesNumericUpDown;
 
-        // Token: 0x04000031 RID: 49
-        private global::System.Windows.Forms.NumericUpDown mergeFilesNumericUpDown;
+        private System.Windows.Forms.ComboBox columnComboBox5;
 
-        // Token: 0x04000032 RID: 50
-        private global::System.Windows.Forms.ComboBox columnComboBox5;
+        private System.Windows.Forms.ComboBox columnComboBox4;
 
-        // Token: 0x04000033 RID: 51
-        private global::System.Windows.Forms.ComboBox columnComboBox4;
+        private System.Windows.Forms.ComboBox columnComboBox3;
 
-        // Token: 0x04000034 RID: 52
-        private global::System.Windows.Forms.ComboBox columnComboBox3;
+        private System.Windows.Forms.ComboBox columnComboBox2;
 
-        // Token: 0x04000035 RID: 53
-        private global::System.Windows.Forms.ComboBox columnComboBox2;
+        private System.Windows.Forms.ComboBox columnComboBox1;
 
-        // Token: 0x04000036 RID: 54
-        private global::System.Windows.Forms.ComboBox columnComboBox1;
+        private System.Windows.Forms.Panel processingStatusPanel;
 
-        // Token: 0x04000037 RID: 55
-        private global::System.Windows.Forms.Panel processingStatusPanel;
+        private System.Windows.Forms.Label label12;
 
-        // Token: 0x04000038 RID: 56
-        private global::System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
 
-        // Token: 0x04000039 RID: 57
-        private global::System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
 
-        // Token: 0x0400003A RID: 58
-        private global::System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
 
-        // Token: 0x0400003B RID: 59
-        private global::System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
 
-        // Token: 0x0400003C RID: 60
-        private global::System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
 
-        // Token: 0x0400003D RID: 61
-        private global::System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
 
-        // Token: 0x0400003E RID: 62
-        private global::System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
 
-        // Token: 0x0400003F RID: 63
-        private global::System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
 
-        // Token: 0x04000040 RID: 64
-        private global::System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox outputTypeComboBox;
 
-        // Token: 0x04000041 RID: 65
-        private global::System.Windows.Forms.ComboBox outputTypeComboBox;
+        private System.Windows.Forms.Label label3;
 
-        // Token: 0x04000042 RID: 66
-        private global::System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
 
-        // Token: 0x04000043 RID: 67
-        private global::System.Windows.Forms.Label label2;
-
-        // Token: 0x04000044 RID: 68
-        private global::System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label1;
     }
 }

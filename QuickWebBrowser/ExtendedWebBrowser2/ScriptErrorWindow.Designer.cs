@@ -2,6 +2,8 @@
 {
     internal partial class ScriptErrorWindow
     {
+        private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
@@ -79,18 +81,16 @@
 
         }
 
-        private global::System.ComponentModel.IContainer components;
+        private System.Windows.Forms.ListView listView1;
 
-        private global::System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
 
-        private global::System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton clearListToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripButton clearListToolStripButton;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
 
-        private global::System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
 
-        private global::System.Windows.Forms.ColumnHeader columnHeader2;
-
-        private global::System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
     }
 }

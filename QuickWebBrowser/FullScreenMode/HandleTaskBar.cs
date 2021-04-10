@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace FullScreenMode
 {
+    // TODO: DON'T DO THIS
     internal class HandleTaskBar
     {
         [DllImport("User32.dll")]
@@ -12,15 +13,9 @@ namespace FullScreenMode
         private static extern int SetWindowPos(int hWnd, int hWndInsertAfter, int x, int y, int cx, int cy, int wFlags);
 
         public static void ShowTaskBar()
-        {
-            int hWnd = FindWindow("Shell_TrayWnd", "");
-            SetWindowPos(hWnd, 0, 0, 0, 0, 0, 64);
-        }
+            => SetWindowPos(FindWindow("Shell_TrayWnd", ""), 0, 0, 0, 0, 0, 64);
 
         public static void HideTaskBar()
-        {
-            int hWnd = FindWindow("Shell_TrayWnd", "");
-            SetWindowPos(hWnd, 0, 0, 0, 0, 0, 128);
-        }
+            => SetWindowPos(FindWindow("Shell_TrayWnd", ""), 0, 0, 0, 0, 0, 128);
     }
 }

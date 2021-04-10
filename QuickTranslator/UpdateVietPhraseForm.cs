@@ -9,8 +9,7 @@ using System.Threading;
 using System.Web;
 using System.Windows.Forms;
 using QuickTranslatorCore;
-
-using static QuickTranslatorCore.TranslationEngine;
+using QuickTranslatorCore.Engine;
 
 namespace QuickTranslator
 {
@@ -41,7 +40,7 @@ namespace QuickTranslator
             this.type = type;
             vietPhraseLabel.Text = (type == 0) ? "VietPhrase:" : "Name:";
             Text = (type == 0) ? "Update VietPhrase" : ((type == 1) ? "Update Name (chính)" : "Update Name (phụ)");
-            entryCountLabel.Text = ((type == 0) ? GetVietPhraseDictCount() : GetNameDictCount(type == 1)).ToString("0,0") ?? "";
+            entryCountLabel.Text = ((type == 0) ? Operator.GetVietPhraseDictCount() : Operator.GetNameDictCount(type == 1)).ToString("0,0") ?? "";
         }
 
         private void ChineseTextBoxTextChanged(object sender, EventArgs e)
@@ -59,12 +58,12 @@ namespace QuickTranslator
                 return;
             }
 
-            hanVietRichTextBox.Text = ChineseToHanViet(chineseTextBox.Text, out _).Trim();
-            string text = (type == 0) ? GetVietPhrase(chineseTextBox.Text) : GetName(chineseTextBox.Text, type == 1);
+            hanVietRichTextBox.Text = Translator.ChineseToHanViet(chineseTextBox.Text, out _).Trim();
+            string text = (type == 0) ? Operator.GetVietPhrase(chineseTextBox.Text) : Operator.GetName(chineseTextBox.Text, type == 1);
             vietPhraseRichTextBox.Text = text ?? ((type == 0) ? hanVietRichTextBox.Text : CultureInfo.CurrentCulture.TextInfo.ToTitleCase(hanVietRichTextBox.Text));
             deleteButton.Enabled = text != null;
             updateButton.Text = (text != null) ? "Update" : "Add";
-            updatedByLabel.Text = (type == 0) ? GetVietPhraseLogRecord(chineseTextBox.Text) : GetNameLogRecord(chineseTextBox.Text, type == 1);
+            updatedByLabel.Text = (type == 0) ? Operator.GetVietPhraseLogRecord(chineseTextBox.Text) : Operator.GetNameLogRecord(chineseTextBox.Text, type == 1);
             CheckBaikeInNewThread(chineseTextBox.Text.Trim());
         }
 
@@ -72,11 +71,11 @@ namespace QuickTranslator
         {
             if (type == 0)
             {
-                DeleteVietPhrase(chineseTextBox.Text, sortingCheckBox.Checked);
+                Operator.DeleteVietPhrase(chineseTextBox.Text, sortingCheckBox.Checked);
             }
             else
             {
-                DeleteKeyFromNameDict(chineseTextBox.Text, sortingCheckBox.Checked, type == 1);
+                Operator.DeleteKeyFromNameDict(chineseTextBox.Text, sortingCheckBox.Checked, type == 1);
             }
             CompressDictionaryHistory();
             Close();
@@ -90,11 +89,11 @@ namespace QuickTranslator
             }
             if (type == 0)
             {
-                UpdateVietPhraseDict(chineseTextBox.Text, vietPhraseRichTextBox.Text, sortingCheckBox.Checked);
+                Operator.UpdateVietPhraseDict(chineseTextBox.Text, vietPhraseRichTextBox.Text, sortingCheckBox.Checked);
             }
             else
             {
-                UpdateNameDict(chineseTextBox.Text, vietPhraseRichTextBox.Text, sortingCheckBox.Checked, type == 1);
+                Operator.UpdateNameDict(chineseTextBox.Text, vietPhraseRichTextBox.Text, sortingCheckBox.Checked, type == 1);
             }
             CompressDictionaryHistory();
             Close();
@@ -106,10 +105,10 @@ namespace QuickTranslator
             {
                 if (type == 0)
                 {
-                    CompressVietPhraseOnlyLog();
+                    Operator.CompressVietPhraseOnlyLog();
                     return;
                 }
-                CompressNameOnlyDictLog(type == 1);
+                Operator.CompressNameOnlyDictLog(type == 1);
             }
         }
 

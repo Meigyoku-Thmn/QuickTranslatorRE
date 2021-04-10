@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using QuickTranslatorCore;
-
-using static QuickTranslatorCore.TranslationEngine;
+using QuickTranslatorCore.Engine;
 
 namespace QuickConverter
 {
@@ -59,7 +59,7 @@ namespace QuickConverter
             changeFileNameCheckBox.Checked = QuickConverterSettings.Default.changeFileName;
             insertBlankLinesCheckBox.Checked = QuickConverterSettings.Default.insertBlankLines;
             prioritizedNameCheckBox.Checked = QuickConverterSettings.Default.prioritizedName;
-            LoadDictionaries();
+            Initializer.LoadDictionaries();
         }
 
         private void OutputTypeComboBoxSelectedIndexChanged(object sender, EventArgs e)
@@ -202,7 +202,7 @@ namespace QuickConverter
                 int num2 = 0;
                 while (num2 < mergeOption && sourceFiles.Length > i + num2)
                 {
-                    stringBuilder.Append(NormalizeTextAndRemoveIgnoredChinesePhrases(readFile(sourceFiles[i + num2], Encoding.GetEncoding(name), needMarkChapterHeaders))).Append("\n\n----------oOo----------\n\n");
+                    stringBuilder.Append(Util.NormalizeTextAndRemoveIgnoredChinesePhrases(readFile(sourceFiles[i + num2], Encoding.GetEncoding(name), needMarkChapterHeaders))).Append("\n\n----------oOo----------\n\n");
                     if (num2 == 0)
                     {
                         stringBuilder2.Append(getOutputFileName(sourceFiles[i + num2], i + num2, num, @checked));
@@ -425,7 +425,7 @@ namespace QuickConverter
                         return;
                     }
                     int num = (int)batchIndexObject;
-                    VietPhraseExporter.Export(ChineseToVietPhraseForBatch(chineseContents[num], wrapType, translationAlgorithm, prioritizedName), needToRemoveBlankLine, Path.Combine(targetFolder, mergedFileNames[num] + (outputToWord ? ".doc" : (mergedFileNames[num].EndsWith("txt") ? "" : ".txt"))), outputToWord);
+                    VietPhraseExporter.Export(Translator.ChineseToVietPhraseForBatch(chineseContents[num], wrapType, translationAlgorithm, prioritizedName), needToRemoveBlankLine, Path.Combine(targetFolder, mergedFileNames[num] + (outputToWord ? ".doc" : (mergedFileNames[num].EndsWith("txt") ? "" : ".txt"))), outputToWord);
                     processStatus[num]++;
                 }, i);
             }
@@ -451,7 +451,7 @@ namespace QuickConverter
                         return;
                     }
                     int num = (int)batchIndexObject;
-                    VietPhraseExporter.Export(ChineseToVietPhraseOneMeaningForBatch(chineseContents[num], wrapType, translationAlgorithm, prioritizedName), needToRemoveBlankLine, Path.Combine(targetFolder, mergedFileNames[num] + (outputToWord ? ".doc" : (mergedFileNames[num].EndsWith("txt") ? "" : ".txt"))), outputToWord);
+                    VietPhraseExporter.Export(Translator.ChineseToVietPhraseOneMeaningForBatch(chineseContents[num], wrapType, translationAlgorithm, prioritizedName), needToRemoveBlankLine, Path.Combine(targetFolder, mergedFileNames[num] + (outputToWord ? ".doc" : (mergedFileNames[num].EndsWith("txt") ? "" : ".txt"))), outputToWord);
                     processStatus[num]++;
                 }, i);
             }
@@ -474,7 +474,7 @@ namespace QuickConverter
                         return;
                     }
                     int num = (int)batchIndexObject;
-                    VietPhraseExporter.Export(ChineseToHanVietForBatch(chineseContents[num]), needToRemoveBlankLine, Path.Combine(targetFolder, mergedFileNames[num] + (outputToWord ? ".doc" : (mergedFileNames[num].EndsWith("txt") ? "" : ".txt"))), outputToWord);
+                    VietPhraseExporter.Export(Translator.ChineseToHanVietForBatch(chineseContents[num]), needToRemoveBlankLine, Path.Combine(targetFolder, mergedFileNames[num] + (outputToWord ? ".doc" : (mergedFileNames[num].EndsWith("txt") ? "" : ".txt"))), outputToWord);
                     processStatus[num]++;
                 }, i);
             }
@@ -548,7 +548,7 @@ namespace QuickConverter
                 {
                     return;
                 }
-                hanVietResult[batchId] = ChineseToHanVietForBatch(chineseContent);
+                hanVietResult[batchId] = Translator.ChineseToHanVietForBatch(chineseContent);
                 processStatus[batchId]++;
             });
         }
@@ -564,7 +564,7 @@ namespace QuickConverter
                 {
                     return;
                 }
-                vietPhraseOneMeaningResult[batchId] = ChineseToVietPhraseOneMeaningForBatch(chineseContent, wrapType, translationAlgorithm, prioritizedName);
+                vietPhraseOneMeaningResult[batchId] = Translator.ChineseToVietPhraseOneMeaningForBatch(chineseContent, wrapType, translationAlgorithm, prioritizedName);
                 processStatus[batchId]++;
             });
         }
@@ -572,15 +572,11 @@ namespace QuickConverter
         private void translateVietPhrase(string chineseContent, int wrapType, int translationAlgorithm, bool prioritizedName, int batchId)
         {
             if (requestCancel)
-            {
                 return;
-            }
             ThreadPool.QueueUserWorkItem(delegate (object param0) {
                 if (requestCancel)
-                {
                     return;
-                }
-                vietPhraseResult[batchId] = ChineseToVietPhraseForBatch(chineseContent, wrapType, translationAlgorithm, prioritizedName);
+                vietPhraseResult[batchId] = Translator.ChineseToVietPhraseForBatch(chineseContent, wrapType, translationAlgorithm, prioritizedName);
                 processStatus[batchId]++;
             });
         }

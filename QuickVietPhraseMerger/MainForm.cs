@@ -8,8 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using QuickTranslatorCore;
-
-using static QuickTranslatorCore.TranslationEngine;
+using QuickTranslatorCore.Engine;
 
 namespace QuickVietPhraseMerger
 {
@@ -106,8 +105,8 @@ namespace QuickVietPhraseMerger
             var dict = MergeDictionaries(vietPhrase1Dict, vietPhrase1DictLog, vietPhrase2Dict, vietPhrase2DictLog);
             var dict2 = CompareDictionaries(vietPhrase1Dict, vietPhrase1DictLog, vietPhrase2Dict, vietPhrase2DictLog);
 
-            SaveDictionaryToFile(ref dict, Path.Combine(txtOutputDirPath.Text, "VietPhrase.txt"));
-            SaveDictionaryToFile(ref dict2, Path.Combine(txtOutputDirPath.Text, "VietPhraseDiff.txt"));
+            Operator.SaveDictionaryToFile(ref dict, Path.Combine(txtOutputDirPath.Text, "VietPhrase.txt"));
+            Operator.SaveDictionaryToFile(ref dict2, Path.Combine(txtOutputDirPath.Text, "VietPhraseDiff.txt"));
 
             MessageBox.Show("Xong!!!");
 
@@ -217,16 +216,16 @@ namespace QuickVietPhraseMerger
                 if (mergedDict.ContainsKey(vietPhrase2.Key))
                 {
                     mergedDict[vietPhrase2.Key] = MergeMeanings(mergedDict[vietPhrase2.Key], vietPhrase2.Value);
-                    CreateLog(vietPhrase2.Key, "Updated", ref stringBuilder);
+                    Operator.CreateLog(vietPhrase2.Key, "Updated", ref stringBuilder);
                 }
                 else
                 {
                     mergedDict[vietPhrase2.Key] = vietPhrase2.Value;
-                    CreateLog(vietPhrase2.Key, "Added", ref stringBuilder);
+                    Operator.CreateLog(vietPhrase2.Key, "Added", ref stringBuilder);
                 }
             }
 
-            WriteLog(stringBuilder.ToString(), logPath);
+            Operator.WriteLog(stringBuilder.ToString(), logPath);
 
             return mergedDict;
         }
@@ -261,7 +260,7 @@ namespace QuickVietPhraseMerger
         private DataSet LoadDictionaryLog(string dictLogPath)
         {
             var result = new DataSet();
-            Helper.LoadLog(dictLogPath, ref result);
+            Helper.LoadLog(dictLogPath, result);
             return result;
         }
 
@@ -274,7 +273,7 @@ namespace QuickVietPhraseMerger
         {
             var text = txtVietPhrase1FilePath.Text;
             txtVietPhrase1LogPath.Text = Path.Combine(
-                Path.GetDirectoryName(text), 
+                Path.GetDirectoryName(text),
                 Path.GetFileNameWithoutExtension(text) + "History" + Path.GetExtension(text));
         }
 

@@ -2,6 +2,8 @@
 {
     public partial class UpdatePhienAmForm
     {
+        private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
@@ -159,8 +161,6 @@
             this.PerformLayout();
 
         }
-
-        private System.ComponentModel.IContainer components;
 
         private System.Windows.Forms.Label phienAmLabel;
 

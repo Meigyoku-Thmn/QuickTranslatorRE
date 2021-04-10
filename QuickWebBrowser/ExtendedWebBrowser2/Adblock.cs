@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using mshtml;
 
+using static System.StringComparison;
+
 namespace ExtendedWebBrowser2
 {
     public class Adblock
@@ -14,29 +16,24 @@ namespace ExtendedWebBrowser2
             foreach (IHTMLEmbedElement embed in document.embeds)
                 Remove(embed as IHTMLDOMNode);
 
-            foreach (IHTMLElement2 htmlElement2 in document.getElementsByTagName("OBJECT"))
+            foreach (IHTMLElement2 objectElm in document.getElementsByTagName("OBJECT"))
             {
-                foreach (IHTMLElement4 htmlElement4 in htmlElement2.getElementsByTagName("PARAM"))
+                foreach (IHTMLElement4 paramElm in objectElm.getElementsByTagName("PARAM"))
                 {
-                    var attr = (string)htmlElement4.getAttributeNode("NAME").nodeValue;
-                    if ("Src".Equals(attr, StringComparison.CurrentCultureIgnoreCase) 
-                        || "Movie".Equals(attr, StringComparison.CurrentCultureIgnoreCase))
-                        Remove(htmlElement2 as IHTMLDOMNode);
+                    var attr = (string)paramElm.getAttributeNode("NAME").nodeValue;
+                    if ("Src".Equals(attr, CurrentCultureIgnoreCase) || "Movie".Equals(attr, CurrentCultureIgnoreCase))
+                        Remove(objectElm as IHTMLDOMNode);
                 }
             }
+
             foreach (IHTMLElement4 htmlElement4 in document.getElementsByTagName("IFRAME"))
                 Remove(htmlElement4 as IHTMLDOMNode);
         }
 
         private static void Remove(IHTMLDOMNode node)
         {
-            try
-            {
-                node.parentNode.removeChild(node);
-            }
-            catch
-            {
-            }
+            try { node.parentNode.removeChild(node); }
+            catch { }
         }
     }
 }

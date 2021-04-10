@@ -2,6 +2,8 @@
 {
     public partial class ConfigurationPanel
     {
+        private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
@@ -1253,8 +1255,6 @@
             this.ResumeLayout(false);
 
         }
-
-        private System.ComponentModel.IContainer components;
 
         private System.Windows.Forms.CheckBox prioritizedNameCheckBox;
 

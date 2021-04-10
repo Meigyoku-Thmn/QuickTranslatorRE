@@ -6,54 +6,52 @@ namespace FullScreenMode
 {
     public class FullScreen
     {
+        private readonly Form targetForm;
+
+        private FormWindowState lastWindowState;
+
+        private FormBorderStyle lastBorderStyle;
+
+        private Rectangle lastBounds;
+
+        private bool isFullScreen = false;
+
         public FullScreen(Form form)
-        {
-            _Form = form;
-            _FullScreen = false;
-        }
+            => targetForm = form;
 
-        private void ScreenMode()
+        private void ToggleScreenMode()
         {
-            if (!_FullScreen)
+            if (!isFullScreen)
             {
-                _cBorderStyle = _Form.FormBorderStyle;
-                _cBounds = _Form.Bounds;
-                _cWindowState = _Form.WindowState;
-                _Form.Visible = false;
+                lastBorderStyle = targetForm.FormBorderStyle;
+                lastBounds = targetForm.Bounds;
+                lastWindowState = targetForm.WindowState;
+
+                targetForm.Visible = false;
+
                 HandleTaskBar.HideTaskBar();
-                _Form.FormBorderStyle = FormBorderStyle.None;
-                _Form.WindowState = FormWindowState.Maximized;
-                _Form.Visible = true;
-                _FullScreen = true;
-                return;
+
+                targetForm.FormBorderStyle = FormBorderStyle.None;
+                targetForm.WindowState = FormWindowState.Maximized;
+                targetForm.Visible = true;
+                isFullScreen = true;
             }
-            _Form.Visible = false;
-            _Form.WindowState = _cWindowState;
-            _Form.FormBorderStyle = _cBorderStyle;
-            _Form.Bounds = _cBounds;
-            HandleTaskBar.ShowTaskBar();
-            _Form.Visible = true;
-            _FullScreen = false;
+            else
+            {
+                targetForm.Visible = false;
+                targetForm.WindowState = lastWindowState;
+                targetForm.FormBorderStyle = lastBorderStyle;
+                targetForm.Bounds = lastBounds;
+
+                HandleTaskBar.ShowTaskBar();
+
+                targetForm.Visible = true;
+                isFullScreen = false;
+            }
         }
 
-        public void ShowFullScreen()
-        {
-            ScreenMode();
-        }
+        public void ShowFullScreen() => ToggleScreenMode();
 
-        public void ResetTaskBar()
-        {
-            HandleTaskBar.ShowTaskBar();
-        }
-
-        private Form _Form;
-
-        private FormWindowState _cWindowState;
-
-        private FormBorderStyle _cBorderStyle;
-
-        private Rectangle _cBounds;
-
-        private bool _FullScreen;
+        public void ResetTaskBar() => HandleTaskBar.ShowTaskBar();
     }
 }

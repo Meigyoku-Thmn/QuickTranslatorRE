@@ -6,10 +6,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using QuickTranslatorCore;
-
-using static QuickTranslatorCore.TranslationEngine;
+using QuickTranslatorCore.Engine;
 
 namespace QuickAnalyzer
 {
@@ -22,7 +22,7 @@ namespace QuickAnalyzer
 
         void MainFormLoad(object sender, EventArgs e)
         {
-            LoadDictionaries();
+            Initializer.LoadDictionaries();
             cboTranslationAlgorithm.SelectedIndex = 0;
             LoadSettings();
         }
@@ -148,7 +148,7 @@ namespace QuickAnalyzer
 
             foreach (var keyValuePair2 in orderedEnumerable2)
             {
-                if (IsInVietPhrase(keyValuePair2.Key))
+                if (Util.IsInVietPhrase(keyValuePair2.Key))
                 {
                     stringBuilder3.AppendLine(string.Concat(new[] {
                         keyValuePair2.Key,
@@ -191,17 +191,17 @@ namespace QuickAnalyzer
 
         string ChineseToHanViet(string chinese)
         {
-            return ChineseToHanVietForAnalyzer(chinese);
+            return Util.ChineseToHanVietForAnalyzer(chinese);
         }
 
         string ChineseToVietPhrase(string chinese, int translationAlgorithm, bool prioritizedName)
         {
-            return ChineseToVietPhraseForAnalyzer(chinese, translationAlgorithm, prioritizedName);
+            return Util.ChineseToVietPhraseForAnalyzer(chinese, translationAlgorithm, prioritizedName);
         }
 
         bool Refine(List<string> doneList, string key)
         {
-            if (IsInVietPhrase(key))
+            if (Util.IsInVietPhrase(key))
             {
                 doneList.Add(key);
                 return false;

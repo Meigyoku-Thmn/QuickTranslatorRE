@@ -10,10 +10,10 @@ using System.Web;
 using System.Windows.Forms;
 using ExtendedWebBrowser2;
 using QuickConverter;
+using QuickTranslatorCore.Engine;
 using QuickTranslatorCore;
 using WeifenLuo.WinFormsUI.Docking;
-
-using static QuickTranslatorCore.TranslationEngine;
+using System.Threading.Tasks;
 
 namespace QuickTranslator
 {
@@ -118,7 +118,7 @@ namespace QuickTranslator
             meaningDocumentPanel.NcikuingHandler = new DocumentPanel.NcikuingDelegate(NcikuingHandler);
             meaningDocumentPanel.CopyToVietHandler = new DocumentPanel.CopyToVietDelegate(CopyToVietHandler);
             meaningDocumentPanel.AddToPhienAmHandler = new DocumentPanel.AddToPhienAmDelegate(AddToPhienAmHandler);
-            LoadDictionaries();
+            Initializer.LoadDictionaries();
             Shortcuts.LoadFromFile(shortcutDictionaryFilePath);
             vietPhraseToolStripMenuItem.Checked = ActiveConfiguration.Layout_VietPhrase;
             vietPhraseOneMeaningToolStripMenuItem.Checked = ActiveConfiguration.Layout_VietPhraseOneMeaning;
@@ -227,7 +227,7 @@ namespace QuickTranslator
             catch
             {
             }
-            chineseDocumentPanel.SetTextContent(NormalizeTextAndRemoveIgnoredChinesePhrases(original));
+            chineseDocumentPanel.SetTextContent(Util.NormalizeTextAndRemoveIgnoredChinesePhrases(original));
             Translate(-2, -2, -2);
             Text = "Quick Translator - Untitled";
             workingFilePath = "";
@@ -246,95 +246,102 @@ namespace QuickTranslator
             vietPhraseOneMeaningChanged = false;
         }
 
+        readonly object translateHanVietLock = new object();
+
         private void TranslateHanViet(int currentDisplayedLine)
         {
-            new Thread(delegate () {
-                lock (LastTranslatedWord_SinoViet)
+            var thread = new Thread(() => {
+                lock (translateHanVietLock)
                 {
-                    if (!string.IsNullOrEmpty(chineseContent))
-                    {
-                        string text = ChineseToHanViet(chineseContent, out chineseHanVietMappingArray);
-                        UpdateDocumentPanel(hanVietDocumentPanel, text, currentDisplayedLine);
-                    }
+                    if (string.IsNullOrEmpty(chineseContent))
+                        return;
+
+                    var text = Translator.ChineseToHanViet(chineseContent, out chineseHanVietMappingArray);
+                    UpdateDocumentPanel(hanVietDocumentPanel, text, currentDisplayedLine);
                 }
-            }) {
-                IsBackground = true
-            }.Start();
+            });
+            thread.IsBackground = true;
+            thread.Start();
         }
+
+        readonly object translateVietPhraseOneMeaningLock = new object();
 
         private void TranslateVietPhraseOneMeaning(int currentDisplayedLine)
         {
-            if (!vietPhraseOneMeaningDocumentPanel.IsHidden)
-            {
-                new Thread(delegate () {
-                    lock (LastTranslatedWord_VietPhraseOneMeaning)
+            if (vietPhraseOneMeaningDocumentPanel.IsHidden)
+                return;
+
+            var thread = new Thread(() => {
+                lock (translateVietPhraseOneMeaningLock)
+                {
+                    if (string.IsNullOrEmpty(chineseContent))
+                        return;
+
+                    string text;
+                    if (ActiveConfiguration.Layout_VietPhrase)
                     {
-                        if (!string.IsNullOrEmpty(chineseContent))
-                        {
-                            string text;
-                            if (ActiveConfiguration.Layout_VietPhrase)
-                            {
-                                text = ChineseToVietPhraseOneMeaning(chineseContent, ActiveConfiguration.VietPhraseOneMeaning_Wrap, ActiveConfiguration.TranslationAlgorithm, ActiveConfiguration.PrioritizedName, out CharRange[] array, out vietPhraseOneMeaningRanges);
-                            }
-                            else
-                            {
-                                text = ChineseToVietPhraseOneMeaning(chineseContent, ActiveConfiguration.VietPhraseOneMeaning_Wrap, ActiveConfiguration.TranslationAlgorithm, ActiveConfiguration.PrioritizedName, out chinesePhraseRanges, out vietPhraseOneMeaningRanges);
-                            }
-                            UpdateDocumentPanel(vietPhraseOneMeaningDocumentPanel, text, currentDisplayedLine);
-                        }
+                        text = Translator.ChineseToVietPhraseOneMeaning(chineseContent, ActiveConfiguration.VietPhraseOneMeaning_Wrap,
+                            ActiveConfiguration.TranslationAlgorithm, ActiveConfiguration.PrioritizedName,
+                            out _, out vietPhraseOneMeaningRanges);
                     }
-                }) {
-                    IsBackground = true
-                }.Start();
-            }
+                    else
+                    {
+                        text = Translator.ChineseToVietPhraseOneMeaning(chineseContent, ActiveConfiguration.VietPhraseOneMeaning_Wrap,
+                            ActiveConfiguration.TranslationAlgorithm, ActiveConfiguration.PrioritizedName,
+                            out chinesePhraseRanges, out vietPhraseOneMeaningRanges);
+                    }
+
+                    UpdateDocumentPanel(vietPhraseOneMeaningDocumentPanel, text, currentDisplayedLine);
+                }
+            });
+            thread.IsBackground = true;
+            thread.Start();
         }
+
+        readonly object translateVietPhraseLock = new object();
 
         private void TranslateVietPhrase(int currentDisplayedLine)
         {
-            if (!vietPhraseDocumentPanel.IsHidden)
-            {
-                new Thread(delegate () {
-                    lock (LastTranslatedWord_VietPhrase)
-                    {
-                        if (!string.IsNullOrEmpty(chineseContent))
-                        {
-                            string text = ChineseToVietPhrase(chineseContent, ActiveConfiguration.VietPhrase_Wrap, ActiveConfiguration.TranslationAlgorithm, ActiveConfiguration.PrioritizedName, out chinesePhraseRanges, out vietPhraseRanges);
-                            UpdateDocumentPanel(vietPhraseDocumentPanel, text, currentDisplayedLine);
-                        }
-                    }
-                }) {
-                    IsBackground = true
-                }.Start();
-            }
+            if (vietPhraseDocumentPanel.IsHidden)
+                return;
+
+            var thread = new Thread(() => {
+                lock (translateVietPhraseLock)
+                {
+                    if (string.IsNullOrEmpty(chineseContent))
+                        return;
+
+                    string text = Translator.ChineseToVietPhrase(chineseContent, ActiveConfiguration.VietPhrase_Wrap,
+                        ActiveConfiguration.TranslationAlgorithm, ActiveConfiguration.PrioritizedName,
+                        out chinesePhraseRanges, out vietPhraseRanges);
+                    UpdateDocumentPanel(vietPhraseDocumentPanel, text, currentDisplayedLine);
+                }
+            });
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         private void UpdateDocumentPanel(DocumentPanel panel, string text, int currentDisplayedLine)
         {
-            GenericDelegate genericDelegate = delegate () {
+            GenericDelegate genericDelegate = () => {
                 panel.SetTextContent(text);
+
                 if (currentDisplayedLine <= -2)
-                {
                     panel.ScrollToTop();
-                    return;
-                }
-                if (currentDisplayedLine == -1)
-                {
-                    int physicalLine = CountPhysicalLines(vietDocumentPanel.GetTextContent());
-                    panel.ScrollToASpecificPhysicalLine(physicalLine);
-                    return;
-                }
-                panel.ScrollToASpecificLogicalLine(currentDisplayedLine);
+                else if (currentDisplayedLine == -1)
+                    panel.ScrollToASpecificPhysicalLine(
+                        CountPhysicalLines(vietDocumentPanel.GetTextContent()));
+                else
+                    panel.ScrollToASpecificLogicalLine(currentDisplayedLine);
             };
+
             if (!panel.IsHandleCreated)
-            {
                 CreateHandle();
-            }
+
             if (panel.InvokeRequired)
-            {
                 panel.BeginInvoke(genericDelegate);
-                return;
-            }
-            genericDelegate();
+            else
+                genericDelegate();
         }
 
         public void SetPanelStyle()
@@ -398,7 +405,7 @@ namespace QuickTranslator
             {
                 return;
             }
-            string text = ChineseToMeanings(chineseDocumentPanel.GetTextContent().Substring(num), out int num2);
+            string text = Translator.ChineseToMeanings(chineseDocumentPanel.GetTextContent().Substring(num), out int num2);
             meaningDocumentPanel.SetTextContent(text.Replace("\\n", "\n").Replace("\\t", "\t"));
             meaningDocumentPanel.ScrollToTop();
             chineseDocumentPanel.HighlightText(num, num2, true, true);
@@ -438,7 +445,7 @@ namespace QuickTranslator
             {
                 return;
             }
-            string text = ChineseToMeanings(chineseDocumentPanel.GetTextContent().Substring(chineseCharIndex), out int num);
+            string text = Translator.ChineseToMeanings(chineseDocumentPanel.GetTextContent().Substring(chineseCharIndex), out int num);
             meaningDocumentPanel.SetTextContent(text.Replace("\\n", "\n").Replace("\\t", "\t"));
             meaningDocumentPanel.ScrollToTop();
             chineseDocumentPanel.HighlightText(chineseCharIndex, num, true, false);
@@ -497,7 +504,7 @@ namespace QuickTranslator
                 return;
             }
             int startIndex = GetChineseCharRangeFromVietPhraseIndex(currentCharIndex).StartIndex;
-            string text = ChineseToMeanings(chineseDocumentPanel.GetTextContent().Substring(startIndex), out int num);
+            string text = Translator.ChineseToMeanings(chineseDocumentPanel.GetTextContent().Substring(startIndex), out int num);
             meaningDocumentPanel.SetTextContent(text.Replace("\\n", "\n").Replace("\\t", "\t"));
             meaningDocumentPanel.ScrollToTop();
             chineseDocumentPanel.HighlightText(startIndex, num, true, true);
@@ -540,7 +547,7 @@ namespace QuickTranslator
                 return;
             }
             int startIndex = chineseCharRangeFromVietPhraseOneMeaningIndex.StartIndex;
-            string text = ChineseToMeanings(chineseDocumentPanel.GetTextContent().Substring(startIndex), out int num);
+            string text = Translator.ChineseToMeanings(chineseDocumentPanel.GetTextContent().Substring(startIndex), out int num);
             meaningDocumentPanel.SetTextContent(text.Replace("\\n", "\n").Replace("\\t", "\t"));
             meaningDocumentPanel.ScrollToTop();
             chineseDocumentPanel.HighlightText(startIndex, num, true, true);
@@ -552,7 +559,7 @@ namespace QuickTranslator
                 vietPhraseDocumentPanel.HighlightText(vietPhraseCharRangeFromChineseIndex.StartIndex, vietPhraseCharRangeFromChineseIndex.Length, true, true);
             }
             CharRange vietPhraseOneMeaningCharRangeFromChineseIndex = GetVietPhraseOneMeaningCharRangeFromChineseIndex(startIndex);
-            string text2 = GetVietPhraseOrName(chineseContent.Substring(startIndex, num));
+            string text2 = Operator.GetVietPhraseOrName(chineseContent.Substring(startIndex, num));
             if (vietPhraseOneMeaningDocumentPanel.CurrentHighlightedTextStartIndex == vietPhraseOneMeaningCharRangeFromChineseIndex.StartIndex && vietPhraseOneMeaningDocumentPanel.CurrentHighlightedTextLength == vietPhraseOneMeaningCharRangeFromChineseIndex.Length && !"\n".Equals(vietPhraseOneMeaningDocumentPanel.GetHighlightText()))
             {
                 if (string.IsNullOrEmpty(text2))
@@ -637,7 +644,7 @@ namespace QuickTranslator
             vietPhraseOneMeaningDocumentPanel.ReplaceHighlightedText(text3);
             if ("Update VietPhrase".Equals(toolStripMenuItem.Text))
             {
-                string[] array2 = GetVietPhrase(array[2].Trim()).Split("/|".ToCharArray());
+                string[] array2 = Operator.GetVietPhrase(array[2].Trim()).Split("/|".ToCharArray());
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.Append(text);
                 foreach (string text4 in array2)
@@ -648,7 +655,7 @@ namespace QuickTranslator
                         stringBuilder.Append(text4);
                     }
                 }
-                UpdateVietPhraseDict(array[2], stringBuilder.ToString(), false);
+                Operator.UpdateVietPhraseDict(array[2], stringBuilder.ToString(), false);
             }
             vietPhraseOneMeaningDocumentPanel.chooseMeaningContextMenuStrip.Hide();
         }
@@ -686,7 +693,7 @@ namespace QuickTranslator
                 text3 = char.ToUpper(text[0]) + ((text.Length <= 1) ? "" : text.Substring(1));
             }
             vietPhraseOneMeaningDocumentPanel.ReplaceHighlightedText(text3);
-            string vietPhraseValueFromKey = GetVietPhrase(array[2].Trim());
+            string vietPhraseValueFromKey = Operator.GetVietPhrase(array[2].Trim());
             string[] array2 = (vietPhraseValueFromKey ?? "").Split("/|".ToCharArray());
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(text);
@@ -698,7 +705,7 @@ namespace QuickTranslator
                     stringBuilder.Append(text4);
                 }
             }
-            UpdateVietPhraseDict(array[2], stringBuilder.ToString().TrimEnd("/".ToCharArray()), false);
+            Operator.UpdateVietPhraseDict(array[2], stringBuilder.ToString().TrimEnd("/".ToCharArray()), false);
             vietPhraseOneMeaningDocumentPanel.chooseMeaningContextMenuStrip.Hide();
         }
 
@@ -1049,13 +1056,7 @@ namespace QuickTranslator
             }
         }
 
-        private int CountPhysicalLines(string text)
-        {
-            return text.Split(new char[]
-            {
-                '\n'
-            }).Length;
-        }
+        private int CountPhysicalLines(string text) => text.Split('\n').Length;
 
         private void MainFormFormClosing(object sender, FormClosingEventArgs e)
         {
@@ -1074,8 +1075,7 @@ namespace QuickTranslator
 
         private void ReloadDictToolStripButtonClick(object sender, EventArgs e)
         {
-            FlagToLoadData = true;
-            LoadDictionaries();
+            Initializer.LoadDictionaries();
             Shortcuts.LoadFromFile(shortcutDictionaryFilePath);
             Retranslate();
         }
@@ -1250,7 +1250,7 @@ namespace QuickTranslator
                     return;
                 }
             }
-            chineseDocumentPanel.SetTextContent(NormalizeTextAndRemoveIgnoredChinesePhrases(original));
+            chineseDocumentPanel.SetTextContent(Util.NormalizeTextAndRemoveIgnoredChinesePhrases(original));
             vietDocumentPanel.SetRftContent(rftContent);
             vietDocumentPanel.AppendText("");
             vietDocumentPanel.ScrollToBottom();
@@ -1661,7 +1661,7 @@ namespace QuickTranslator
             if (remembered)
             {
                 string selectedText = chineseDocumentPanel.GetSelectedText();
-                AddIgnoredChinesePhrase(selectedText);
+                Operator.AddIgnoredChinesePhrase(selectedText);
             }
             chineseDocumentPanel.DeleteSelectedText();
             Retranslate();
@@ -1724,7 +1724,7 @@ namespace QuickTranslator
                     {
                         text4 = char.ToUpper(text4[0]) + text4.Substring(1);
                         CharRange chineseCharRangeFromVietPhraseOneMeaningIndex = GetChineseCharRangeFromVietPhraseOneMeaningIndex(selectionStart);
-                        if (chineseCharRangeFromVietPhraseOneMeaningIndex != null && GetName(chineseContent.Substring(chineseCharRangeFromVietPhraseOneMeaningIndex.StartIndex, chineseCharRangeFromVietPhraseOneMeaningIndex.Length)) == null)
+                        if (chineseCharRangeFromVietPhraseOneMeaningIndex != null && Operator.GetName(chineseContent.Substring(chineseCharRangeFromVietPhraseOneMeaningIndex.StartIndex, chineseCharRangeFromVietPhraseOneMeaningIndex.Length)) == null)
                         {
                             text4 = text4.Substring(0, num3) + char.ToLower(text4[num3]) + text4.Substring(num3 + 1);
                         }
@@ -1766,7 +1766,7 @@ namespace QuickTranslator
             {
                 text4 = char.ToUpper(text4[0]) + text4.Substring(1);
                 int num5 = text4.Length - num4 + (text4.EndsWith(" ") ? 0 : 1);
-                if (GetName(chineseDocumentPanel.GetHighlightText()) == null)
+                if (Operator.GetName(chineseDocumentPanel.GetHighlightText()) == null)
                 {
                     text4 = text4.Substring(0, num5) + char.ToLower(text4[num5]) + text4.Substring(num5 + 1);
                 }
@@ -1792,7 +1792,7 @@ namespace QuickTranslator
         private void RetranslateToolStripButtonClick(object sender, EventArgs e)
         {
             int currentLineIndex = chineseDocumentPanel.GetCurrentLineIndex();
-            UpdateDocumentPanel(chineseDocumentPanel, NormalizeTextAndRemoveIgnoredChinesePhrases(chineseDocumentPanel.GetTextContent()), currentLineIndex);
+            UpdateDocumentPanel(chineseDocumentPanel, Util.NormalizeTextAndRemoveIgnoredChinesePhrases(chineseDocumentPanel.GetTextContent()), currentLineIndex);
             Retranslate();
         }
 
@@ -1832,7 +1832,7 @@ namespace QuickTranslator
                     text = textReader.ReadToEnd();
                 }
                 string original = text.Substring(text.IndexOf("[Chinese]\n") + "[Chinese]\n".Length, text.IndexOf("[Viet]\n") - text.IndexOf("[Chinese]\n") - "[Chinese]\n".Length);
-                chineseDocumentPanel.SetTextContent(NormalizeTextAndRemoveIgnoredChinesePhrases(original));
+                chineseDocumentPanel.SetTextContent(Util.NormalizeTextAndRemoveIgnoredChinesePhrases(original));
                 string rftContent = text.Substring(text.IndexOf("[Viet]\n") + "[Viet]\n".Length);
                 vietDocumentPanel.SetRftContent(rftContent);
                 vietDocumentPanel.AppendText("");
@@ -1898,7 +1898,7 @@ namespace QuickTranslator
             {
                 text = HtmlScrapper.GetChineseContent(text, false);
             }
-            text = NormalizeTextAndRemoveIgnoredChinesePhrases(text);
+            text = Util.NormalizeTextAndRemoveIgnoredChinesePhrases(text);
             chineseDocumentPanel.SetTextContent(text);
             Text = "Quick Translator - " + fileName;
             Translate(-2, -2, -2);
@@ -1919,7 +1919,7 @@ namespace QuickTranslator
                 Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
                 return;
             }
-            chineseDocumentPanel.SetTextContent(NormalizeTextAndRemoveIgnoredChinesePhrases(original));
+            chineseDocumentPanel.SetTextContent(Util.NormalizeTextAndRemoveIgnoredChinesePhrases(original));
             vietDocumentPanel.SetTextContent(textContent);
             vietDocumentPanel.ScrollToBottom();
             vietDocumentPanel.FocusInRichTextBox();
@@ -2046,7 +2046,7 @@ namespace QuickTranslator
             string textContent = chineseDocumentPanel.GetTextContent();
             foreach (char character in textContent)
             {
-                if (IsChineseChar(character))
+                if (Util.IsChineseChar(character))
                 {
                     num++;
                 }
@@ -2089,12 +2089,6 @@ namespace QuickTranslator
         private bool isNewTranslationWork;
 
         private DeserializeDockContent deserializeDockContent;
-
-        private string hanVietContent;
-
-        private string vietPhraseContent;
-
-        private string vietPhraseOneMeaningContent;
 
         private string chineseContent;
 

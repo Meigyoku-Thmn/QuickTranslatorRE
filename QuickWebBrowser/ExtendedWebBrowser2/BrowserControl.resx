@@ -118,36 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="_browser.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+  <data name="browser.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="_browser.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="browser.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="_browser.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="_browser.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>27, 25</value>
-  </data>
-  <data name="_browser.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="browser.Size" type="System.Drawing.Size, System.Drawing">
     <value>799, 469</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="_browser.TabIndex" type="System.Int32, mscorlib">
+  <data name="browser.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;_browser.Name" xml:space="preserve">
-    <value>_browser</value>
+  <data name="&gt;&gt;browser.Name" xml:space="preserve">
+    <value>browser</value>
   </data>
-  <data name="&gt;&gt;_browser.Type" xml:space="preserve">
+  <data name="&gt;&gt;browser.Type" xml:space="preserve">
     <value>ExtendedWebBrowser2.ExtendedWebBrowser, QuickWebBrowser, Version=1.4.4937.24291, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="&gt;&gt;_browser.Parent" xml:space="preserve">
+  <data name="&gt;&gt;browser.Parent" xml:space="preserve">
     <value>containerPanel</value>
   </data>
-  <data name="&gt;&gt;_browser.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;browser.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="containerPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">

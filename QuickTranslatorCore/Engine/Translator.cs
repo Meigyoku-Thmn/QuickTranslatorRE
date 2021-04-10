@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickTranslatorCore
+namespace QuickTranslatorCore.Engine
 {
-    public partial class TranslationEngine
+    using static Data;
+    using static Util;
+    using static Initializer;
+
+    public class Translator
     {
         static void AppendTranslatedWord(StringBuilder result, string translatedText, ref string lastTranslatedWord)
         {

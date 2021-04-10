@@ -67,6 +67,9 @@
     <Compile Include="ExtendedWebBrowser2\BrowserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ExtendedWebBrowser2\BrowserControl.Designer.cs">
+      <DependentUpon>BrowserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ExtendedWebBrowser2\BrowserExtendedNavigatingEventArgs.cs" />
     <Compile Include="ExtendedWebBrowser2\BrowserForm.cs">
       <SubType>Form</SubType>

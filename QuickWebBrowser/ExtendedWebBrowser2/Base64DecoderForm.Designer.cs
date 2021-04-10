@@ -2,6 +2,8 @@
 {
     public partial class Base64DecoderForm
     {
+        private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
@@ -117,8 +119,6 @@
             this.PerformLayout();
 
         }
-
-        private System.ComponentModel.IContainer components;
 
         private System.Windows.Forms.TextBox decodedTextBox;
 

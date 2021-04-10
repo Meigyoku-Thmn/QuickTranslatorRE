@@ -9,6 +9,7 @@
     <RootNamespace>QuickTranslatorCore</RootNamespace>
     <AssemblyName>QuickTranslatorCore</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>4096</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -43,11 +44,12 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\DictData.cs" />
-    <Compile Include="Engine\DictInitializer.cs" />
-    <Compile Include="Engine\DictLogger.cs" />
-    <Compile Include="Engine\DictOperator.cs" />
-    <Compile Include="Engine\DictTranslator.cs" />
+    <Compile Include="Engine\Util.cs" />
+    <Compile Include="Engine\Data.cs" />
+    <Compile Include="Engine\Initializer.cs" />
+    <Compile Include="Engine\Logger.cs" />
+    <Compile Include="Engine\Operator.cs" />
+    <Compile Include="Engine\Translator.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="CharRange.cs" />
     <Compile Include="CharsetDetector.cs" />
@@ -56,28 +58,6 @@
     <Compile Include="Helper.cs" />
     <Compile Include="HtmlScrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TranslationEngine.Algorithm.cs">
-      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TranslationEngine.Database.cs" />
-    <Compile Include="TranslationEngine.Deleter.cs">
-      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TranslationEngine.Helper.cs">
-      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TranslationEngine.Normalizer.cs">
-      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TranslationEngine.Reader.cs">
-      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TranslationEngine.Updater.cs">
-      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TranslationEngine.Writer.cs">
-      <DependentUpon>TranslationEngine.Database.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NChardet">

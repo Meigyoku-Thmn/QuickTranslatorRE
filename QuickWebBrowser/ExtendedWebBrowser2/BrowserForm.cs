@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ExtendedWebBrowser2.Properties;
+using FullScreenMode;
+using QuickTranslatorCore;
+using QuickTranslatorCore.Engine;
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
@@ -6,13 +10,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using ExtendedWebBrowser2.Properties;
-using FullScreenMode;
-using QuickTranslatorCore;
 using WeifenLuo.WinFormsUI.Docking;
-
-using static QuickTranslatorCore.TranslationEngine;
 
 namespace ExtendedWebBrowser2
 {
@@ -154,27 +154,25 @@ namespace ExtendedWebBrowser2
         private void MainForm_Load(object sender, EventArgs e)
         {
             _windowManager.New(false, true);
-            if (FlagToLoadData)
-            {
-                new Thread(delegate () {
-                    LoadDictionaries();
-                }) {
-                    IsBackground = true
-                }.Start();
-            }
-            translateToolStripComboBox.Items.AddRange(new string[]
-            {
+
+            Initializer.LoadDictionaries();
+
+            translateToolStripComboBox.Items.AddRange(new[] {
                 "Không dịch",
                 "Hán Việt",
                 "VietPhrase",
                 "VietPhrase một nghĩa"
             });
+
             translateToolStripComboBox.SelectedItem = SettingsHelper.Current.TranslationMode;
             textSizeToolStripComboBox.SelectedItem = SettingsHelper.Current.TextSize;
             zoomToolStripComboBox.SelectedItem = SettingsHelper.Current.Zoom;
+
             InitializeFontComboBox(fontToolStripComboBox);
+
             fontToolStripComboBox.SelectedItem = SettingsHelper.Current.Font;
             fullScreen = new FullScreen(this);
+
             LoadBookmarks();
         }
 
@@ -359,39 +357,39 @@ namespace ExtendedWebBrowser2
                 string title;
                 if (TranslationType == 1)
                 {
-                    innerHtml = ChineseToHanVietForBrowser(text);
-                    title = ChineseToHanVietForBrowser(htmlDocument.Title);
+                    innerHtml = Translator.ChineseToHanVietForBrowser(text);
+                    title = Translator.ChineseToHanVietForBrowser(htmlDocument.Title);
                 }
                 else if (TranslationType == 2)
                 {
-                    innerHtml = ChineseToVietPhraseForBrowser(text, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
-                    title = ChineseToVietPhraseForBrowser(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
+                    innerHtml = Translator.ChineseToVietPhraseForBrowser(text, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
+                    title = Translator.ChineseToVietPhraseForBrowser(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
                 }
                 else
                 {
-                    innerHtml = ChineseToVietPhraseOneMeaningForBrowser(text, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
-                    title = ChineseToVietPhraseOneMeaningForBrowser(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
+                    innerHtml = Translator.ChineseToVietPhraseOneMeaningForBrowser(text, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
+                    title = Translator.ChineseToVietPhraseOneMeaningForBrowser(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
                 }
                 HtmlUtilities.SetInnerHtml(body, HtmlUtilities.DecodeLinks(innerHtml));
                 htmlDocument.Title = title;
                 return;
             }
-            text = NormalizeTextAndRemoveIgnoredChinesePhrases(text);
+            text = Util.NormalizeTextAndRemoveIgnoredChinesePhrases(text);
             text = text.Replace(". htm", ".htm");
             if (TranslationType == 1)
             {
-                HtmlUtilities.SetInnerHtml(body, ChineseToHanVietForBatch(text));
-                htmlDocument.Title = ChineseToHanViet(htmlDocument.Title, out _);
+                HtmlUtilities.SetInnerHtml(body, Translator.ChineseToHanVietForBatch(text));
+                htmlDocument.Title = Translator.ChineseToHanViet(htmlDocument.Title, out _);
                 return;
             }
             if (TranslationType == 2)
             {
-                HtmlUtilities.SetInnerHtml(body, ChineseToVietPhraseForBatch(text, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1));
-                htmlDocument.Title = ChineseToVietPhrase(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1, out _, out _);
+                HtmlUtilities.SetInnerHtml(body, Translator.ChineseToVietPhraseForBatch(text, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1));
+                htmlDocument.Title = Translator.ChineseToVietPhrase(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1, out _, out _);
                 return;
             }
-            HtmlUtilities.SetInnerHtml(body, ChineseToVietPhraseOneMeaningForBatch(text, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1));
-            htmlDocument.Title = ChineseToVietPhraseOneMeaning(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1, out _, out _);
+            HtmlUtilities.SetInnerHtml(body, Translator.ChineseToVietPhraseOneMeaningForBatch(text, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1));
+            htmlDocument.Title = Translator.ChineseToVietPhraseOneMeaning(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1, out _, out _);
         }
 
         private void BaikeToolStripButtonClick(object sender, EventArgs e)
@@ -680,8 +678,7 @@ namespace ExtendedWebBrowser2
 
         private void ReloadDictsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FlagToLoadData = true;
-            LoadDictionaries();
+            Initializer.LoadDictionaries();
             RefreshToolStripButton_Click(null, null);
         }
 
@@ -713,17 +710,15 @@ namespace ExtendedWebBrowser2
         private void LoadBookmarks()
         {
             if (!File.Exists(BookmarksFilePath))
-            {
                 return;
-            }
+
             bookmarksToolStripMenuItem.DropDownItems.Clear();
-            bookmarksToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
-            {
+            bookmarksToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
                 bookmarkThisPageToolStripMenuItem,
                 toolStripSeparator8
             });
-            string[] array = File.ReadAllLines(BookmarksFilePath);
-            foreach (string text in array)
+
+            foreach (string text in File.ReadAllLines(BookmarksFilePath))
             {
                 if (!string.IsNullOrEmpty(text) && text.Contains("\t"))
                 {
