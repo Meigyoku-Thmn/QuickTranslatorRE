@@ -31,7 +31,7 @@ namespace ExtendedWebBrowser2
 
         private string[] GetIgnoredList(bool getUrlList)
         {
-            string[] lines = File.ReadAllLines(BrowserForm.IgnoredListFilePath);
+            var lines = File.ReadAllLines(BrowserForm.IgnoredListFilePath);
 
             var ignoredUrls = new List<string>();
             var ignoredTags = new List<string>();
@@ -116,7 +116,7 @@ namespace ExtendedWebBrowser2
                 }
             }
             var mainForm = GetMainFormFromControl(sender as Control);
-            mainForm.TranslateHandler?.Invoke(browser.Document);
+            mainForm.Translate(browser.Document);
         }
 
         private void UpdateAddressBox()
@@ -128,59 +128,53 @@ namespace ExtendedWebBrowser2
 
         private void Browser_StartNewWindow(object sender, BrowserExtendedNavigatingEventArgs e)
         {
-            var ignoredUrls = GetIgnoredList(getUrlList: true);
-            foreach (string url in ignoredUrls)
+            foreach (var url in GetIgnoredList(getUrlList: true))
             {
-                if (!e.Url.AbsoluteUri.Contains(url))
-                    continue;
-                e.Cancel = true;
-                return;
+                if (e.Url.AbsoluteUri.Contains(url))
+                {
+                    e.Cancel = true;
+                    return;
+                }
             }
 
-            var mainFormFromControl = GetMainFormFromControl(sender as Control);
-            if (mainFormFromControl == null)
+            var mainForm = GetMainFormFromControl(sender as Control);
+            if (mainForm == null)
                 return;
 
-            bool flag = e.NavigationContext == UrlContext.None
+            var flag = e.NavigationContext == UrlContext.None
                 || (e.NavigationContext & UrlContext.OverrideKey) == UrlContext.OverrideKey;
 
-            if (flag == false)
+            if (!flag)
             {
                 switch (SettingsHelper.Current.FilterLevel)
                 {
                     case PopupBlockerFilterLevel.None:
                         flag = true;
-                        goto IL_B8;
+                        break;
                     case PopupBlockerFilterLevel.Low:
                         if (WebBrowser.EncryptionLevel != WebBrowserEncryptionLevel.Insecure)
                         {
                             flag = true;
-                            goto IL_B8;
+                            break;
                         }
-                        break;
+                        goto case PopupBlockerFilterLevel.Medium;
                     case PopupBlockerFilterLevel.Medium:
+                        if ((e.NavigationContext & UrlContext.UserFirstInited) == UrlContext.UserFirstInited
+                            && (e.NavigationContext & UrlContext.UserInited) == UrlContext.UserInited)
+                            flag = true;
                         break;
-                    default:
-                        goto IL_B8;
                 }
-                if ((e.NavigationContext & UrlContext.UserFirstInited) == UrlContext.UserFirstInited
-                    && (e.NavigationContext & UrlContext.UserInited) == UrlContext.UserInited)
-                    flag = true;
-                goto IL_B8;
             }
-        IL_B8:
+
             if (flag)
             {
-                if ((e.NavigationContext & UrlContext.HtmlDialog) != UrlContext.HtmlDialog)
-                {
-                    ExtendedWebBrowser extendedWebBrowser = mainFormFromControl.WindowManager.New(false);
-                    e.AutomationObject = extendedWebBrowser.Application;
+                if ((e.NavigationContext & UrlContext.HtmlDialog) == UrlContext.HtmlDialog)
                     return;
-                }
+                var brw = mainForm.WindowManager.New(false);
+                e.AutomationObject = brw.Application;
             }
             else
                 e.Cancel = true;
-            return;
         }
 
         private void Browser_Navigated(object sender, WebBrowserNavigatedEventArgs e)

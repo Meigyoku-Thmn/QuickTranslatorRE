@@ -31,9 +31,10 @@ namespace ExtendedWebBrowser2
 
         private static void UnhandledExceptionHandler(Exception exception)
         {
-            string text = "QuickWebBrowser";
-            Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), text, exception);
-            MessageBox.Show("Lỗi chương trình! Hãy gửi " + text + ".log cho tác giả. Xin cám ơn!", "Lỗi chương trình", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            var logName = "QuickWebBrowser";
+            Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), logName, exception);
+            MessageBox.Show($"Lỗi chương trình! Hãy gửi {logName}.log cho tác giả. Xin cám ơn!", "Lỗi chương trình",
+                MessageBoxButtons.OK, MessageBoxIcon.Hand);
             Application.Exit();
         }
     }

@@ -20,7 +20,9 @@ namespace ExtendedWebBrowser2
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]
-        int SetHostNames([MarshalAs(UnmanagedType.LPWStr)][In] string szContainerApp, [MarshalAs(UnmanagedType.LPWStr)][In] string szContainerObj);
+        int SetHostNames(
+            [MarshalAs(UnmanagedType.LPWStr)][In] string szContainerApp,
+            [MarshalAs(UnmanagedType.LPWStr)][In] string szContainerObj);
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]
@@ -28,21 +30,35 @@ namespace ExtendedWebBrowser2
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]
-        int SetMoniker([MarshalAs(UnmanagedType.U4)][In] uint dwWhichMoniker, [MarshalAs(UnmanagedType.Interface)][In] object pmk);
+        int SetMoniker(
+            [MarshalAs(UnmanagedType.U4)][In] uint dwWhichMoniker,
+            [MarshalAs(UnmanagedType.Interface)][In] object pmk);
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]
-        int GetMoniker([MarshalAs(UnmanagedType.U4)][In] uint dwAssign, [MarshalAs(UnmanagedType.U4)][In] uint dwWhichMoniker, [MarshalAs(UnmanagedType.Interface)] out object moniker);
+        int GetMoniker(
+            [MarshalAs(UnmanagedType.U4)][In] uint dwAssign,
+            [MarshalAs(UnmanagedType.U4)][In] uint dwWhichMoniker,
+            [MarshalAs(UnmanagedType.Interface)] out object moniker);
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]
-        int InitFromData([MarshalAs(UnmanagedType.Interface)][In] object pDataObject, [MarshalAs(UnmanagedType.Bool)][In] bool fCreation, [MarshalAs(UnmanagedType.U4)][In] uint dwReserved);
+        int InitFromData(
+            [MarshalAs(UnmanagedType.Interface)][In] object pDataObject,
+            [MarshalAs(UnmanagedType.Bool)][In] bool fCreation,
+            [MarshalAs(UnmanagedType.U4)][In] uint dwReserved);
 
         int GetClipboardData([MarshalAs(UnmanagedType.U4)][In] uint dwReserved, out object data);
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]
-        int DoVerb([MarshalAs(UnmanagedType.I4)][In] int iVerb, [In] IntPtr lpmsg, [MarshalAs(UnmanagedType.Interface)][In] IOleClientSite pActiveSite, [MarshalAs(UnmanagedType.I4)][In] int lindex, [In] IntPtr hwndParent, [In] RECT lprcPosRect);
+        int DoVerb(
+            [MarshalAs(UnmanagedType.I4)][In] int iVerb,
+            [In] IntPtr lpmsg,
+            [MarshalAs(UnmanagedType.Interface)][In] IOleClientSite pActiveSite,
+            [MarshalAs(UnmanagedType.I4)][In] int lindex,
+            [In] IntPtr hwndParent,
+            [In] RECT lprcPosRect);
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]
@@ -62,7 +78,9 @@ namespace ExtendedWebBrowser2
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]
-        int GetUserType([MarshalAs(UnmanagedType.U4)][In] uint dwFormOfType, [MarshalAs(UnmanagedType.LPWStr)] out string userType);
+        int GetUserType(
+            [MarshalAs(UnmanagedType.U4)][In] uint dwFormOfType,
+            [MarshalAs(UnmanagedType.LPWStr)] out string userType);
 
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.I4)]

@@ -5,16 +5,8 @@ namespace ExtendedWebBrowser2
     internal class TextChangedEventArgs : EventArgs
     {
         public TextChangedEventArgs(string text)
-        {
-            _text = text;
-        }
+            => Text = text;
 
-        public string Text {
-            get {
-                return _text;
-            }
-        }
-
-        private string _text;
+        public string Text { get; private set; }
     }
 }

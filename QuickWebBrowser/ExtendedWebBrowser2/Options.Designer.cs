@@ -2,6 +2,8 @@
 {
     internal partial class Options
     {
+        private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
@@ -284,62 +286,60 @@
 
         }
 
-        private global::System.ComponentModel.IContainer components;
+        private System.Windows.Forms.CheckBox prioritizedNameCheckBox;
 
-        private global::System.Windows.Forms.CheckBox prioritizedNameCheckBox;
+        private System.Windows.Forms.RadioButton algorithm_LongestVietPhraseFirstWithConditionRadioButton;
 
-        private global::System.Windows.Forms.RadioButton algorithm_LongestVietPhraseFirstWithConditionRadioButton;
+        private System.Windows.Forms.CheckBox blockFlashesCheckBox;
 
-        private global::System.Windows.Forms.CheckBox blockFlashesCheckBox;
+        private System.Windows.Forms.CheckBox blockImagesCheckBox;
 
-        private global::System.Windows.Forms.CheckBox blockImagesCheckBox;
+        private System.Windows.Forms.Label label2;
 
-        private global::System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox4;
 
-        private global::System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton vietPhraseOneMeaning_AlwaysWrapRadioButton;
 
-        private global::System.Windows.Forms.RadioButton vietPhraseOneMeaning_AlwaysWrapRadioButton;
+        private System.Windows.Forms.RadioButton vietPhraseOneMeaning_NoWrapRadioButton;
 
-        private global::System.Windows.Forms.RadioButton vietPhraseOneMeaning_NoWrapRadioButton;
+        private System.Windows.Forms.GroupBox groupBox3;
 
-        private global::System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.RadioButton vietPhrase_NoWrapRadioButton;
 
-        private global::System.Windows.Forms.RadioButton vietPhrase_NoWrapRadioButton;
+        private System.Windows.Forms.RadioButton vietPhrase_AlwaysWrapRadioButton;
 
-        private global::System.Windows.Forms.RadioButton vietPhrase_AlwaysWrapRadioButton;
+        private System.Windows.Forms.RadioButton vietPhrase_OnlyWrapTwoMeaningRadioButton;
 
-        private global::System.Windows.Forms.RadioButton vietPhrase_OnlyWrapTwoMeaningRadioButton;
+        private System.Windows.Forms.GroupBox groupBox1;
 
-        private global::System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox popupBlockerGroupBox;
 
-        private global::System.Windows.Forms.GroupBox popupBlockerGroupBox;
+        private System.Windows.Forms.RadioButton filterLevelHighRadioButton;
 
-        private global::System.Windows.Forms.RadioButton filterLevelHighRadioButton;
+        private System.Windows.Forms.RadioButton filterLevelMediumRadioButton;
 
-        private global::System.Windows.Forms.RadioButton filterLevelMediumRadioButton;
+        private System.Windows.Forms.RadioButton filterLevelLowRadioButton;
 
-        private global::System.Windows.Forms.RadioButton filterLevelLowRadioButton;
+        private System.Windows.Forms.RadioButton filterLevelNoneRadioButton;
 
-        private global::System.Windows.Forms.RadioButton filterLevelNoneRadioButton;
+        private System.Windows.Forms.GroupBox groupBox2;
 
-        private global::System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox doNotShowScriptErrorsCheckBox;
 
-        private global::System.Windows.Forms.CheckBox doNotShowScriptErrorsCheckBox;
+        private System.Windows.Forms.Button okButton;
 
-        private global::System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Button cancelButton;
 
-        private global::System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Label label1;
 
-        private global::System.Windows.Forms.Label label1;
+        private System.Windows.Forms.RadioButton vietPhraseOneMeaning_AlwaysWrapExceptHanVietRadioButton;
 
-        private global::System.Windows.Forms.RadioButton vietPhraseOneMeaning_AlwaysWrapExceptHanVietRadioButton;
+        private System.Windows.Forms.RadioButton vietPhrase_AlwaysWrapExceptHanVietRadioButton;
 
-        private global::System.Windows.Forms.RadioButton vietPhrase_AlwaysWrapExceptHanVietRadioButton;
+        private System.Windows.Forms.GroupBox groupBox5;
 
-        private global::System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton algorithm_LeftToRightRadioButton;
 
-        private global::System.Windows.Forms.RadioButton algorithm_LeftToRightRadioButton;
-
-        private global::System.Windows.Forms.RadioButton algorithm_LongestVietPhraseFirstRadioButton;
+        private System.Windows.Forms.RadioButton algorithm_LongestVietPhraseFirstRadioButton;
     }
 }

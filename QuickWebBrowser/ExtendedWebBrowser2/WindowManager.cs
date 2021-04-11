@@ -6,6 +6,8 @@ namespace ExtendedWebBrowser2
 {
     internal class WindowManager
     {
+        private readonly TabControl _tabControl;
+
         public WindowManager(TabControl tabControl)
         {
             _tabControl = tabControl;
@@ -14,8 +16,8 @@ namespace ExtendedWebBrowser2
 
         public void Close()
         {
-            TabPage selectedTab = _tabControl.SelectedTab;
-            int selectedIndex = _tabControl.SelectedIndex;
+            var selectedTab = _tabControl.SelectedTab;
+            var selectedIndex = _tabControl.SelectedIndex;
             if (selectedTab != null)
             {
                 _tabControl.TabPages.Remove(selectedTab);
@@ -26,7 +28,7 @@ namespace ExtendedWebBrowser2
                 _tabControl.Visible = false;
                 return;
             }
-            _tabControl.SelectedIndex = ((0 <= selectedIndex - 1) ? (selectedIndex - 1) : 0);
+            _tabControl.SelectedIndex = (0 <= selectedIndex - 1) ? (selectedIndex - 1) : 0;
         }
 
         public ExtendedWebBrowser New()
@@ -41,12 +43,12 @@ namespace ExtendedWebBrowser2
 
         public ExtendedWebBrowser New(bool navigateHome, bool goToNewTab)
         {
-            TabPage tabPage = new TabPage {
+            var tabPage = new TabPage {
                 BorderStyle = BorderStyle.None,
                 Margin = Padding.Empty,
                 Padding = Padding.Empty
             };
-            BrowserControl browserControl = new BrowserControl {
+            var browserControl = new BrowserControl {
                 Tag = tabPage,
                 BorderStyle = BorderStyle.None,
                 Margin = Padding.Empty,
@@ -57,9 +59,7 @@ namespace ExtendedWebBrowser2
             browserControl.Dock = DockStyle.Fill;
             tabPage.Controls.Add(browserControl);
             if (navigateHome)
-            {
                 browserControl.WebBrowser.GoHome();
-            }
             browserControl.WebBrowser.StatusTextChanged += WebBrowser_StatusTextChanged;
             browserControl.WebBrowser.DocumentTitleChanged += WebBrowser_DocumentTitleChanged;
             browserControl.WebBrowser.CanGoBackChanged += WebBrowser_CanGoBackChanged;
@@ -69,41 +69,29 @@ namespace ExtendedWebBrowser2
             browserControl.WebBrowser.Quit += WebBrowser_Quit;
             _tabControl.TabPages.Add(tabPage);
             if (goToNewTab)
-            {
                 _tabControl.SelectedTab = tabPage;
-            }
             _tabControl.Visible = true;
             return browserControl.WebBrowser;
         }
 
         private void WebBrowser_Quit(object sender, EventArgs e)
         {
-            ExtendedWebBrowser extendedWebBrowser = sender as ExtendedWebBrowser;
-            if (extendedWebBrowser == null)
-            {
+            if (!(sender is ExtendedWebBrowser extendedWebBrowser))
                 return;
-            }
-            BrowserControl browserControl = BrowserControlFromBrowser(extendedWebBrowser);
+            var browserControl = BrowserControlFromBrowser(extendedWebBrowser);
             if (browserControl == null)
-            {
                 return;
-            }
-            TabPage tabPage = browserControl.Tag as TabPage;
-            if (tabPage == null)
-            {
+            if (!(browserControl.Tag is TabPage tabPage))
                 return;
-            }
             _tabControl.TabPages.Remove(tabPage);
             tabPage.Dispose();
             if (_tabControl.TabPages.Count == 0)
-            {
                 _tabControl.Visible = false;
-            }
         }
 
         public void Open(Uri url)
         {
-            ExtendedWebBrowser extendedWebBrowser = New(false);
+            var extendedWebBrowser = New(false);
             extendedWebBrowser.Navigate(url);
         }
 
@@ -134,21 +122,15 @@ namespace ExtendedWebBrowser2
 
         private void CheckCommandState()
         {
-            BrowserCommands browserCommands = BrowserCommands.None;
+            var browserCommands = BrowserCommands.None;
             if (ActiveBrowser != null)
             {
                 if (ActiveBrowser.CanGoBack)
-                {
                     browserCommands |= BrowserCommands.Back;
-                }
                 if (ActiveBrowser.CanGoForward)
-                {
                     browserCommands |= BrowserCommands.Forward;
-                }
                 if (ActiveBrowser.IsBusy)
-                {
                     browserCommands |= BrowserCommands.Stop;
-                }
                 browserCommands |= BrowserCommands.Home;
                 browserCommands |= BrowserCommands.Search;
                 browserCommands |= BrowserCommands.Print;
@@ -160,51 +142,31 @@ namespace ExtendedWebBrowser2
 
         private void WebBrowser_DocumentTitleChanged(object sender, EventArgs e)
         {
-            ExtendedWebBrowser extendedWebBrowser = sender as ExtendedWebBrowser;
-            if (extendedWebBrowser == null)
-            {
+            if (!(sender is ExtendedWebBrowser extendedWebBrowser))
                 return;
-            }
-            BrowserControl browserControl = WindowManager.BrowserControlFromBrowser(extendedWebBrowser);
+            var browserControl = BrowserControlFromBrowser(extendedWebBrowser);
             if (browserControl == null)
-            {
                 return;
-            }
-            TabPage tabPage = browserControl.Tag as TabPage;
-            if (tabPage == null)
-            {
+            if (!(browserControl.Tag is TabPage tabPage))
                 return;
-            }
-            string text = extendedWebBrowser.DocumentTitle;
+            var text = extendedWebBrowser.DocumentTitle;
             if (string.IsNullOrEmpty(text))
-            {
                 text = Resources.DefaultBrowserTitle;
-            }
             else if (text.Length > 30)
-            {
                 text = text.Substring(0, 30) + "...";
-            }
             tabPage.Text = text;
             tabPage.ToolTipText = extendedWebBrowser.DocumentTitle;
         }
 
         private void WebBrowser_StatusTextChanged(object sender, EventArgs e)
         {
-            ExtendedWebBrowser extendedWebBrowser = sender as ExtendedWebBrowser;
-            if (extendedWebBrowser == null)
-            {
+            if (!(sender is ExtendedWebBrowser extendedWebBrowser))
                 return;
-            }
-            BrowserControl browserControl = WindowManager.BrowserControlFromBrowser(extendedWebBrowser);
-            TabPage tabPage = browserControl.Tag as TabPage;
-            if (tabPage == null)
-            {
+            var browserControl = BrowserControlFromBrowser(extendedWebBrowser);
+            if (!(browserControl.Tag is TabPage tabPage))
                 return;
-            }
             if (_tabControl.SelectedTab == tabPage)
-            {
                 OnStatusTextChanged(new TextChangedEventArgs(extendedWebBrowser.StatusText));
-            }
         }
 
         public event EventHandler<TextChangedEventArgs> StatusTextChanged;
@@ -216,47 +178,19 @@ namespace ExtendedWebBrowser2
 
         private static BrowserControl BrowserControlFromBrowser(ExtendedWebBrowser browser)
         {
-            if (browser == null)
-            {
-                return null;
-            }
-            if (browser.Parent == null)
-            {
-                return null;
-            }
-            return browser.Parent.Parent as BrowserControl;
+            return browser?.Parent?.Parent as BrowserControl;
         }
 
         public ExtendedWebBrowser ActiveBrowser {
-            get {
-                TabPage selectedTab = _tabControl.SelectedTab;
-                if (selectedTab != null)
-                {
-                    BrowserControl browserControl = selectedTab.Tag as BrowserControl;
-                    if (browserControl != null)
-                    {
-                        return browserControl.WebBrowser;
-                    }
-                }
-                return null;
-            }
+            get => (_tabControl.SelectedTab?.Tag as BrowserControl)?.WebBrowser;
         }
 
         public BrowserControl ActiveBrowserControl {
-            get {
-                TabPage selectedTab = _tabControl.SelectedTab;
-                if (selectedTab != null)
-                {
-                    return selectedTab.Tag as BrowserControl;
-                }
-                return null;
-            }
+            get => _tabControl.SelectedTab?.Tag as BrowserControl;
         }
 
         public TabPage ActiveTabPage {
-            get {
-                return _tabControl.SelectedTab;
-            }
+            get => _tabControl.SelectedTab;
         }
 
         public event EventHandler<CommandStateEventArgs> CommandStateChanged;
@@ -265,7 +199,5 @@ namespace ExtendedWebBrowser2
         {
             CommandStateChanged?.Invoke(this, e);
         }
-
-        private TabControl _tabControl;
     }
 }

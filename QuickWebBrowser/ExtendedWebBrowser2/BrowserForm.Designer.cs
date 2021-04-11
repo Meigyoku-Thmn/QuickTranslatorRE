@@ -119,7 +119,7 @@
             this.openFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openFileToolStripMenuItem.Image")));
             this.openFileToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
-            this.openFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.openFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.O)));
             this.openFileToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.openFileToolStripMenuItem.Text = "Open &File...";
@@ -155,7 +155,7 @@
             this.printPreviewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripMenuItem.Image")));
             this.printPreviewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            this.printPreviewToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.printPreviewToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.P)));
             this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.printPreviewToolStripMenuItem.Text = "Print Pre&view";
@@ -656,116 +656,116 @@
 
         }
 
-        private global::System.ComponentModel.IContainer components;
+        private System.ComponentModel.IContainer components;
 
-        private global::System.Windows.Forms.ToolStripButton extractTXTToolStripButton;
+        private System.Windows.Forms.ToolStripButton extractTXTToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem base64DecoderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem base64DecoderToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 
-        private global::System.Windows.Forms.Panel showHideMenuPanel;
+        private System.Windows.Forms.Panel showHideMenuPanel;
 
-        private global::System.Windows.Forms.ToolStripButton tangthuvienToolStripButton;
+        private System.Windows.Forms.ToolStripButton tangthuvienToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripButton1;
+        private System.Windows.Forms.ToolStripSeparator toolStripButton1;
 
-        private global::System.Windows.Forms.ToolStripButton viewSourceToolStripButton;
+        private System.Windows.Forms.ToolStripButton viewSourceToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
 
-        public global::System.Windows.Forms.ToolStripButton fullScreenToolStripButton;
+        public System.Windows.Forms.ToolStripButton fullScreenToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
 
-        private global::System.Windows.Forms.ToolStripComboBox textSizeToolStripComboBox;
+        private System.Windows.Forms.ToolStripComboBox textSizeToolStripComboBox;
 
-        private global::System.Windows.Forms.ToolStripComboBox zoomToolStripComboBox;
+        private System.Windows.Forms.ToolStripComboBox zoomToolStripComboBox;
 
-        private global::System.Windows.Forms.ToolStripComboBox translateToolStripComboBox;
+        private System.Windows.Forms.ToolStripComboBox translateToolStripComboBox;
 
-        private global::System.Windows.Forms.ToolStripButton baikeToolStripButton;
+        private System.Windows.Forms.ToolStripButton baikeToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripButton2;
+        private System.Windows.Forms.ToolStripSeparator toolStripButton2;
 
-        private global::System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.MenuStrip menuStrip;
 
-        private global::System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem openUrlToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openUrlToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem openFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openFileToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
 
-        private global::System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem printPreviewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printPreviewToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
 
-        private global::System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStrip toolStrip;
+        private System.Windows.Forms.ToolStrip toolStrip;
 
-        private global::System.Windows.Forms.ToolStripButton backToolStripButton;
+        private System.Windows.Forms.ToolStripButton backToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripButton forwardToolStripButton;
+        private System.Windows.Forms.ToolStripButton forwardToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripButton stopToolStripButton;
+        private System.Windows.Forms.ToolStripButton stopToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripButton refreshToolStripButton;
+        private System.Windows.Forms.ToolStripButton refreshToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripButton homeToolStripButton;
+        private System.Windows.Forms.ToolStripButton homeToolStripButton;
 
-        private global::System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabControl tabControl;
 
-        private global::System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel1;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 
-        private global::System.Windows.Forms.ToolStripButton closeToolStripButton;
+        private System.Windows.Forms.ToolStripButton closeToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripButton closeWindowToolStripButton;
+        private System.Windows.Forms.ToolStripButton closeWindowToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 
-        private global::System.Windows.Forms.ToolStripButton printToolStripButton;
+        private System.Windows.Forms.ToolStripButton printToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripButton printPreviewToolStripButton;
+        private System.Windows.Forms.ToolStripButton printPreviewToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripButton searchToolStripButton;
+        private System.Windows.Forms.ToolStripButton searchToolStripButton;
 
-        private global::System.Windows.Forms.ToolStripMenuItem scriptErrorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem scriptErrorToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
 
-        private global::System.Windows.Forms.ToolStripComboBox fontToolStripComboBox;
+        private System.Windows.Forms.ToolStripComboBox fontToolStripComboBox;
 
-        private global::System.Windows.Forms.ToolStripMenuItem reloadDictsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadDictsToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem bookmarksToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bookmarksToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripMenuItem bookmarkThisPageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bookmarkThisPageToolStripMenuItem;
 
-        private global::System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
 
-        private global::System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
 
-        private global::System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip statusStrip1;
     }
 }

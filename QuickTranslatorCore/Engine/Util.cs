@@ -428,7 +428,7 @@ namespace QuickTranslatorCore.Engine
             if (str.FindIndex(c => c >= '！' && c <= '～') == -1)
                 return str;
 
-            return string.Join("", str.Select(c => (c >= '！' && c <= '～') ? (c - '！' + '!') : c));
+            return string.Join("", str.Select(c => (c >= '！' && c <= '～') ? (char)(c - '！' + '!') : c));
         }
 
         public static string NormalizeText(string text)

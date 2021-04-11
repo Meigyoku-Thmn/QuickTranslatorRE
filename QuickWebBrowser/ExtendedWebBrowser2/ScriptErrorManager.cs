@@ -4,57 +4,27 @@ namespace ExtendedWebBrowser2
 {
     internal class ScriptErrorManager
     {
+        public readonly static ScriptErrorManager Instance = new ScriptErrorManager();
+
+        public NotifyCollection<ScriptError> ScriptErrors { get; private set; }
+
+        private ScriptErrorWindow errorWindow;
+
         private ScriptErrorManager()
-        {
-            _scriptErrors = new NotifyCollection<ScriptError>();
-        }
-
-        public static ScriptErrorManager Instance {
-            get {
-                if (_instance == null)
-                {
-                    lock (lockObject)
-                    {
-                        if (_instance == null)
-                        {
-                            _instance = new ScriptErrorManager();
-                        }
-                    }
-                }
-                return _instance;
-            }
-        }
-
-        public NotifyCollection<ScriptError> ScriptErrors {
-            get {
-                return _scriptErrors;
-            }
-        }
+            => ScriptErrors = new NotifyCollection<ScriptError>();
 
         public void RegisterScriptError(Uri url, string description, int lineNumber)
         {
-            _scriptErrors.Add(new ScriptError(url, description, lineNumber));
+            ScriptErrors.Add(new ScriptError(url, description, lineNumber));
             if (SettingsHelper.Current.ShowScriptErrors)
-            {
                 ShowWindow();
-            }
         }
 
         public void ShowWindow()
         {
-            if (_errorWindow == null || _errorWindow.IsDisposed)
-            {
-                _errorWindow = new ScriptErrorWindow();
-            }
-            _errorWindow.Show();
+            if (errorWindow?.IsDisposed == true)
+                errorWindow = new ScriptErrorWindow();
+            errorWindow.Show();
         }
-
-        private NotifyCollection<ScriptError> _scriptErrors;
-
-        private static object lockObject = new object();
-
-        private static ScriptErrorManager _instance;
-
-        private ScriptErrorWindow _errorWindow;
     }
 }

@@ -50,7 +50,7 @@ namespace FullScreenMode
             }
         }
 
-        public void ShowFullScreen() => ToggleScreenMode();
+        public void ToggleFullScreen() => ToggleScreenMode();
 
         public void ResetTaskBar() => HandleTaskBar.ShowTaskBar();
     }

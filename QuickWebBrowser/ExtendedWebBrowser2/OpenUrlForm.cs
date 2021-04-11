@@ -6,6 +6,8 @@ namespace ExtendedWebBrowser2
 {
     internal partial class OpenUrlForm : Form
     {
+        public Uri Url { get; private set; }
+
         public OpenUrlForm()
         {
             InitializeComponent();
@@ -14,22 +16,13 @@ namespace ExtendedWebBrowser2
         private void OkButton_Click(object sender, EventArgs e)
         {
             Uri uri = null;
-            try
-            {
-                uri = new Uri(addressTextBox.Text);
-            }
-            catch (UriFormatException)
-            {
-            }
+            try { uri = new Uri(addressTextBox.Text); }
+            catch (UriFormatException) { }
+
             if (uri == null)
             {
-                try
-                {
-                    uri = new Uri("http://" + addressTextBox.Text);
-                }
-                catch (UriFormatException)
-                {
-                }
+                try { uri = new Uri("http://" + addressTextBox.Text); }
+                catch (UriFormatException) { }
                 if (uri == null)
                 {
                     invalidAddressLabel.Visible = true;
@@ -38,18 +31,12 @@ namespace ExtendedWebBrowser2
             }
             if (uri.Scheme == "http" || uri.Scheme == "https" || uri.Scheme == "file")
             {
-                _url = uri;
+                Url = uri;
                 DialogResult = DialogResult.OK;
                 Close();
                 return;
             }
             invalidAddressLabel.Visible = false;
-        }
-
-        public Uri Url {
-            get {
-                return _url;
-            }
         }
 
         private void OpenUrlForm_Load(object sender, EventArgs e)
@@ -61,7 +48,5 @@ namespace ExtendedWebBrowser2
         {
             invalidAddressLabel.Visible = false;
         }
-
-        private Uri _url;
     }
 }

@@ -8,9 +8,7 @@ namespace ExtendedWebBrowser2
 {
     internal class UnsafeNativeMethods
     {
-        private UnsafeNativeMethods()
-        {
-        }
+        private UnsafeNativeMethods() { }
 
         [Guid("34A715A0-6587-11D0-924A-0020AFC7AC4D")]
         [TypeLibType(4112)]
@@ -48,7 +46,14 @@ namespace ExtendedWebBrowser2
 
             [DispId(250)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
-            void BeforeNavigate2([MarshalAs(UnmanagedType.IDispatch)][In] object pDisp, [MarshalAs(UnmanagedType.Struct)][In] ref object URL, [MarshalAs(UnmanagedType.Struct)][In] ref object Flags, [MarshalAs(UnmanagedType.Struct)][In] ref object TargetFrameName, [MarshalAs(UnmanagedType.Struct)][In] ref object PostData, [MarshalAs(UnmanagedType.Struct)][In] ref object Headers, [In][Out] ref bool Cancel);
+            void BeforeNavigate2(
+                [MarshalAs(UnmanagedType.IDispatch)][In] object pDisp,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object URL,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object Flags,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object TargetFrameName,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object PostData,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object Headers,
+                [In][Out] ref bool Cancel);
 
             [DispId(251)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
@@ -56,11 +61,15 @@ namespace ExtendedWebBrowser2
 
             [DispId(252)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
-            void NavigateComplete2([MarshalAs(UnmanagedType.IDispatch)][In] object pDisp, [MarshalAs(UnmanagedType.Struct)][In] ref object URL);
+            void NavigateComplete2(
+                [MarshalAs(UnmanagedType.IDispatch)][In] object pDisp,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object URL);
 
             [DispId(259)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
-            void DocumentComplete([MarshalAs(UnmanagedType.IDispatch)][In] object pDisp, [MarshalAs(UnmanagedType.Struct)][In] ref object URL);
+            void DocumentComplete(
+                [MarshalAs(UnmanagedType.IDispatch)][In] object pDisp,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object URL);
 
             [DispId(253)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
@@ -128,7 +137,12 @@ namespace ExtendedWebBrowser2
 
             [DispId(271)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
-            void NavigateError([MarshalAs(UnmanagedType.IDispatch)][In] object pDisp, [MarshalAs(UnmanagedType.Struct)][In] ref object URL, [MarshalAs(UnmanagedType.Struct)][In] ref object Frame, [MarshalAs(UnmanagedType.Struct)][In] ref object StatusCode, [In][Out] ref bool Cancel);
+            void NavigateError(
+                [MarshalAs(UnmanagedType.IDispatch)][In] object pDisp,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object URL,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object Frame,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object StatusCode,
+                [In][Out] ref bool Cancel);
 
             [DispId(225)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
@@ -140,7 +154,10 @@ namespace ExtendedWebBrowser2
 
             [DispId(227)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
-            void UpdatePageStatus([MarshalAs(UnmanagedType.IDispatch)][In] object pDisp, [MarshalAs(UnmanagedType.Struct)][In] ref object nPage, [MarshalAs(UnmanagedType.Struct)][In] ref object fDone);
+            void UpdatePageStatus(
+                [MarshalAs(UnmanagedType.IDispatch)][In] object pDisp,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object nPage,
+                [MarshalAs(UnmanagedType.Struct)][In] ref object fDone);
 
             [DispId(272)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
@@ -148,7 +165,11 @@ namespace ExtendedWebBrowser2
 
             [DispId(273)]
             [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
-            void NewWindow3([MarshalAs(UnmanagedType.IDispatch)][In][Out] ref object ppDisp, [In][Out] ref bool Cancel, [In] uint dwFlags, [MarshalAs(UnmanagedType.BStr)][In] string bstrUrlContext, [MarshalAs(UnmanagedType.BStr)][In] string bstrUrl);
+            void NewWindow3(
+                [MarshalAs(UnmanagedType.IDispatch)][In][Out] ref object ppDisp,
+                [In][Out] ref bool Cancel, [In] uint dwFlags,
+                [MarshalAs(UnmanagedType.BStr)][In] string bstrUrlContext,
+                [MarshalAs(UnmanagedType.BStr)][In] string bstrUrl);
         }
 
         [TypeLibType(TypeLibTypeFlags.FHidden | TypeLibTypeFlags.FDual | TypeLibTypeFlags.FOleAutomation)]
@@ -170,7 +191,12 @@ namespace ExtendedWebBrowser2
             void GoSearch();
 
             [DispId(104)]
-            void Navigate([In] string Url, [In] ref object flags, [In] ref object targetFrameName, [In] ref object postData, [In] ref object headers);
+            void Navigate(
+                [In] string Url,
+                [In] ref object flags,
+                [In] ref object targetFrameName,
+                [In] ref object postData,
+                [In] ref object headers);
 
             [DispId(-550)]
             void Refresh();
@@ -263,13 +289,21 @@ namespace ExtendedWebBrowser2
             bool FullScreen { get; set; }
 
             [DispId(500)]
-            void Navigate2([In] ref object URL, [In] ref object flags, [In] ref object targetFrameName, [In] ref object postData, [In] ref object headers);
+            void Navigate2(
+                [In] ref object URL,
+                [In] ref object flags,
+                [In] ref object targetFrameName,
+                [In] ref object postData,
+                [In] ref object headers);
 
             [DispId(501)]
             NativeMethods.OLECMDF QueryStatusWB([In] NativeMethods.OLECMDID cmdID);
 
             [DispId(502)]
-            void ExecWB([In] NativeMethods.OLECMDID cmdID, [In] NativeMethods.OLECMDEXECOPT cmdexecopt, ref object pvaIn, IntPtr pvaOut);
+            void ExecWB(
+                [In] NativeMethods.OLECMDID cmdID,
+                [In] NativeMethods.OLECMDEXECOPT cmdexecopt,
+                ref object pvaIn, IntPtr pvaOut);
 
             [DispId(503)]
             void ShowBrowserBar([In] ref object pvaClsid, [In] ref object pvarShow, [In] ref object pvarSize);

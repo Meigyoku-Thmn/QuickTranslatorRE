@@ -2,6 +2,8 @@
 {
     internal partial class OpenUrlForm
     {
+        private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
@@ -88,20 +90,18 @@
 
         }
 
-        private global::System.ComponentModel.IContainer components;
+        private System.Windows.Forms.Label label1;
 
-        private global::System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox1;
 
-        private global::System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label2;
 
-        private global::System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox addressTextBox;
 
-        private global::System.Windows.Forms.TextBox addressTextBox;
+        private System.Windows.Forms.Button okButton;
 
-        private global::System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Button cancelButton;
 
-        private global::System.Windows.Forms.Button cancelButton;
-
-        private global::System.Windows.Forms.Label invalidAddressLabel;
+        private System.Windows.Forms.Label invalidAddressLabel;
     }
 }

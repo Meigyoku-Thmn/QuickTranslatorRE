@@ -14,23 +14,47 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
+using static System.StringComparison;
+
 namespace ExtendedWebBrowser2
 {
     [ComVisible(true)]
     public partial class BrowserForm : DockContent, IOleClientSite
     {
+        private bool isFullScreen;
+
+        private FullScreen fullScreen;
+
+        private bool isTooglingFullScreen;
+
+        private bool isLostFocusWhenFullScreen;
+
+        public static string IgnoredListFilePath = Path.Combine(Constants.AssetsDir, "IgnoredList.txt");
+
+        public static string BookmarksFilePath = Path.Combine(Constants.AssetsDir, "Bookmarks.txt");
+
+        private WindowManager _windowManager;
+
+        public int TranslationType;
+
+        private string textSize;
+
+        private bool resetTextSize = true;
+
+        private bool shown;
+
         private void ToogleFullScreen()
         {
             isTooglingFullScreen = true;
             if (isFullScreen)
             {
                 isFullScreen = false;
-                fullScreen.ShowFullScreen();
+                fullScreen.ToggleFullScreen();
             }
             else
             {
                 isFullScreen = true;
-                fullScreen.ShowFullScreen();
+                fullScreen.ToggleFullScreen();
             }
             isTooglingFullScreen = false;
             menuStrip.Visible = !isFullScreen;
@@ -47,7 +71,6 @@ namespace ExtendedWebBrowser2
             _windowManager.CommandStateChanged += WindowManager_CommandStateChanged;
             _windowManager.StatusTextChanged += WindowManager_StatusTextChanged;
             DockHandler.GetPersistStringCallback = new GetPersistStringCallback(GetPersistStringFromText);
-            TranslateHandler = new TranslateDelegate(Translate);
         }
 
         private void WindowManager_StatusTextChanged(object sender, TextChangedEventArgs e)
@@ -59,8 +82,10 @@ namespace ExtendedWebBrowser2
         {
             forwardToolStripButton.Enabled = (e.BrowserCommands & BrowserCommands.Forward) == BrowserCommands.Forward;
             backToolStripButton.Enabled = (e.BrowserCommands & BrowserCommands.Back) == BrowserCommands.Back;
-            printPreviewToolStripButton.Enabled = (e.BrowserCommands & BrowserCommands.PrintPreview) == BrowserCommands.PrintPreview;
-            printPreviewToolStripMenuItem.Enabled = (e.BrowserCommands & BrowserCommands.PrintPreview) == BrowserCommands.PrintPreview;
+            printPreviewToolStripButton.Enabled =
+                (e.BrowserCommands & BrowserCommands.PrintPreview) == BrowserCommands.PrintPreview;
+            printPreviewToolStripMenuItem.Enabled =
+                (e.BrowserCommands & BrowserCommands.PrintPreview) == BrowserCommands.PrintPreview;
             printToolStripButton.Enabled = (e.BrowserCommands & BrowserCommands.Print) == BrowserCommands.Print;
             printToolStripMenuItem.Enabled = (e.BrowserCommands & BrowserCommands.Print) == BrowserCommands.Print;
             saveAsToolStripMenuItem.Enabled = (e.BrowserCommands & BrowserCommands.Print) == BrowserCommands.Print;
@@ -72,10 +97,8 @@ namespace ExtendedWebBrowser2
 
         private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (Options options = new Options())
-            {
-                options.ShowDialog(this);
-            }
+            using var options = new Options();
+            options.ShowDialog(this);
         }
 
         private void ScriptErrorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -105,26 +128,22 @@ namespace ExtendedWebBrowser2
 
         private void OpenUrlToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (OpenUrlForm openUrlForm = new OpenUrlForm())
+            using var openUrlForm = new OpenUrlForm();
+            if (openUrlForm.ShowDialog() == DialogResult.OK)
             {
-                if (openUrlForm.ShowDialog() == DialogResult.OK)
-                {
-                    ExtendedWebBrowser extendedWebBrowser = _windowManager.New(false, true);
-                    extendedWebBrowser.Navigate(openUrlForm.Url);
-                }
+                var extendedWebBrowser = _windowManager.New(false, true);
+                extendedWebBrowser.Navigate(openUrlForm.Url);
             }
         }
 
         private void OpenFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            using OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = Resources.OpenFileDialogFilter;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                openFileDialog.Filter = Resources.OpenFileDialogFilter;
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    Uri url = new Uri(openFileDialog.FileName);
-                    WindowManager.Open(url);
-                }
+                var url = new Uri(openFileDialog.FileName);
+                WindowManager.Open(url);
             }
         }
 
@@ -135,20 +154,16 @@ namespace ExtendedWebBrowser2
 
         private void About()
         {
-            using (AboutForm aboutForm = new AboutForm())
-            {
-                aboutForm.ShowDialog(this);
-            }
+            using AboutForm aboutForm = new AboutForm();
+            aboutForm.ShowDialog(this);
         }
 
         private void TabControl_VisibleChanged(object sender, EventArgs e)
         {
             if (tabControl.Visible)
-            {
                 panel1.BackColor = SystemColors.Control;
-                return;
-            }
-            panel1.BackColor = SystemColors.AppWorkspace;
+            else
+                panel1.BackColor = SystemColors.AppWorkspace;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -180,16 +195,15 @@ namespace ExtendedWebBrowser2
         {
             comboBox.Items.Clear();
             comboBox.Items.Add("Original Font");
-            foreach (FontFamily fontFamily in FontFamily.Families)
-            {
+            foreach (var fontFamily in FontFamily.Families)
                 comboBox.Items.Add(fontFamily.Name);
-            }
         }
 
         public void Baikeing(string chinese)
         {
             _windowManager.New(false, true);
-            _windowManager.ActiveBrowser.Navigate("http://baike.baidu.com/list-php/dispose/searchword.php?word=" + chinese + "&pic=1");
+            _windowManager.ActiveBrowser.Navigate(
+                "http://baike.baidu.com/list-php/dispose/searchword.php?word=" + chinese + "&pic=1");
         }
 
         public void Ncikuing(string chinese)
@@ -200,29 +214,17 @@ namespace ExtendedWebBrowser2
 
         private void Print()
         {
-            ExtendedWebBrowser activeBrowser = _windowManager.ActiveBrowser;
-            if (activeBrowser != null)
-            {
-                activeBrowser.ShowPrintDialog();
-            }
+            _windowManager.ActiveBrowser?.ShowPrintDialog();
         }
 
         private void PrintPreview()
         {
-            ExtendedWebBrowser activeBrowser = _windowManager.ActiveBrowser;
-            if (activeBrowser != null)
-            {
-                activeBrowser.ShowPrintPreviewDialog();
-            }
+            _windowManager.ActiveBrowser?.ShowPrintPreviewDialog();
         }
 
         private void SaveAs()
         {
-            ExtendedWebBrowser activeBrowser = _windowManager.ActiveBrowser;
-            if (activeBrowser != null)
-            {
-                activeBrowser.ShowSaveAsDialog();
-            }
+            _windowManager.ActiveBrowser?.ShowSaveAsDialog();
         }
 
         private void CloseWindowToolStripButton_Click(object sender, EventArgs e)
@@ -247,57 +249,39 @@ namespace ExtendedWebBrowser2
 
         private void BackToolStripButton_Click(object sender, EventArgs e)
         {
-            if (_windowManager.ActiveBrowser != null && _windowManager.ActiveBrowser.CanGoBack)
-            {
+            if (_windowManager.ActiveBrowser?.CanGoBack == true)
                 _windowManager.ActiveBrowser.GoBack();
-            }
         }
 
         private void ForwardToolStripButton_Click(object sender, EventArgs e)
         {
-            if (_windowManager.ActiveBrowser != null && _windowManager.ActiveBrowser.CanGoForward)
-            {
+            if (_windowManager.ActiveBrowser?.CanGoForward == true)
                 _windowManager.ActiveBrowser.GoForward();
-            }
         }
 
         private void StopToolStripButton_Click(object sender, EventArgs e)
         {
-            if (_windowManager.ActiveBrowser != null)
-            {
-                _windowManager.ActiveBrowser.Stop();
-            }
+            _windowManager.ActiveBrowser?.Stop();
             stopToolStripButton.Enabled = false;
         }
 
         private void RefreshToolStripButton_Click(object sender, EventArgs e)
         {
-            if (_windowManager.ActiveBrowserControl != null)
-            {
-                _windowManager.ActiveBrowserControl.Navigate();
-            }
+            _windowManager.ActiveBrowserControl?.Navigate();
         }
 
         private void HomeToolStripButton_Click(object sender, EventArgs e)
         {
-            if (_windowManager.ActiveBrowser != null)
-            {
-                _windowManager.ActiveBrowser.GoHome();
-            }
+            _windowManager.ActiveBrowser?.GoHome();
         }
 
         private void SearchToolStripButton_Click(object sender, EventArgs e)
         {
-            if (_windowManager.ActiveBrowser != null)
-            {
-                _windowManager.ActiveBrowser.GoSearch();
-            }
+            _windowManager.ActiveBrowser?.GoSearch();
         }
 
         internal WindowManager WindowManager {
-            get {
-                return _windowManager;
-            }
+            get => _windowManager;
         }
 
         public string GetPersistStringFromText()
@@ -305,132 +289,127 @@ namespace ExtendedWebBrowser2
             return Text;
         }
 
-        public void RefreshActiveBrowser()
+        public void Translate(HtmlDocument htmlDocument)
         {
-            if (_windowManager.ActiveBrowser != null)
-            {
-                _windowManager.ActiveBrowser.Refresh(WebBrowserRefreshOption.Normal);
-            }
-        }
-
-        private void Translate(HtmlDocument htmlDocument)
-        {
-            HtmlElement body = htmlDocument.Body;
+            var body = htmlDocument.Body;
             if (TranslationType == 0)
-            {
                 return;
-            }
             if (fontToolStripComboBox.Text == "Original Font")
             {
-                foreach (var obj in htmlDocument.All)
+                foreach (HtmlElement elm in htmlDocument.All)
                 {
-                    HtmlElement htmlElement = (HtmlElement)obj;
-                    if (!string.IsNullOrEmpty(htmlElement.TagName) && !htmlElement.TagName.Equals("html", StringComparison.OrdinalIgnoreCase) && !htmlElement.TagName.Equals("meta", StringComparison.OrdinalIgnoreCase) && !htmlElement.TagName.Equals("script", StringComparison.OrdinalIgnoreCase) && !htmlElement.TagName.Equals("head", StringComparison.OrdinalIgnoreCase) && !htmlElement.TagName.Equals("style", StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrEmpty(elm.TagName)
+                        && !elm.TagName.Equals("html", OrdinalIgnoreCase)
+                        && !elm.TagName.Equals("meta", OrdinalIgnoreCase)
+                        && !elm.TagName.Equals("script", OrdinalIgnoreCase)
+                        && !elm.TagName.Equals("head", OrdinalIgnoreCase)
+                        && !elm.TagName.Equals("style", OrdinalIgnoreCase))
                     {
-                        htmlElement.Style = (string.IsNullOrEmpty(htmlElement.Style) ? "" : (htmlElement.Style + ";")) + (resetTextSize ? "" : ("font-size: " + textSize));
+                        elm.Style =
+                            (string.IsNullOrEmpty(elm.Style) ? "" : (elm.Style + ";")) +
+                            (resetTextSize ? "" : ("font-size: " + textSize));
                     }
                 }
             }
             else
             {
-                foreach (object obj2 in htmlDocument.All)
+                foreach (HtmlElement elm in htmlDocument.All)
                 {
-                    HtmlElement htmlElement2 = (HtmlElement)obj2;
-                    if (!string.IsNullOrEmpty(htmlElement2.TagName) && !htmlElement2.TagName.Equals("html", StringComparison.OrdinalIgnoreCase) && !htmlElement2.TagName.Equals("meta", StringComparison.OrdinalIgnoreCase) && !htmlElement2.TagName.Equals("script", StringComparison.OrdinalIgnoreCase) && !htmlElement2.TagName.Equals("head", StringComparison.OrdinalIgnoreCase) && !htmlElement2.TagName.Equals("style", StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrEmpty(elm.TagName)
+                        && !elm.TagName.Equals("html", OrdinalIgnoreCase)
+                        && !elm.TagName.Equals("meta", OrdinalIgnoreCase)
+                        && !elm.TagName.Equals("script", OrdinalIgnoreCase)
+                        && !elm.TagName.Equals("head", OrdinalIgnoreCase)
+                        && !elm.TagName.Equals("style", OrdinalIgnoreCase))
                     {
-                        htmlElement2.Style = string.Concat(new string[]
-                        {
-                        string.IsNullOrEmpty(htmlElement2.Style) ? "" : (htmlElement2.Style + ";"),
-                        "font-family: '",
-                        fontToolStripComboBox.Text,
-                        "'; ",
-                        resetTextSize ? "" : ("font-size: " + textSize)
+                        elm.Style = string.Concat(new[] {
+                            string.IsNullOrEmpty(elm.Style) ? "" : (elm.Style + ";"),
+                            "font-family: '",
+                            fontToolStripComboBox.Text,
+                            "'; ",
+                            resetTextSize ? "" : ("font-size: " + textSize)
                         });
                     }
                 }
             }
-            string text = body.InnerHtml;
-            bool flag = htmlDocument.Url.ToString().StartsWith("file");
+            var innerHtml = body.InnerHtml;
+            var flag = htmlDocument.Url.ToString().StartsWith("file");
             if (!flag)
             {
-                string innerHtml;
-                string title;
+                string newInnerHtml;
+                string newTitle;
                 if (TranslationType == 1)
                 {
-                    innerHtml = Translator.ChineseToHanVietForBrowser(text);
-                    title = Translator.ChineseToHanVietForBrowser(htmlDocument.Title);
+                    newInnerHtml = Translator.ChineseToHanVietForBrowser(innerHtml);
+                    newTitle = Translator.ChineseToHanVietForBrowser(htmlDocument.Title);
                 }
                 else if (TranslationType == 2)
                 {
-                    innerHtml = Translator.ChineseToVietPhraseForBrowser(text, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
-                    title = Translator.ChineseToVietPhraseForBrowser(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
+                    newInnerHtml = Translator.ChineseToVietPhraseForBrowser(innerHtml,
+                        int.Parse(SettingsHelper.Current.VietPhraseWrapType),
+                        SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
+                    newTitle = Translator.ChineseToVietPhraseForBrowser(htmlDocument.Title,
+                        int.Parse(SettingsHelper.Current.VietPhraseWrapType),
+                        SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
                 }
                 else
                 {
-                    innerHtml = Translator.ChineseToVietPhraseOneMeaningForBrowser(text, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
-                    title = Translator.ChineseToVietPhraseOneMeaningForBrowser(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
+                    newInnerHtml = Translator.ChineseToVietPhraseOneMeaningForBrowser(innerHtml,
+                        int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType),
+                        SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
+                    newTitle = Translator.ChineseToVietPhraseOneMeaningForBrowser(htmlDocument.Title,
+                        int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType),
+                        SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1);
                 }
-                HtmlUtilities.SetInnerHtml(body, HtmlUtilities.DecodeLinks(innerHtml));
-                htmlDocument.Title = title;
+                HtmlUtilities.SetInnerHtml(body, HtmlUtilities.DecodeLinks(newInnerHtml));
+                htmlDocument.Title = newTitle;
                 return;
             }
-            text = Util.NormalizeTextAndRemoveIgnoredChinesePhrases(text);
-            text = text.Replace(". htm", ".htm");
+            innerHtml = Util.NormalizeTextAndRemoveIgnoredChinesePhrases(innerHtml);
+            innerHtml = innerHtml.Replace(". htm", ".htm");
             if (TranslationType == 1)
             {
-                HtmlUtilities.SetInnerHtml(body, Translator.ChineseToHanVietForBatch(text));
+                HtmlUtilities.SetInnerHtml(body, Translator.ChineseToHanVietForBatch(innerHtml));
                 htmlDocument.Title = Translator.ChineseToHanViet(htmlDocument.Title, out _);
-                return;
             }
-            if (TranslationType == 2)
+            else if (TranslationType == 2)
             {
-                HtmlUtilities.SetInnerHtml(body, Translator.ChineseToVietPhraseForBatch(text, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1));
-                htmlDocument.Title = Translator.ChineseToVietPhrase(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1, out _, out _);
-                return;
+                HtmlUtilities.SetInnerHtml(body, Translator.ChineseToVietPhraseForBatch(innerHtml,
+                    int.Parse(SettingsHelper.Current.VietPhraseWrapType),
+                    SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1));
+                htmlDocument.Title = Translator.ChineseToVietPhrase(htmlDocument.Title,
+                    int.Parse(SettingsHelper.Current.VietPhraseWrapType),
+                    SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1, out _, out _);
             }
-            HtmlUtilities.SetInnerHtml(body, Translator.ChineseToVietPhraseOneMeaningForBatch(text, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1));
-            htmlDocument.Title = Translator.ChineseToVietPhraseOneMeaning(htmlDocument.Title, int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType), SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1, out _, out _);
+            else
+            {
+                HtmlUtilities.SetInnerHtml(body, Translator.ChineseToVietPhraseOneMeaningForBatch(innerHtml,
+                    int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType),
+                    SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1));
+                htmlDocument.Title = Translator.ChineseToVietPhraseOneMeaning(htmlDocument.Title,
+                    int.Parse(SettingsHelper.Current.VietPhraseOneMeaningWrapType),
+                    SettingsHelper.Current.TranslationAlgorithm, SettingsHelper.Current.PrioritizedName == 1, out _, out _);
+            }
         }
 
         private void BaikeToolStripButtonClick(object sender, EventArgs e)
         {
             if (_windowManager.ActiveBrowser == null)
-            {
                 _windowManager.New(false, true);
-            }
             _windowManager.ActiveBrowser.Navigate("http://baike.baidu.com");
         }
 
         private void TranslateToolStripComboBoxSelectedIndexChanged(object sender, EventArgs e)
         {
             if (translateToolStripComboBox.Text == "Không dịch")
-            {
                 TranslationType = 0;
-            }
             else if (translateToolStripComboBox.Text == "Hán Việt")
-            {
                 TranslationType = 1;
-            }
             else if (translateToolStripComboBox.Text == "VietPhrase")
-            {
                 TranslationType = 2;
-            }
             else if (translateToolStripComboBox.Text == "VietPhrase một nghĩa")
-            {
                 TranslationType = 3;
-            }
             RefreshToolStripButton_Click(null, null);
-        }
-
-        private static BrowserOptions InitOptions()
-        {
-            return (BrowserOptions)4294967279U;
-        }
-
-        [DispId(-5512)]
-        public virtual int IDispatch_Invoke_Handler()
-        {
-            return (int)_options;
         }
 
         public int SaveObject()
@@ -481,48 +460,23 @@ namespace ExtendedWebBrowser2
 
         private void ZoomToolStripComboBoxKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Return && int.TryParse(zoomToolStripComboBox.Text.Replace("%", ""), out _))
-            {
-                zoomToolStripComboBox.Text = zoomToolStripComboBox.Text.Replace("%", "") + "%";
-                ZoomToolStripComboBoxSelectedIndexChanged(null, null);
-            }
+            if (e.KeyCode != Keys.Return || !int.TryParse(zoomToolStripComboBox.Text.Replace("%", ""), out _))
+                return;
+            zoomToolStripComboBox.Text = zoomToolStripComboBox.Text.Replace("%", "") + "%";
+            ZoomToolStripComboBoxSelectedIndexChanged(null, null);
         }
 
         private void TextSizeToolStripComboBoxSelectedIndexChanged(object sender, EventArgs e)
         {
             resetTextSize = textSizeToolStripComboBox.Text == "Original Size";
-            string text;
-            int num;
-            if ((text = textSizeToolStripComboBox.Text) != null)
-            {
-                if (text == "Largest")
-                {
-                    num = 4;
-                    goto IL_83;
-                }
-                if (text == "Larger")
-                {
-                    num = 3;
-                    goto IL_83;
-                }
-                if (text == "Medium")
-                {
-                    num = 2;
-                    goto IL_83;
-                }
-                if (text == "Smaller")
-                {
-                    num = 1;
-                    goto IL_83;
-                }
-                if (text == "Smallest")
-                {
-                    num = 0;
-                    goto IL_83;
-                }
-            }
-            num = 2;
-        IL_83:
+            var num = textSizeToolStripComboBox.Text switch {
+                "Largest" => 4,
+                "Larger" => 3,
+                "Medium" => 2,
+                "Smaller" => 1,
+                "Smallest" => 0,
+                _ => 2,
+            };
             textSize = 12 + num * 3 + "px";
             RefreshToolStripButton_Click(null, null);
         }
@@ -535,9 +489,7 @@ namespace ExtendedWebBrowser2
         private void BrowserFormFormClosing(object sender, FormClosingEventArgs e)
         {
             if (isFullScreen)
-            {
                 ToogleFullScreen();
-            }
             SettingsHelper.Current.TranslationMode = translateToolStripComboBox.Text;
             SettingsHelper.Current.Zoom = zoomToolStripComboBox.Text;
             SettingsHelper.Current.TextSize = textSizeToolStripComboBox.Text;
@@ -553,50 +505,39 @@ namespace ExtendedWebBrowser2
 
         private void ViewSourceToolStripButtonClick(object sender, EventArgs e)
         {
-            if (_windowManager.ActiveBrowser == null || _windowManager.ActiveBrowser.Document == null || _windowManager.ActiveBrowser.Document.All.Count == 0)
-            {
+            if (_windowManager.ActiveBrowser?.Document?.All.Count == 0)
                 return;
-            }
             if (string.IsNullOrEmpty(_windowManager.ActiveBrowserControl.OriginalHTMLSource))
-            {
                 return;
-            }
-            ViewSourceForm viewSourceForm = new ViewSourceForm(_windowManager.ActiveBrowserControl.OriginalHTMLSource);
+            var viewSourceForm = new ViewSourceForm(_windowManager.ActiveBrowserControl.OriginalHTMLSource);
             viewSourceForm.ShowDialog(this);
         }
 
         private void TangthuvienToolStripButtonClick(object sender, EventArgs e)
         {
             if (_windowManager.ActiveBrowser == null)
-            {
                 _windowManager.New(false, true);
-            }
             _windowManager.ActiveBrowser.Navigate("http://tangthuvien.com/forum/");
         }
 
         private void BrowserFormDeactivate(object sender, EventArgs e)
         {
-            if (!isTooglingFullScreen)
-            {
-                isLostFocusWhenFullScreen = isFullScreen;
-                if (isFullScreen)
-                {
-                    ToogleFullScreen();
-                    fullScreen.ResetTaskBar();
-                }
-            }
+            if (isTooglingFullScreen)
+                return;
+            isLostFocusWhenFullScreen = isFullScreen;
+            if (!isFullScreen)
+                return;
+            ToogleFullScreen();
+            fullScreen.ResetTaskBar();
         }
 
         private void BrowserFormActivated(object sender, EventArgs e)
         {
-            if (!isTooglingFullScreen && isLostFocusWhenFullScreen)
-            {
-                if (!isFullScreen)
-                {
-                    ToogleFullScreen();
-                }
-                isLostFocusWhenFullScreen = false;
-            }
+            if (isTooglingFullScreen || !isLostFocusWhenFullScreen)
+                return;
+            if (!isFullScreen)
+                ToogleFullScreen();
+            isLostFocusWhenFullScreen = false;
         }
 
         private void ShowHideMenuPanelMouseEnter(object sender, EventArgs e)
@@ -608,9 +549,7 @@ namespace ExtendedWebBrowser2
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (Parent is MdiClient)
-            {
                 return base.ProcessCmdKey(ref msg, keyData);
-            }
             if (msg.Msg == 256 || msg.Msg == 260)
             {
                 if (keyData == Keys.F11 && fullScreenToolStripButton.Enabled)
@@ -620,17 +559,15 @@ namespace ExtendedWebBrowser2
                 }
                 else
                 {
-                    if (keyData == (Keys.LButton | Keys.Back | Keys.Shift | Keys.Control))
+                    if (keyData == (Keys.Tab | Keys.Shift | Keys.Control))
                     {
                         GoToPreviousTab();
                         return true;
                     }
-                    if (keyData == (Keys.LButton | Keys.Back | Keys.Control))
-                    {
-                        GoToNextTab();
-                        return true;
-                    }
-                    return base.ProcessCmdKey(ref msg, keyData);
+                    if (keyData != (Keys.Tab | Keys.Control))
+                        return base.ProcessCmdKey(ref msg, keyData);
+                    GoToNextTab();
+                    return true;
                 }
             }
             return base.ProcessCmdKey(ref msg, keyData);
@@ -639,40 +576,32 @@ namespace ExtendedWebBrowser2
         public void GoToNextTab()
         {
             if (tabControl.TabCount <= 1)
-            {
                 return;
-            }
             if (tabControl.SelectedIndex <= tabControl.TabCount - 2)
             {
                 tabControl.SelectedIndex++;
                 return;
             }
             if (tabControl.SelectedIndex == tabControl.TabCount - 1)
-            {
                 tabControl.SelectedIndex = 0;
-            }
         }
 
         public void GoToPreviousTab()
         {
             if (tabControl.TabCount == 0)
-            {
                 return;
-            }
             if (tabControl.SelectedIndex == 0)
             {
                 tabControl.SelectedIndex = tabControl.TabCount - 1;
                 return;
             }
             if (0 < tabControl.SelectedIndex)
-            {
                 tabControl.SelectedIndex--;
-            }
         }
 
         private void Base64DecoderToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Base64DecoderForm base64DecoderForm = new Base64DecoderForm();
+            var base64DecoderForm = new Base64DecoderForm();
             base64DecoderForm.ShowDialog();
         }
 
@@ -685,19 +614,13 @@ namespace ExtendedWebBrowser2
         private void BookmarkThisPageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (WindowManager.ActiveBrowser == null)
-            {
                 return;
-            }
-            string text = WindowManager.ActiveBrowser.DocumentTitle;
+            var text = WindowManager.ActiveBrowser.DocumentTitle;
             if (string.IsNullOrEmpty(text))
-            {
                 text = Resources.DefaultBrowserTitle;
-            }
             else if (50 < text.Length)
-            {
                 text = text.Substring(0, 50) + "...";
-            }
-            string absoluteUri = WindowManager.ActiveBrowser.Url.AbsoluteUri;
+            var absoluteUri = WindowManager.ActiveBrowser.Url.AbsoluteUri;
             AddToBookmark(text, absoluteUri);
             LoadBookmarks();
         }
@@ -718,18 +641,18 @@ namespace ExtendedWebBrowser2
                 toolStripSeparator8
             });
 
-            foreach (string text in File.ReadAllLines(BookmarksFilePath))
+            foreach (var line in File.ReadAllLines(BookmarksFilePath))
             {
-                if (!string.IsNullOrEmpty(text) && text.Contains("\t"))
+                if (!string.IsNullOrEmpty(line) && line.Contains("\t"))
                 {
-                    ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem(text.Split('\t')[0]) {
-                        ToolTipText = text.Split('\t')[1],
+                    ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem(line.Split('\t')[0]) {
+                        ToolTipText = line.Split('\t')[1],
                         DisplayStyle = ToolStripItemDisplayStyle.Text
                     };
                     toolStripMenuItem.Click += ABookmarkToolStripMenuItem_Click;
-                    ToolStripMenuItem toolStripMenuItem2 = new ToolStripMenuItem("Delete") {
+                    var toolStripMenuItem2 = new ToolStripMenuItem("Delete") {
                         AutoToolTip = false,
-                        ToolTipText = text,
+                        ToolTipText = line,
                         DisplayStyle = ToolStripItemDisplayStyle.Text
                     };
                     toolStripMenuItem2.Click += DeleteToolStripMenuItem_Click;
@@ -741,69 +664,31 @@ namespace ExtendedWebBrowser2
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string oldValue = (sender as ToolStripMenuItem).ToolTipText + "\n";
-            string text = File.ReadAllText(BookmarksFilePath);
-            File.WriteAllText(BookmarksFilePath, text.Replace(oldValue, ""), Encoding.UTF8);
+            var oldValue = (sender as ToolStripMenuItem).ToolTipText + "\n";
+            var lines = File.ReadAllText(BookmarksFilePath);
+            File.WriteAllText(BookmarksFilePath, lines.Replace(oldValue, ""), Encoding.UTF8);
             LoadBookmarks();
         }
 
         private void ABookmarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
             bookmarksToolStripMenuItem.HideDropDown();
-            string toolTipText = (sender as ToolStripMenuItem).ToolTipText;
+            var toolTipText = (sender as ToolStripMenuItem).ToolTipText;
             if (WindowManager.ActiveBrowser == null)
-            {
                 WindowManager.New(false);
-            }
             WindowManager.ActiveBrowser.Navigate(toolTipText);
         }
 
         private void ExtractTXTToolStripButtonClick(object sender, EventArgs e)
         {
-            if (_windowManager.ActiveBrowser == null || _windowManager.ActiveBrowser.Document == null || _windowManager.ActiveBrowser.Document.All.Count == 0)
-            {
+            if (_windowManager.ActiveBrowser?.Document?.All.Count == 0)
                 return;
-            }
             if (string.IsNullOrEmpty(_windowManager.ActiveBrowserControl.OriginalHTMLSource))
-            {
                 return;
-            }
-            string chineseContent = HtmlScrapper.GetChineseContent(_windowManager.ActiveBrowserControl.OriginalHTMLSource, false);
-            try
-            {
-                Clipboard.SetDataObject(chineseContent, true, 50, 100);
-            }
-            catch (ExternalException)
-            {
-            }
+            var chineseContent = HtmlScrapper.GetChineseContent(
+                _windowManager.ActiveBrowserControl.OriginalHTMLSource, false);
+            try { Clipboard.SetDataObject(chineseContent, true, 50, 100); }
+            catch (ExternalException) { }
         }
-
-        private bool isFullScreen;
-
-        private FullScreen fullScreen;
-
-        private bool isTooglingFullScreen;
-
-        private bool isLostFocusWhenFullScreen;
-
-        public static string IgnoredListFilePath = Path.Combine(Constants.AssetsDir, "IgnoredList.txt");
-
-        public static string BookmarksFilePath = Path.Combine(Constants.AssetsDir, "Bookmarks.txt");
-
-        private WindowManager _windowManager;
-
-        public int TranslationType;
-
-        public TranslateDelegate TranslateHandler;
-
-        private BrowserOptions _options = InitOptions();
-
-        private string textSize;
-
-        private bool resetTextSize = true;
-
-        private bool shown;
-
-        public delegate void TranslateDelegate(HtmlDocument htmlDocument);
     }
 }

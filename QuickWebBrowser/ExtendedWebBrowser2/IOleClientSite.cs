@@ -12,7 +12,10 @@ namespace ExtendedWebBrowser2
         int SaveObject();
 
         [PreserveSig]
-        int GetMoniker([MarshalAs(UnmanagedType.U4)][In] int dwAssign, [MarshalAs(UnmanagedType.U4)][In] int dwWhichMoniker, [MarshalAs(UnmanagedType.Interface)] out object moniker);
+        int GetMoniker(
+            [MarshalAs(UnmanagedType.U4)][In] int dwAssign,
+            [MarshalAs(UnmanagedType.U4)][In] int dwWhichMoniker,
+            [MarshalAs(UnmanagedType.Interface)] out object moniker);
 
         [PreserveSig]
         int GetContainer(out object container);

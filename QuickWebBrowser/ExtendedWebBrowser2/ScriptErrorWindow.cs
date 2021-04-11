@@ -22,9 +22,9 @@ namespace ExtendedWebBrowser2
         {
             listView1.BeginUpdate();
             listView1.Items.Clear();
-            foreach (ScriptError scriptError in ScriptErrorManager.Instance.ScriptErrors)
+            foreach (var scriptError in ScriptErrorManager.Instance.ScriptErrors)
             {
-                ListViewItem listViewItem = new ListViewItem(scriptError.Description);
+                var listViewItem = new ListViewItem(scriptError.Description);
                 listViewItem.SubItems.Add(scriptError.LineNumber.ToString(CultureInfo.CurrentCulture));
                 listViewItem.SubItems.Add(scriptError.Url.ToString());
                 listView1.Items.Add(listViewItem);

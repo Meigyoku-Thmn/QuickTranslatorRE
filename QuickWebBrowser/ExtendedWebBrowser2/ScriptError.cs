@@ -4,35 +4,23 @@ namespace ExtendedWebBrowser2
 {
     internal class ScriptError
     {
-        public ScriptError(Uri url, string description, int lineNumber)
-        {
-            _url = url;
-            _description = description;
-            _lineNumber = lineNumber;
-        }
-
         public int LineNumber {
-            get {
-                return _lineNumber;
-            }
+            get; private set;
         }
 
         public string Description {
-            get {
-                return _description;
-            }
+            get; private set;
         }
 
         public Uri Url {
-            get {
-                return _url;
-            }
+            get; private set;
         }
 
-        private int _lineNumber;
-
-        private string _description;
-
-        private Uri _url;
+        public ScriptError(Uri url, string description, int lineNumber)
+        {
+            Url = url;
+            Description = description;
+            LineNumber = lineNumber;
+        }
     }
 }

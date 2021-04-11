@@ -5,47 +5,20 @@ namespace ExtendedWebBrowser2
 {
     internal class BrowserExtendedNavigatingEventArgs : CancelEventArgs
     {
-        public Uri Url {
-            get {
-                return _Url;
-            }
-        }
+        public Uri Url { get; private set; }
 
-        public string Frame {
-            get {
-                return _Frame;
-            }
-        }
+        public string Frame { get; private set; }
 
-        public UrlContext NavigationContext {
-            get {
-                return navigationContext;
-            }
-        }
+        public UrlContext NavigationContext { get; private set; }
 
-        public object AutomationObject {
-            get {
-                return _pDisp;
-            }
-            set {
-                _pDisp = value;
-            }
-        }
+        public object AutomationObject { get; set; }
 
         public BrowserExtendedNavigatingEventArgs(object automation, Uri url, string frame, UrlContext navigationContext)
         {
-            _Url = url;
-            _Frame = frame;
-            this.navigationContext = navigationContext;
-            _pDisp = automation;
+            Url = url;
+            Frame = frame;
+            NavigationContext = navigationContext;
+            AutomationObject = automation;
         }
-
-        private Uri _Url;
-
-        private string _Frame;
-
-        private UrlContext navigationContext;
-
-        private object _pDisp;
     }
 }

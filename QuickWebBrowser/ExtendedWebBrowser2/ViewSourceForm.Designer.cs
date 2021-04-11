@@ -2,7 +2,7 @@
 {
     public partial class ViewSourceForm
     {
-        private global::System.ComponentModel.IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         protected override void Dispose(bool disposing)
         {
@@ -51,6 +51,6 @@
 
         }
 
-        private global::System.Windows.Forms.RichTextBox sourceRichTextBox;
+        private System.Windows.Forms.RichTextBox sourceRichTextBox;
     }
 }
