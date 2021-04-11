@@ -1,19 +1,14 @@
-﻿using System;
+﻿using QuickConverter;
+using QuickTranslatorCore;
+using QuickTranslatorCore.Engine;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Web;
 using System.Windows.Forms;
-using ExtendedWebBrowser2;
-using QuickConverter;
-using QuickTranslatorCore.Engine;
-using QuickTranslatorCore;
 using WeifenLuo.WinFormsUI.Docking;
-using System.Threading.Tasks;
 
 namespace QuickTranslator
 {
@@ -49,16 +44,12 @@ namespace QuickTranslator
             SetPanelStyle();
             configurationPanel.Text = "Configuration";
             configurationPanel.CloseButton = false;
-            extendedBrowserPanel.Text = "Quick Web Browser";
-            extendedBrowserPanel.CloseButton = false;
             hanVietDocumentPanel.EnableAddToVietPhraseContextMenuStrip();
             chineseDocumentPanel.EnableAddToVietPhraseContextMenuStrip();
             vietPhraseDocumentPanel.EnableAddToVietPhraseContextMenuStrip();
             vietPhraseOneMeaningDocumentPanel.EnableAddToVietPhraseContextMenuStrip();
             vietDocumentPanel.EnableCommentContextMenuStrip();
             meaningDocumentPanel.EnableAddToVietPhraseContextMenuStrip();
-            extendedBrowserPanel.fullScreenToolStripButton.Enabled = false;
-            extendedBrowserPanel.fullScreenToolStripButton.Visible = false;
             hanVietDocumentPanel.AllowDeletingSelectedText();
             chineseDocumentPanel.AllowDeletingSelectedText();
             if (File.Exists(dockPanelConfigFilePath))
@@ -68,7 +59,6 @@ namespace QuickTranslator
             else
             {
                 configurationPanel.Show(dockPanel, DockState.DockLeftAutoHide);
-                extendedBrowserPanel.Show(dockPanel, DockState.Document);
                 vietDocumentPanel.Show(dockPanel, DockState.Document);
                 meaningDocumentPanel.Show(dockPanel, DockState.Document);
                 vietPhraseOneMeaningDocumentPanel.Show(dockPanel, DockState.Document);
@@ -81,8 +71,6 @@ namespace QuickTranslator
             chineseDocumentPanel.ClickHandler = new DocumentPanel.ClickDelegate(ChineseClick);
             chineseDocumentPanel.AddToVietPhraseHandler = new DocumentPanel.AddToVietPhraseDelegate(Chinese_AddToVietPhraseHandler);
             chineseDocumentPanel.SelectTextHandler = new DocumentPanel.SelectTextDelegate(Chinese_SelectTextHandler);
-            chineseDocumentPanel.BaikeingHandler = new DocumentPanel.BaikeingDelegate(BaikeingHandler);
-            chineseDocumentPanel.NcikuingHandler = new DocumentPanel.NcikuingDelegate(NcikuingHandler);
             chineseDocumentPanel.CopyToVietHandler = new DocumentPanel.CopyToVietDelegate(CopyToVietHandler);
             chineseDocumentPanel.DeleteSelectedTextHandler = new DocumentPanel.DeleteSelectedTextDelegate(DeleteSelectedTextHandler);
             chineseDocumentPanel.AddToPhienAmHandler = new DocumentPanel.AddToPhienAmDelegate(AddToPhienAmHandler);
@@ -90,8 +78,6 @@ namespace QuickTranslator
             hanVietDocumentPanel.RightClickHandler = new DocumentPanel.RightClickDelegate(HanVietRightClick);
             hanVietDocumentPanel.AddToVietPhraseHandler = new DocumentPanel.AddToVietPhraseDelegate(HanViet_AddToVietPhraseHandler);
             hanVietDocumentPanel.SelectTextHandler = new DocumentPanel.SelectTextDelegate(HanViet_SelectTextHandler);
-            hanVietDocumentPanel.BaikeingHandler = new DocumentPanel.BaikeingDelegate(BaikeingHandler);
-            hanVietDocumentPanel.NcikuingHandler = new DocumentPanel.NcikuingDelegate(NcikuingHandler);
             hanVietDocumentPanel.CopyToVietHandler = new DocumentPanel.CopyToVietDelegate(CopyToVietHandler);
             hanVietDocumentPanel.DeleteSelectedTextHandler = new DocumentPanel.DeleteSelectedTextDelegate(DeleteSelectedTextHandler);
             hanVietDocumentPanel.AddToPhienAmHandler = new DocumentPanel.AddToPhienAmDelegate(AddToPhienAmHandler);
@@ -99,23 +85,17 @@ namespace QuickTranslator
             vietPhraseDocumentPanel.RightClickHandler = new DocumentPanel.RightClickDelegate(VietPhraseRightClick);
             vietPhraseDocumentPanel.AddToVietPhraseHandler = new DocumentPanel.AddToVietPhraseDelegate(VietPhrase_AddToVietPhraseHandler);
             vietPhraseDocumentPanel.SelectTextHandler = new DocumentPanel.SelectTextDelegate(VietPhrase_SelectTextHandler);
-            vietPhraseDocumentPanel.BaikeingHandler = new DocumentPanel.BaikeingDelegate(BaikeingHandler);
-            vietPhraseDocumentPanel.NcikuingHandler = new DocumentPanel.NcikuingDelegate(NcikuingHandler);
             vietPhraseDocumentPanel.CopyToVietHandler = new DocumentPanel.CopyToVietDelegate(CopyToVietHandler);
             vietPhraseDocumentPanel.AddToPhienAmHandler = new DocumentPanel.AddToPhienAmDelegate(AddToPhienAmHandler);
             vietPhraseOneMeaningDocumentPanel.ClickHandler = new DocumentPanel.ClickDelegate(VietPhraseOneMeaningClick);
             vietPhraseOneMeaningDocumentPanel.RightClickHandler = new DocumentPanel.RightClickDelegate(VietPhraseOneMeaningRightClick);
             vietPhraseOneMeaningDocumentPanel.AddToVietPhraseHandler = new DocumentPanel.AddToVietPhraseDelegate(VietPhraseOneMeaning_AddToVietPhraseHandler);
             vietPhraseOneMeaningDocumentPanel.SelectTextHandler = new DocumentPanel.SelectTextDelegate(VietPhraseOneMeaning_SelectTextHandler);
-            vietPhraseOneMeaningDocumentPanel.BaikeingHandler = new DocumentPanel.BaikeingDelegate(BaikeingHandler);
-            vietPhraseOneMeaningDocumentPanel.NcikuingHandler = new DocumentPanel.NcikuingDelegate(NcikuingHandler);
             vietPhraseOneMeaningDocumentPanel.CopyToVietHandler = new DocumentPanel.CopyToVietDelegate(CopyToVietHandler);
             vietPhraseOneMeaningDocumentPanel.AddToPhienAmHandler = new DocumentPanel.AddToPhienAmDelegate(AddToPhienAmHandler);
             vietPhraseOneMeaningDocumentPanel.ShiftAndMouseMoveHandler = new DocumentPanel.ShiftAndMouseMoveDelegate(ShiftAndMouseMoveHandler);
             vietPhraseOneMeaningDocumentPanel.ShiftUpHandler = new DocumentPanel.ShiftUpDelegate(ShiftUpHandler);
             meaningDocumentPanel.AddToVietPhraseHandler = new DocumentPanel.AddToVietPhraseDelegate(Meaning_AddToVietPhraseHandler);
-            meaningDocumentPanel.BaikeingHandler = new DocumentPanel.BaikeingDelegate(BaikeingHandler);
-            meaningDocumentPanel.NcikuingHandler = new DocumentPanel.NcikuingDelegate(NcikuingHandler);
             meaningDocumentPanel.CopyToVietHandler = new DocumentPanel.CopyToVietDelegate(CopyToVietHandler);
             meaningDocumentPanel.AddToPhienAmHandler = new DocumentPanel.AddToPhienAmDelegate(AddToPhienAmHandler);
             Initializer.LoadDictionaries();
@@ -1123,10 +1103,6 @@ namespace QuickTranslator
             {
                 return configurationPanel;
             }
-            if (persistString == "Quick Web Browser")
-            {
-                return extendedBrowserPanel;
-            }
             return vietDocumentPanel;
         }
 
@@ -1149,12 +1125,6 @@ namespace QuickTranslator
             }
             UpdateVietPhraseForm updateVietPhraseForm = new UpdateVietPhraseForm(stringBuilder.ToString(), type);
             updateVietPhraseForm.ShowDialog();
-            if (updateVietPhraseForm.NeedSurfBaike)
-            {
-                string chinese = HttpUtility.UrlEncode(updateVietPhraseForm.ChinesePhraseToSurfBaike, Encoding.GetEncoding("gb2312"));
-                extendedBrowserPanel.Baikeing(chinese);
-                extendedBrowserPanel.Activate();
-            }
         }
 
         private void UpdateNameToolStripButtonClick(object sender, EventArgs e)
@@ -1325,12 +1295,6 @@ namespace QuickTranslator
         {
             UpdateVietPhraseForm updateVietPhraseForm = new UpdateVietPhraseForm(chineseDocumentPanel.GetSelectedText(), type);
             updateVietPhraseForm.ShowDialog();
-            if (updateVietPhraseForm.NeedSurfBaike)
-            {
-                string chinese = HttpUtility.UrlEncode(updateVietPhraseForm.ChinesePhraseToSurfBaike, Encoding.GetEncoding("gb2312"));
-                extendedBrowserPanel.Baikeing(chinese);
-                extendedBrowserPanel.Activate();
-            }
         }
 
         private void HanViet_AddToVietPhraseHandler(int type)
@@ -1358,12 +1322,6 @@ namespace QuickTranslator
             string chineseToLookup = chineseDocumentPanel.GetTextContent().Substring(num, num3 - num + 1);
             UpdateVietPhraseForm updateVietPhraseForm = new UpdateVietPhraseForm(chineseToLookup, type);
             updateVietPhraseForm.ShowDialog();
-            if (updateVietPhraseForm.NeedSurfBaike)
-            {
-                string chinese = HttpUtility.UrlEncode(updateVietPhraseForm.ChinesePhraseToSurfBaike, Encoding.GetEncoding("gb2312"));
-                extendedBrowserPanel.Baikeing(chinese);
-                extendedBrowserPanel.Activate();
-            }
         }
 
         private int GetChineseStartIndexFromVietPhraseIndex(int vietPhraseIndex)
@@ -1411,12 +1369,6 @@ namespace QuickTranslator
             string chineseToLookup = chineseDocumentPanel.GetTextContent().Substring(chineseStartIndexFromVietPhraseIndex, chineseEndIndexFromVietPhraseIndex - chineseStartIndexFromVietPhraseIndex + 1);
             UpdateVietPhraseForm updateVietPhraseForm = new UpdateVietPhraseForm(chineseToLookup, type);
             updateVietPhraseForm.ShowDialog();
-            if (updateVietPhraseForm.NeedSurfBaike)
-            {
-                string chinese = HttpUtility.UrlEncode(updateVietPhraseForm.ChinesePhraseToSurfBaike, Encoding.GetEncoding("gb2312"));
-                extendedBrowserPanel.Baikeing(chinese);
-                extendedBrowserPanel.Activate();
-            }
         }
 
         private int GetChineseStartIndexFromVietPhraseOneMeaningIndex(int vietPhraseOneMeaningIndex)
@@ -1464,12 +1416,6 @@ namespace QuickTranslator
             string chineseToLookup = chineseDocumentPanel.GetTextContent().Substring(chineseStartIndexFromVietPhraseOneMeaningIndex, chineseEndIndexFromVietPhraseOneMeaningIndex - chineseStartIndexFromVietPhraseOneMeaningIndex + 1);
             UpdateVietPhraseForm updateVietPhraseForm = new UpdateVietPhraseForm(chineseToLookup, type);
             updateVietPhraseForm.ShowDialog();
-            if (updateVietPhraseForm.NeedSurfBaike)
-            {
-                string chinese = HttpUtility.UrlEncode(updateVietPhraseForm.ChinesePhraseToSurfBaike, Encoding.GetEncoding("gb2312"));
-                extendedBrowserPanel.Baikeing(chinese);
-                extendedBrowserPanel.Activate();
-            }
         }
 
         private void Meaning_AddToVietPhraseHandler(int type)
@@ -1477,12 +1423,6 @@ namespace QuickTranslator
             string selectedText = meaningDocumentPanel.GetSelectedText();
             UpdateVietPhraseForm updateVietPhraseForm = new UpdateVietPhraseForm(selectedText, type);
             updateVietPhraseForm.ShowDialog();
-            if (updateVietPhraseForm.NeedSurfBaike)
-            {
-                string chinese = HttpUtility.UrlEncode(updateVietPhraseForm.ChinesePhraseToSurfBaike, Encoding.GetEncoding("gb2312"));
-                extendedBrowserPanel.Baikeing(chinese);
-                extendedBrowserPanel.Activate();
-            }
         }
 
         private void Chinese_SelectTextHandler()
@@ -1621,20 +1561,6 @@ namespace QuickTranslator
             CharRange vietPhraseOneMeaningCharRangeFromChineseIndex = GetVietPhraseOneMeaningCharRangeFromChineseIndex(chineseStartIndex);
             CharRange vietPhraseOneMeaningCharRangeFromChineseIndex2 = GetVietPhraseOneMeaningCharRangeFromChineseIndex(chineseStartIndex + chineseLength - 1);
             vietPhraseOneMeaningDocumentPanel.SelectText(vietPhraseOneMeaningCharRangeFromChineseIndex.StartIndex, vietPhraseOneMeaningCharRangeFromChineseIndex2.GetEndIndex() - vietPhraseOneMeaningCharRangeFromChineseIndex.StartIndex + 1);
-        }
-
-        private void BaikeingHandler()
-        {
-            string chinese = HttpUtility.UrlEncode(chineseDocumentPanel.GetSelectedText().Trim(), Encoding.GetEncoding("gb2312"));
-            extendedBrowserPanel.Baikeing(chinese);
-            extendedBrowserPanel.Activate();
-        }
-
-        private void NcikuingHandler()
-        {
-            string chinese = HttpUtility.UrlEncode(chineseDocumentPanel.GetSelectedText().Trim(), Encoding.GetEncoding("utf-8"));
-            extendedBrowserPanel.Ncikuing(chinese);
-            extendedBrowserPanel.Activate();
         }
 
         private void CopyToVietHandler(string textToCopy)
@@ -2065,8 +1991,6 @@ namespace QuickTranslator
         private DocumentPanel meaningDocumentPanel = new DocumentPanel(true);
 
         private DocumentPanel vietPhraseOneMeaningDocumentPanel = new DocumentPanel(true);
-
-        private BrowserForm extendedBrowserPanel = new BrowserForm();
 
         private ConfigurationPanel configurationPanel = new ConfigurationPanel(applicationConfigFilePath);
 

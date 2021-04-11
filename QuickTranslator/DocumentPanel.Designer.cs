@@ -28,9 +28,6 @@
             this.updateNamePhuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updatePhienAmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.baikeingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ncikuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.copyToVietToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteSelectedTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,9 +85,6 @@
             this.updateNamePhuToolStripMenuItem,
             this.updatePhienAmToolStripMenuItem,
             this.toolStripSeparator2,
-            this.baikeingToolStripMenuItem,
-            this.ncikuToolStripMenuItem,
-            this.toolStripSeparator3,
             this.copyToVietToolStripMenuItem,
             this.copyToClipboardToolStripMenuItem,
             this.deleteSelectedTextToolStripMenuItem,
@@ -135,27 +129,6 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(286, 6);
-            // 
-            // baikeingToolStripMenuItem
-            // 
-            this.baikeingToolStripMenuItem.Name = "baikeingToolStripMenuItem";
-            this.baikeingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.B)));
-            this.baikeingToolStripMenuItem.Size = new System.Drawing.Size(289, 24);
-            this.baikeingToolStripMenuItem.Text = "&Baike-ing";
-            this.baikeingToolStripMenuItem.Click += new System.EventHandler(this.BaikeingToolStripMenuItemClick);
-            // 
-            // ncikuToolStripMenuItem
-            // 
-            this.ncikuToolStripMenuItem.Name = "ncikuToolStripMenuItem";
-            this.ncikuToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.U)));
-            this.ncikuToolStripMenuItem.Size = new System.Drawing.Size(289, 24);
-            this.ncikuToolStripMenuItem.Text = "Ncik&u-ing";
-            this.ncikuToolStripMenuItem.Click += new System.EventHandler(this.NcikuToolStripMenuItemClick);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(286, 6);
             // 
             // copyToVietToolStripMenuItem
             // 
@@ -240,11 +213,7 @@
 
         public System.Windows.Forms.ContextMenuStrip chooseMeaningContextMenuStrip;
 
-        private System.Windows.Forms.ToolStripMenuItem ncikuToolStripMenuItem;
-
         private System.Windows.Forms.ToolStripMenuItem updatePhienAmToolStripMenuItem;
-
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 
@@ -257,8 +226,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 
         private System.Windows.Forms.ToolStripMenuItem copyToVietToolStripMenuItem;
-
-        private System.Windows.Forms.ToolStripMenuItem baikeingToolStripMenuItem;
 
         private System.Windows.Forms.ToolStripMenuItem addToNameToolStripMenuItem;
 

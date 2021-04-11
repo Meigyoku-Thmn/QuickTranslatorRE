@@ -156,10 +156,6 @@
       <Project>{55F09024-A43F-4671-BF92-45B3C013C7ED}</Project>
       <Name>QuickConverter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\QuickWebBrowser\QuickWebBrowser.csproj">
-      <Project>{D3EA0DC3-C9D4-4C5A-A30A-A82F73B05A57}</Project>
-      <Name>QuickWebBrowser</Name>
-    </ProjectReference>
     <ProjectReference Include="..\QuickTranslatorCore\QuickTranslatorCore.csproj">
       <Project>{67F7A833-92CA-440E-9155-04228974501C}</Project>
       <Name>QuickTranslatorCore</Name>
