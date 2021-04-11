@@ -3,7 +3,7 @@
 
 Mã nguồn sẽ dần dần được refactor cho dễ hiểu hơn.
 
-## Các công cụ đã bị loại bỏ
+## Các module đã bị loại bỏ
 - **OnlineTranslationEngine:**
 
 Module này sử dụng WebAPI Bing Translator cũ của Microsoft, Microsoft đã dừng dịch vụ này từ lâu và thay bằng hệ thống khác.
