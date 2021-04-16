@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using QuickTranslatorCore;
 using QuickTranslatorCore.Engine;
 
+using static System.StringSplitOptions;
+
 namespace QuickVietPhraseMerger
 {
     public partial class MainForm : Form
@@ -105,8 +107,8 @@ namespace QuickVietPhraseMerger
             var dict = MergeDictionaries(vietPhrase1Dict, vietPhrase1DictLog, vietPhrase2Dict, vietPhrase2DictLog);
             var dict2 = CompareDictionaries(vietPhrase1Dict, vietPhrase1DictLog, vietPhrase2Dict, vietPhrase2DictLog);
 
-            Operator.SaveDictionaryToFile(ref dict, Path.Combine(txtOutputDirPath.Text, "VietPhrase.txt"));
-            Operator.SaveDictionaryToFile(ref dict2, Path.Combine(txtOutputDirPath.Text, "VietPhraseDiff.txt"));
+            Operator.SaveDictionaryToFileSorted(dict, Path.Combine(txtOutputDirPath.Text, "VietPhrase.txt"));
+            Operator.SaveDictionaryToFileSorted(dict2, Path.Combine(txtOutputDirPath.Text, "VietPhraseDiff.txt"));
 
             MessageBox.Show("Xong!!!");
 
@@ -232,9 +234,9 @@ namespace QuickVietPhraseMerger
 
         private string MergeMeanings(string meanings1, string meanings2)
         {
-            var mergedSet = meanings1.Split("|/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToHashSet();
+            var mergedSet = meanings1.Split("|/".ToCharArray(), RemoveEmptyEntries).ToHashSet();
 
-            foreach (var meaning in meanings2.Split("|/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (var meaning in meanings2.Split("|/".ToCharArray(), RemoveEmptyEntries))
                 mergedSet.Add(meaning);
 
             return string.Join("/", mergedSet);
@@ -243,7 +245,7 @@ namespace QuickVietPhraseMerger
         private Dictionary<string, string> LoadDictionary(string dictPath)
         {
             var dict = new Dictionary<string, string>();
-            var charset = CharsetDetector.DetectChineseCharset(dictPath);
+            var charset = CharsetDetector.GuessCharsetOfFile(dictPath);
             using (var textReader = new StreamReader(dictPath, Encoding.GetEncoding(charset)))
             {
                 string line;

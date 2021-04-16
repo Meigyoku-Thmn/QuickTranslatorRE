@@ -82,16 +82,11 @@ namespace QuickVietPhraseFilter
             var vietPhraseDict = LoadDictionary(txtVietPhraseFilePath.Text);
             var filterRuleLines = LoadFilterRules(txtFilterRuleFilePath.Text);
 
-            var pattern = FilterRulesToRegexPattern(filterRuleLines);
-            var regex = new Regex(pattern, RegexOptions.Compiled);
+            var regex = FilterRulesToRegex(filterRuleLines);
 
-            var sortedVietPhrases = from vietPhrase in vietPhraseDict
-                                    where regex.IsMatch(vietPhrase.Key)
-                                    orderby vietPhrase.Key.Length descending, vietPhrase.Key
-                                    select vietPhrase;
-            var dict = sortedVietPhrases.ToDictionary(pair => pair.Key, pair => pair.Value);
+            var sortedVietPhrases = vietPhraseDict.Where(pair => regex.IsMatch(pair.Key));
 
-            Operator.SaveDictionaryToFileNoSort(dict,
+            Operator.SaveDictionaryToFile(sortedVietPhrases,
                 Path.Combine(txtOutputDirPath.Text, $"QuickVietPhraseFilter_{DateTime.Now:yyyyMMddHHmmss}.txt"));
 
             MessageBox.Show("Done!!!");
@@ -102,48 +97,45 @@ namespace QuickVietPhraseFilter
 
         private string[] LoadFilterRules(string rulePath)
         {
-            var charset = CharsetDetector.DetectChineseCharset(rulePath);
+            var charset = CharsetDetector.GuessCharsetOfFile(rulePath);
             if (charset == "GB2312")
                 charset = "UTF-8";
             return File.ReadAllLines(rulePath, Encoding.GetEncoding(charset));
         }
 
-        private string FilterRulesToRegexPattern(string[] rules)
+        private Regex FilterRulesToRegex(string[] rules)
         {
-            return string.Join("|", rules
+            static string ConvertRuleToPattern(string rule)
+            {
+                var pattern = rule.Replace("{0}", ".*");
+                if (!pattern.StartsWith(".*"))
+                    pattern = "^" + pattern;
+                if (!pattern.EndsWith(".*"))
+                    pattern += "$";
+                return pattern;
+            }
+            var pattern = string.Join("|", rules
                 .Where(rule => !string.IsNullOrEmpty(rule))
                 .Select(rule => $"({ConvertRuleToPattern(rule)})"));
-        }
-
-        private string ConvertRuleToPattern(string rule)
-        {
-            var pattern = rule.Replace("{0}", ".*");
-
-            if (!pattern.StartsWith(".*"))
-                pattern = "^" + pattern;
-
-            if (!pattern.EndsWith(".*"))
-                pattern += "$";
-
-            return pattern;
+            var regex = new Regex(pattern, RegexOptions.Compiled);
+            return regex;
         }
 
         private Dictionary<string, string> LoadDictionary(string dictPath)
         {
             var dict = new Dictionary<string, string>();
-            var charset = CharsetDetector.DetectChineseCharset(dictPath);
+            var charset = CharsetDetector.GuessCharsetOfFile(dictPath);
+            
+            // TODO: explain this
             if (charset == "GB2312")
                 charset = "UTF-8";
 
-            using (var textReader = new StreamReader(dictPath, Encoding.GetEncoding(charset)))
+            using var textReader = new StreamReader(dictPath, Encoding.GetEncoding(charset));
+            foreach (var line in textReader.Lines())
             {
-                string line;
-                while ((line = textReader.ReadLine()) != null)
-                {
-                    var tuple = line.Split('=');
-                    if (tuple.Length == 2 && !dict.ContainsKey(tuple[0]))
-                        dict.Add(tuple[0], tuple[1]);
-                }
+                var tuple = line.Split('=');
+                if (tuple.Length == 2 && !dict.ContainsKey(tuple[0]))
+                    dict.Add(tuple[0], tuple[1]);
             }
             return dict;
         }

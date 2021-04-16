@@ -96,7 +96,7 @@ namespace QuickTextSplitter
             }
             else
             {
-                var charset = CharsetDetector.DetectChineseCharset(txtInputFilePath.Text);
+                var charset = CharsetDetector.GuessCharsetOfFile(txtInputFilePath.Text);
 
                 var inputLines = File.ReadAllLines(txtInputFilePath.Text, Encoding.GetEncoding(charset));
 

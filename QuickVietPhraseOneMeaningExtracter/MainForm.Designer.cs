@@ -26,10 +26,10 @@ namespace QuickVietPhraseOneMeaningExtracter
             // 
             // btnSelectVietPhraseFile
             // 
-            this.btnSelectVietPhraseFile.Location = new System.Drawing.Point(820, 9);
+            this.btnSelectVietPhraseFile.Location = new System.Drawing.Point(799, 9);
             this.btnSelectVietPhraseFile.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectVietPhraseFile.Name = "btnSelectVietPhraseFile";
-            this.btnSelectVietPhraseFile.Size = new System.Drawing.Size(100, 27);
+            this.btnSelectVietPhraseFile.Size = new System.Drawing.Size(121, 27);
             this.btnSelectVietPhraseFile.TabIndex = 11;
             this.btnSelectVietPhraseFile.Text = "Browse...";
             this.btnSelectVietPhraseFile.UseVisualStyleBackColor = true;
@@ -43,7 +43,7 @@ namespace QuickVietPhraseOneMeaningExtracter
             this.txtVietPhraseFilePath.Location = new System.Drawing.Point(192, 10);
             this.txtVietPhraseFilePath.Margin = new System.Windows.Forms.Padding(4);
             this.txtVietPhraseFilePath.Name = "txtVietPhraseFilePath";
-            this.txtVietPhraseFilePath.Size = new System.Drawing.Size(623, 23);
+            this.txtVietPhraseFilePath.Size = new System.Drawing.Size(599, 23);
             this.txtVietPhraseFilePath.TabIndex = 10;
             // 
             // label1
@@ -79,7 +79,7 @@ namespace QuickVietPhraseOneMeaningExtracter
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(917, 30);
             this.textBox1.TabIndex = 14;
-            this.textBox1.Text = "* Chức năng: tách nghia đầu tiên, tạo file VietPhrase một nghĩa trong cùng thư mụ" +
+            this.textBox1.Text = "* Chức năng: tách nghĩa đầu tiên, tạo file VietPhrase một nghĩa trong cùng thư mụ" +
     "c.";
             // 
             // MainForm

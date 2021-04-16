@@ -38,26 +38,22 @@ namespace QuickVietPhraseOneMeaningExtracter
                 return;
             }
             var dirPath = Path.GetDirectoryName(txtVietPhraseFilePath.Text);
-            var dict = LoadOneMeaningDictionary(txtVietPhraseFilePath.Text);
-            Operator.SaveDictionaryToFile(ref dict, Path.Combine(dirPath, "VietPhraseOneMeaning.txt"));
+            var dict = LoadDictionaryAndGetFirstMeaningOfEach(txtVietPhraseFilePath.Text);
+            Operator.SaveDictionaryToFileSorted(dict, Path.Combine(dirPath, "VietPhraseOneMeaning.txt"));
             MessageBox.Show("Xong!!!");
         }
 
-        private Dictionary<string, string> LoadOneMeaningDictionary(string dictPath)
+        private Dictionary<string, string> LoadDictionaryAndGetFirstMeaningOfEach(string dictPath)
         {
             var dict = new Dictionary<string, string>();
-            var charSet = CharsetDetector.DetectChineseCharset(dictPath);
-            using (var textReader = new StreamReader(dictPath, Encoding.GetEncoding(charSet)))
+            var charSet = CharsetDetector.GuessCharsetOfFile(dictPath);
+
+            using var textReader = new StreamReader(dictPath, Encoding.GetEncoding(charSet));
+            foreach (var line in textReader.Lines())
             {
-                string line;
-                while ((line = textReader.ReadLine()) != null)
-                {
-                    var tuple = line.Split('=');
-                    if (tuple.Length == 2 && !dict.ContainsKey(tuple[0]))
-                    {
-                        dict.Add(tuple[0], tuple[1].Split('/', '|')[0]);
-                    }
-                }
+                var tuple = line.Split('=');
+                if (tuple.Length == 2 && !dict.ContainsKey(tuple[0]))
+                    dict.Add(tuple[0], tuple[1].Split('/', '|')[0]);
             }
             return dict;
         }

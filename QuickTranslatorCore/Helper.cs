@@ -148,7 +148,7 @@ namespace QuickTranslatorCore
             if (!File.Exists(logPath))
                 return;
 
-            var charset = CharsetDetector.DetectChineseCharset(logPath);
+            var charset = CharsetDetector.GuessCharsetOfFile(logPath);
             using var reader = new StreamReader(logPath, Encoding.GetEncoding(charset));
 
             foreach (var line in reader.Lines().Skip(1)) // skip header

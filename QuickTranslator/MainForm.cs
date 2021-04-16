@@ -370,7 +370,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
+                Logger.LogError(exception);
             }
         }
 
@@ -415,7 +415,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
+                Logger.LogError(exception);
             }
         }
 
@@ -469,7 +469,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
+                Logger.LogError(exception);
             }
         }
 
@@ -511,7 +511,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), "QuickTranslator", exception);
+                Logger.LogError(exception);
             }
         }
 
@@ -1215,8 +1215,7 @@ namespace QuickTranslator
                 catch (Exception exception)
                 {
                     MessageBox.Show("Định dạng của file không đúng!");
-                    string application = "QuickTranslator";
-                    Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
+                    Logger.LogError(exception);
                     return;
                 }
             }
@@ -1614,8 +1613,7 @@ namespace QuickTranslator
             }
             catch (Exception exception)
             {
-                string application = "QuickTranslator";
-                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
+                Logger.LogError(exception);
             }
         }
 
@@ -1817,7 +1815,7 @@ namespace QuickTranslator
 
         private void OpenOtherFile(string fileName)
         {
-            string name = CharsetDetector.DetectChineseCharset(fileName);
+            string name = CharsetDetector.GuessCharsetOfFile(fileName);
             string text = File.ReadAllText(fileName, Encoding.GetEncoding(name));
             isNewTranslationWork = true;
             if (fileName.EndsWith("html") || fileName.EndsWith("htm") || fileName.EndsWith("asp") || fileName.EndsWith("aspx") || fileName.EndsWith("php"))
@@ -1841,8 +1839,7 @@ namespace QuickTranslator
             catch (Exception exception)
             {
                 MessageBox.Show("Định dạng của file không đúng!");
-                string application = "QuickTranslator";
-                Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), application, exception);
+                Logger.LogError(exception);
                 return;
             }
             chineseDocumentPanel.SetTextContent(Util.NormalizeTextAndRemoveIgnoredChinesePhrases(original));

@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using QuickTranslatorCore;
 using QuickTranslatorCore.Engine;
 
+using static System.StringSplitOptions;
+
 namespace QuickVietPhraseMultiplicator
 {
     public partial class MainForm : Form
@@ -83,6 +85,7 @@ namespace QuickVietPhraseMultiplicator
             var vietPhraseDict = LoadDictionary(txtVietPhraseFilePath.Text);
             var multiplyRuleDict = LoadDictionary(txtMultiplyRuleFilePath.Text);
 
+            // TODO: cut unnecessary MultiplyMeanings method calls
             var dict = (from multiplyRule in multiplyRuleDict
                         from vietPhrase in vietPhraseDict
                         where vietPhrase.Key != multiplyRule.Key.Replace("{0}", "")
@@ -92,7 +95,7 @@ namespace QuickVietPhraseMultiplicator
                         select g.First())
                         .ToDictionary(item => item.key, item => item.value);
 
-            Operator.SaveDictionaryToFileNoSort(dict, Path.Combine(
+            Operator.SaveDictionaryToFile(dict, Path.Combine(
                 txtOutputDirPath.Text, $"QuickVietPhraseMultiplicator_{DateTime.Now:yyyyMMddHHmmss}.txt"));
 
             MessageBox.Show("Xong!!!");
@@ -103,29 +106,25 @@ namespace QuickVietPhraseMultiplicator
 
         private string MultiplyMeanings(string multiplyRule, string meanings)
         {
-            var meaningArr = meanings.Split("|/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var meaningArr = meanings.Split("|/".ToCharArray(), RemoveEmptyEntries);
             return string.Join("/", meaningArr.Select(meaning => multiplyRule.Replace("{0}", meaning)));
         }
 
         private Dictionary<string, string> LoadDictionary(string dictPath)
         {
             var dict = new Dictionary<string, string>();
-            var charset = CharsetDetector.DetectChineseCharset(dictPath);
+            var charset = CharsetDetector.GuessCharsetOfFile(dictPath);
 
+            // TODO: explain this
             if (charset == "GB2312")
                 charset = "UTF-8";
 
-            using (var textReader = new StreamReader(dictPath, Encoding.GetEncoding(charset)))
+            using var textReader = new StreamReader(dictPath, Encoding.GetEncoding(charset));
+            foreach (var line in textReader.Lines())
             {
-                string line;
-                while ((line = textReader.ReadLine()) != null)
-                {
-                    var tuple = line.Split('=');
-                    if (tuple.Length == 2 && !dict.ContainsKey(tuple[0]))
-                    {
-                        dict.Add(tuple[0], tuple[1]);
-                    }
-                }
+                var tuple = line.Split('=');
+                if (tuple.Length == 2 && !dict.ContainsKey(tuple[0]))
+                    dict.Add(tuple[0], tuple[1]);
             }
             return dict;
         }

@@ -279,7 +279,7 @@ namespace QuickAnalyzer
             {
                 return string.Empty;
             }
-            string name = CharsetDetector.DetectChineseCharset(files[0]);
+            string name = CharsetDetector.GuessCharsetOfFile(files[0]);
             Encoding encoding = Encoding.GetEncoding(name);
             StringBuilder stringBuilder = new StringBuilder();
             foreach (string filePath in files)

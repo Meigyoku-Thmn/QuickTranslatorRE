@@ -18,7 +18,7 @@ namespace QuickTranslatorCore
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static string DetectChineseCharset(string filePath)
+        public static string GuessCharsetOfFile(string filePath)
         {
             // case when input file is html with charset=gb2312 meta
             // TODO: this code is not useful and very naive.

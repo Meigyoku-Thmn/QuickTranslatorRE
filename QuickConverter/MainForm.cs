@@ -187,7 +187,7 @@ namespace QuickConverter
 
         private string[] mergeSourceFiles(string[] sourceFiles, int mergeOption, out string[] mergedFileNames)
         {
-            string name = CharsetDetector.DetectChineseCharset(sourceFiles[0]);
+            string name = CharsetDetector.GuessCharsetOfFile(sourceFiles[0]);
             List<string> list = new List<string>();
             List<string> list2 = new List<string>();
             StringBuilder stringBuilder = new StringBuilder();

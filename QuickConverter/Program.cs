@@ -11,30 +11,10 @@ namespace QuickConverter
         [STAThread]
         private static void Main(string[] args)
         {
-            Application.ThreadException += Application_ThreadException;
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-            AppDomain.CurrentDomain.UnhandledException += AppDomain_CurrentDomain_UnhandledException;
+            Logger.SetUpErrorHandler();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-        }
-
-        private static void AppDomain_CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            UnhandledExceptionHandler((Exception)e.ExceptionObject);
-        }
-
-        private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
-        {
-            UnhandledExceptionHandler(e.Exception);
-        }
-
-        private static void UnhandledExceptionHandler(Exception exception)
-        {
-            string text = "QuickConverter";
-            Logger.Log(Path.GetDirectoryName(Application.ExecutablePath), text, exception);
-            MessageBox.Show("Lỗi chương trình! Hãy gửi " + text + ".log cho tác giả. Xin cám ơn!", "Lỗi chương trình", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            Application.Exit();
         }
     }
 }

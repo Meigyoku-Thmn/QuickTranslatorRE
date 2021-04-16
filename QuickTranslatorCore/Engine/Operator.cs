@@ -169,9 +169,9 @@ namespace QuickTranslatorCore.Engine
             var dictPath = DictionaryConfiguration.GetVietPhraseDictPath();
 
             if (useSort)
-                SaveDictionaryToFile(ref VietPhraseDict, dictPath);
+                SaveDictionaryToFileSorted(VietPhraseDict, dictPath);
             else
-                SaveDictionaryToFileNoSort(VietPhraseDict, dictPath);
+                SaveDictionaryToFile(VietPhraseDict, dictPath);
         }
 
         public static void UpdateNameDict(string key, string value, bool useSort, bool usePrimary)
@@ -220,9 +220,9 @@ namespace QuickTranslatorCore.Engine
                 : DictionaryConfiguration.GetSecondaryNameDictPath();
 
             if (useSort)
-                SaveDictionaryToFile(ref selectedNameDict, dictPath);
+                SaveDictionaryToFileSorted(selectedNameDict, dictPath);
             else
-                SaveDictionaryToFileNoSort(selectedNameDict, dictPath);
+                SaveDictionaryToFile(selectedNameDict, dictPath);
         }
 
         public static void UpdateSinoVietPronunciationDict(string key, string value, bool useSort)
@@ -246,20 +246,20 @@ namespace QuickTranslatorCore.Engine
             var dictPath = DictionaryConfiguration.GetSinoVietPronunciationDictPath();
 
             if (useSort)
-                SaveDictionaryToFile(ref SinoVietPronunciationDict, dictPath);
+                SaveDictionaryToFileSorted(SinoVietPronunciationDict, dictPath);
             else
-                SaveDictionaryToFileNoSort(SinoVietPronunciationDict, dictPath);
+                SaveDictionaryToFile(SinoVietPronunciationDict, dictPath);
         }
 
         private static Dictionary<string, string> AddEntryToDictionaryNoSort(
-            Dictionary<string, string> dict, string key, string value)
+            IEnumerable<KeyValuePair<string, string>> dict, string key, string value)
         {
             return dict
                 .Concat(new[] { new KeyValuePair<string, string>(key, value) })
                 .ToDictionary(e => e.Key, e => e.Value);
         }
 
-        public static void SaveDictionaryToFileNoSort(Dictionary<string, string> dict, string filePath)
+        public static void SaveDictionaryToFile(IEnumerable<KeyValuePair<string, string>> dict, string filePath)
         {
             // Back up old file in case of error
             var bakFilePath = filePath + "." + DateTime.Now.Ticks;
@@ -284,17 +284,17 @@ namespace QuickTranslatorCore.Engine
                 File.Delete(bakFilePath);
         }
 
-
-        public static void SaveDictionaryToFile(ref Dictionary<string, string> dict, string filePath)
+        /// <summary>
+        /// Do sorting before saving
+        /// </summary>
+        public static void SaveDictionaryToFileSorted(IEnumerable<KeyValuePair<string, string>> dict, string filePath)
         {
             var sortedPairs = from pair in dict
                               orderby pair.Key.Length descending, pair.Key
                               select pair;
 
-            var newDict = new Dictionary<string, string>();
-
             // Back up old file in case of error
-            string bakFilePath = filePath + "." + DateTime.Now.Ticks;
+            var bakFilePath = filePath + "." + DateTime.Now.Ticks;
             Helper.CopyIfSourceExists(filePath, bakFilePath, true);
 
             var lines = sortedPairs.Select(pair => $"{pair.Key}={pair.Value}");
@@ -393,9 +393,9 @@ namespace QuickTranslatorCore.Engine
             var dictPath = DictionaryConfiguration.GetVietPhraseDictPath();
 
             if (useSort)
-                SaveDictionaryToFile(ref VietPhraseDict, dictPath);
+                SaveDictionaryToFileSorted(VietPhraseDict, dictPath);
             else
-                SaveDictionaryToFileNoSort(VietPhraseDict, dictPath);
+                SaveDictionaryToFile(VietPhraseDict, dictPath);
 
             WriteVietPhraseLog(key, "Deleted");
         }
@@ -416,9 +416,9 @@ namespace QuickTranslatorCore.Engine
                 : DictionaryConfiguration.GetSecondaryNameDictPath();
 
             if (useSort)
-                SaveDictionaryToFile(ref selectedNameDict, selectedNameDictPath);
+                SaveDictionaryToFileSorted(selectedNameDict, selectedNameDictPath);
             else
-                SaveDictionaryToFileNoSort(selectedNameDict, selectedNameDictPath);
+                SaveDictionaryToFile(selectedNameDict, selectedNameDictPath);
 
             WriteNamesLog(key, "Deleted", usePrimary);
         }
@@ -430,9 +430,9 @@ namespace QuickTranslatorCore.Engine
             var dictPath = DictionaryConfiguration.GetSinoVietPronunciationDictPath();
 
             if (useSort)
-                SaveDictionaryToFile(ref SinoVietPronunciationDict, dictPath);
+                SaveDictionaryToFileSorted(SinoVietPronunciationDict, dictPath);
             else
-                SaveDictionaryToFileNoSort(SinoVietPronunciationDict, dictPath);
+                SaveDictionaryToFile(SinoVietPronunciationDict, dictPath);
 
             WriteSinoVietPronunciationLog(key, "Deleted");
         }
